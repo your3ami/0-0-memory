@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Memory Pocket</title>
+    <link rel="stylesheet" href="/src/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main>
+      <header class="masthead">
+        <a href="#" class="wordmark">MEMORY<br />POCKET</a>
+        <p>보관하고 싶은 장면을<br />작은 게임 칩으로 만듭니다.</p>
+        <button class="archive-button" id="openArchive">ARCHIVE <span id="archiveCount">03</span></button>
+      </header>
+
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">POCKET ARCADE</p>
+          <h1 id="hero-title">추억을 꺼내,<br /><strong>다시 플레이</strong>하세요.</h1>
+          <p class="description">칩 하나에 사진 한 장과 그날의 말을 담아요.<br />칩을 고르면, 잊고 있던 장면이 화면에 켜집니다.</p>
+        </div>
+
+        <div class="arcade-stage">
+          <button class="floating-chip chip-one" data-index="0" aria-label="첫 번째 추억 칩"><span class="chip-art sun">☼</span><b>SPRING<br />WALK</b><i>M-001</i></button>
+          <button class="floating-chip chip-two" data-index="1" aria-label="두 번째 추억 칩"><span class="chip-art wave">≈</span><b>BLUE<br />HOUR</b><i>M-002</i></button>
+          <button class="floating-chip chip-three" data-index="2" aria-label="세 번째 추억 칩"><span class="chip-art cake">✦</span><b>LEMON<br />DAY</b><i>M-003</i></button>
+          <button class="add-chip" id="addButton" aria-label="새 추억 칩 만들기">＋<small>NEW<br />CHIP</small></button>
+
+          <section class="pocket-console" aria-label="추억 재생기">
+            <div class="console-tab"><span></span><span></span><span></span><span></span></div>
+            <div class="console-body">
+              <div class="console-title"><span>MEMORY PLAYER</span><span id="memoryCode">M-001</span></div>
+              <div class="screen-bezel">
+                <div class="screen-label"><span id="screenDate">2024. 05. 18</span><span>● PLAYING</span></div>
+                <canvas id="pixelCanvas" width="480" height="320" aria-label="선택한 추억 사진"></canvas>
+                <div class="scanlines"></div>
+                <p class="screen-title" id="screenTitle">비가 멈춘 뒤의 산책</p>
+              </div>
+              <div class="console-controls">
+                <div class="d-pad"><span class="up">▲</span><span class="left">◀</span><span class="right">▶</span><span class="down">▼</span></div>
+                <button class="pixel-button" id="pixelButton">PX<br />ON</button>
+                <div class="button-group"><i>B</i><i>A</i></div>
+              </div>
+              <p class="console-foot">MEMORY SYSTEM · MODEL 01</p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="memory-detail" id="memoryDetail">
+        <div class="detail-label"><span>NOW LOADED</span><span id="detailCode">M-001</span></div>
+        <div class="detail-grid">
+          <div><p class="date" id="memoryDate">2024. 05. 18</p><h2 id="memoryTitle">비가 멈춘 뒤의 산책</h2></div>
+          <div class="note-area"><p id="memoryText">비가 그친 뒤라 공기가 유난히 맑았다. 우산을 접고, 우리가 좋아하는 골목으로 천천히 걸었다.</p><div class="rating"><span>THIS MEMORY WAS...</span><div id="stars" class="stars" aria-label="추억 별점"></div></div><textarea id="comment" maxlength="180" placeholder="이 장면에 남기고 싶은 한마디를 적어주세요."></textarea><button id="saveNote" class="save-note">SAVE A NOTE <b>↗</b></button></div>
+        </div>
+      </section>
+      <footer>MEMORY POCKET © 2024 &nbsp; / &nbsp; A PRIVATE ARCADE FOR THE PAST</footer>
+    </main>
+
+    <div class="modal-backdrop" id="modal">
+      <form class="memory-form" id="memoryForm">
+        <button type="button" class="close" id="closeModal" aria-label="닫기">×</button>
+        <p class="eyebrow">BUILD A NEW CHIP</p><h2>새로운 추억을<br />칩에 담아보세요.</h2>
+        <label>대표 사진 URL<input required name="image" type="url" placeholder="https://..." /></label>
+        <label>추억 제목<input required name="title" type="text" placeholder="예: 늦여름의 아이스크림" /></label>
+        <label>날짜<input required name="date" type="text" placeholder="2024. 08. 11" /></label>
+        <label>짧은 이야기<textarea required name="text" placeholder="그날의 장면을 짧게 적어주세요."></textarea></label>
+        <button class="create" type="submit">MAKE MY CHIP →</button>
+      </form>
+    </div>
+    <script src="/src/main.js"></script>
+  </body>
+</html>
