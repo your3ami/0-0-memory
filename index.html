@@ -2398,8 +2398,8 @@
     openDeleteConfirm(editingId);
   });
 
-  await initializeCloud();
-
+  // Render the local memories immediately so the boot sequence is not held
+  // behind a slow Supabase connection. The cloud sync continues in parallel.
   renderAll();
 
   setTimeout(()=>{
@@ -2407,6 +2407,9 @@
     showView("idle");
     if(cloudError) console.warn("0+0 is using local storage until Supabase schema/setup is complete.");
   }, 1250);
+
+  await initializeCloud();
+  renderAll();
 
 })();
 </script>
