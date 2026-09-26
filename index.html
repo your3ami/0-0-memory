@@ -1581,6 +1581,7 @@
   // Editing an already-recorded memory uses the mission wording instead.
   let completionMode = null;
   let pendingDeleteId = null;
+  let editingTags = [];
 
   function selectChip(idx){
     selected = idx;
@@ -2177,7 +2178,6 @@
 
   let editingId = null;
   let editingShot = null;
-  let editingTags = [];
 
   function toDateInputValue(value){
     const raw = String(value||"").trim();
@@ -2403,9 +2403,13 @@
     openDeleteConfirm(editingId);
   });
 
-  // Render the local memories immediately so the boot sequence is not held
-  // behind a slow Supabase connection. The cloud sync continues in parallel.
-  renderAll();
+  // Keep the game UI independent from the cloud connection.
+  // The local/base memories render first; Supabase sync happens afterward.
+  try{
+    renderAll();
+  }catch(e){
+    console.error("Initial memory render failed:", e);
+  }
 
   setTimeout(()=>{
     booting = false;
@@ -2413,8 +2417,14 @@
     if(cloudError) console.warn("0+0 is using local storage until Supabase schema/setup is complete.");
   }, 1150);
 
-  await initializeCloud();
-  renderAll();
+  initializeCloud().then(()=>{
+    renderAll();
+  }).catch(e=>{
+    cloudError = e;
+    cloudReady = false;
+    console.warn("Cloud initialization failed:", e);
+    try{ renderAll(); }catch(renderError){ console.error("Fallback memory render failed:", renderError); }
+  });
 
 })();
 </script>
