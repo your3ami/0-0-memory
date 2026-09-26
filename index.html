@@ -406,9 +406,10 @@
   }
   .gallery-empty{
     grid-column:1 / -1;
-    width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
-    gap:16px;
-    padding:22px 6px 0;
+    width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:8px;
+    padding:0 6px;
+    box-sizing:border-box;
     color:var(--screen-dim); font-family:var(--font-pixel); font-size:9px; line-height:1.7;
     text-align:center;
   }
@@ -841,13 +842,40 @@
   }
   .memory-extra-label{
     display:block;
-    margin-top:22px;
+    margin-top:18px;
     margin-bottom:6px;
     font-size:11px;
     color:var(--sub);
     text-align:center;
   }
   .memory-extra-input{
+    text-align:center;
+    font-family:var(--font-hand);
+    font-size:14px;
+  }
+  .memory-weather-options{
+    display:flex;
+    justify-content:center;
+    gap:5px;
+    flex-wrap:wrap;
+  }
+  .memory-weather-option{
+    border:1px solid #d7d1c2;
+    background:#fff;
+    color:var(--sub);
+    font-family:var(--font-ui);
+    font-size:11px;
+    line-height:1;
+    padding:6px 9px;
+    border-radius:6px;
+    cursor:pointer;
+  }
+  .memory-weather-option.active{
+    background:var(--ink);
+    border-color:var(--ink);
+    color:#fdfcf8;
+  }
+  .memory-thought-input{
     text-align:center;
     font-family:var(--font-hand);
     font-size:14px;
@@ -1136,8 +1164,15 @@
     <div class="modal-step" id="modal-step-2">
       <label class="modal-label">태그</label>
       <div class="tag-options" id="tag-options" role="group" aria-label="추억 태그"></div>
-      <label class="memory-extra-label" for="field-song-line">그때 들었던 노래나 문장을 적어 주세요.</label>
-      <input type="text" id="field-song-line" class="modal-input memory-extra-input" maxlength="80" placeholder="예: 그때 우리 둘이 들었던 노래">
+
+      <label class="memory-extra-label">그날의 날씨</label>
+      <div class="memory-weather-options" id="memory-weather-options" role="group" aria-label="그날의 날씨"></div>
+
+      <label class="memory-extra-label" for="field-thought">그날, 어떤 생각을 했나요?</label>
+      <input type="text" id="field-thought" class="modal-input memory-thought-input" maxlength="80" placeholder="그날의 마음을 짧게 적어 주세요.">
+
+      <label class="memory-extra-label" for="field-song-line">그때 들었던 노래나 문장이 있나요?</label>
+      <input type="text" id="field-song-line" class="modal-input memory-extra-input" maxlength="80" placeholder="예: 그때 들었던 노래나 문장">
     </div>
 
     <div class="modal-actions">
@@ -1170,6 +1205,7 @@
 
   // Predefined memory tags. Keep this list in Korean 가나다 order.
   const TAG_OPTIONS = ["계절","기타","동물","사람","사진","여행","음식","일상","장소","카페","축제","취미"];
+  const WEATHER_OPTIONS = ["맑음","흐림","비","눈"];
 
   async function cloudRequest(url, options={}){
     const res = await fetch(url, {
@@ -1204,6 +1240,8 @@
       photo: labelArt(preset.bg1, preset.bg2, preset.accent, preset.icon),
       shot: row.photo || null,
       tags: rowTags.length ? rowTags : normalizeTags(base ? base.tags : []),
+      weather: row.weather || (base ? base.weather || "" : ""),
+      thought: row.thought || (base ? base.thought || "" : ""),
       songLine: row.song_line || (base ? base.songLine || "" : "")
     };
   }
@@ -1232,6 +1270,8 @@
       letter: memory.letter || "아직 적지 않은 이야기.",
       photo: shotOverride !== undefined ? (shotOverride || null) : (memory.shot || null),
       tags: Array.isArray(memory.tags) ? memory.tags.filter(tag=>TAG_OPTIONS.includes(tag)) : [],
+      weather: WEATHER_OPTIONS.includes(memory.weather) ? memory.weather : "",
+      thought: memory.thought || "",
       song_line: memory.songLine || "",
       created_at: new Date().toISOString()
     };
@@ -1547,6 +1587,9 @@
     const o = overrides[base.id];
     const merged = o ? Object.assign({}, base, o) : Object.assign({}, base);
     merged.tags = normalizeTags(merged.tags);
+    merged.weather = WEATHER_OPTIONS.includes(merged.weather) ? merged.weather : "";
+    merged.thought = merged.thought || "";
+    merged.songLine = merged.songLine || "";
     return merged;
   }
 
@@ -1701,7 +1744,7 @@
     galleryGrid.innerHTML = "";
     renderGalleryTags();
     if(!entries.length){
-      galleryGrid.innerHTML = `<div class="gallery-empty"><span>NO SAVED MEMORY</span><span>기록을 남긴 추억이 여기에 쌓여요.</span></div>`;
+      galleryGrid.innerHTML = `<div class="gallery-empty"><span>NO SAVED MEMORY</span><span>기록을 남긴 추억이</span><span>여기에 쌓여요.</span></div>`;
       return;
     }
     galleryIndex = 0;
@@ -2205,7 +2248,9 @@
   const fieldDate = document.getElementById("field-date");
   const fieldTitle = document.getElementById("field-title");
   const fieldLetter = document.getElementById("field-letter");
+  const fieldThought = document.getElementById("field-thought");
   const fieldSongLine = document.getElementById("field-song-line");
+  const weatherOptions = document.getElementById("memory-weather-options");
   const fieldAuthor = document.getElementById("field-author");
   const modalFrom = document.getElementById("modal-from");
   const modalDelete = document.getElementById("modal-delete");
@@ -2239,6 +2284,25 @@
     modalFrom.textContent = "From. " + value;
   }
 
+  function renderWeatherOptions(){
+    if(!weatherOptions) return;
+    weatherOptions.innerHTML = WEATHER_OPTIONS.map(weather=>
+      `<button type="button" class="memory-weather-option" data-weather="${weather}">${weather}</button>`
+    ).join("");
+    weatherOptions.querySelectorAll(".memory-weather-option").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if(inputLocked()) return;
+        fieldWeatherValue = btn.dataset.weather;
+        renderWeatherOptions();
+      });
+    });
+    weatherOptions.querySelectorAll(".memory-weather-option").forEach(btn=>{
+      btn.classList.toggle("active", btn.dataset.weather===fieldWeatherValue);
+    });
+  }
+
+  let fieldWeatherValue = "";
+
   function openEditor(id){
     const m = memories.find(x=>x.id===id);
     if(!m) return;
@@ -2250,8 +2314,11 @@
     fieldDate.value = toDateInputValue(m.date || "");
     fieldTitle.value = m.title || "";
     fieldLetter.value = m.letter || "";
+    fieldThought.value = m.thought || "";
     fieldSongLine.value = m.songLine || "";
+    fieldWeatherValue = WEATHER_OPTIONS.includes(m.weather) ? m.weather : "";
     updateCharCount(fieldLetter, document.getElementById("letter-count"), 100);
+    renderWeatherOptions();
     renderTagOptions();
     if(editingShot){ photoPreview.src = editingShot; photoPreview.style.display = "block"; photoPlaceholder.style.display = "none"; }
     else { photoPreview.style.display = "none"; photoPlaceholder.style.display = "block"; }
@@ -2269,8 +2336,11 @@
     fieldDate.value = todayStr();
     fieldTitle.value = "";
     fieldLetter.value = "";
+    fieldThought.value = "";
     fieldSongLine.value = "";
+    fieldWeatherValue = "";
     updateCharCount(fieldLetter, document.getElementById("letter-count"), 100);
+    renderWeatherOptions();
     renderTagOptions();
     photoPreview.style.display = "none";
     photoPlaceholder.style.display = "block";
@@ -2304,8 +2374,11 @@
         selectAuthor(m.author || "H");
         fieldTitle.value = m.title || "";
         fieldLetter.value = m.letter || "";
+        fieldThought.value = m.thought || "";
         fieldSongLine.value = m.songLine || "";
+        fieldWeatherValue = WEATHER_OPTIONS.includes(m.weather) ? m.weather : "";
         updateCharCount(fieldLetter, document.getElementById("letter-count"), 100);
+        renderWeatherOptions();
         editingTags = normalizeTags(m.tags);
         renderTagOptions();
       }
@@ -2365,6 +2438,8 @@
       photo: labelArt(preset.bg1, preset.bg2, preset.accent, preset.icon),
       shot: editingShot || null,
       tags: normalizeTags(editingTags),
+      weather: WEATHER_OPTIONS.includes(fieldWeatherValue) ? fieldWeatherValue : "",
+      thought: fieldThought.value.trim(),
       songLine: fieldSongLine.value.trim()
     };
     const wasEditingCurrent = !!(editingId && current && editingId === current.id);
