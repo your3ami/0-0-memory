@@ -712,18 +712,26 @@
   .chip.c-3{ top:58px; right:max(10px, calc(50% - 470px)); --chip-rot:rotate(7deg); transform:var(--chip-rot); }
   .chip.c-4{ bottom:52px; right:max(10px, calc(50% - 455px)); --chip-rot:rotate(-6deg); transform:var(--chip-rot); }
 
-  /* ---------- extra row: add button + custom chips ---------- */
+  /* ---------- add button + custom memory chips ---------- */
+  /* New memories join the same scattered chip field as the built-in memories.
+     The + button remains the only item in the separate add area. */
+  .custom-chip{ position:absolute; }
+  .custom-chip.custom-1{ top:190px; left:max(10px, calc(50% - 430px)); --chip-rot:rotate(5deg); transform:var(--chip-rot); }
+  .custom-chip.custom-2{ top:205px; right:max(10px, calc(50% - 430px)); --chip-rot:rotate(-5deg); transform:var(--chip-rot); }
+  .custom-chip.custom-3{ bottom:185px; left:max(10px, calc(50% - 420px)); --chip-rot:rotate(-4deg); transform:var(--chip-rot); }
+  .custom-chip.custom-4{ bottom:175px; right:max(10px, calc(50% - 420px)); --chip-rot:rotate(4deg); transform:var(--chip-rot); }
+  .custom-chip.custom-5{ top:145px; left:18%; --chip-rot:rotate(-3deg); transform:var(--chip-rot); }
+  .custom-chip.custom-6{ top:155px; right:18%; --chip-rot:rotate(3deg); transform:var(--chip-rot); }
+  .custom-chip.custom-7{ bottom:145px; left:18%; --chip-rot:rotate(3deg); transform:var(--chip-rot); }
+  .custom-chip.custom-8{ bottom:140px; right:18%; --chip-rot:rotate(-3deg); transform:var(--chip-rot); }
+  .custom-chip:hover{ transform:var(--chip-rot) translateY(-6px) !important; }
+  .custom-chip:active{ transform:var(--chip-rot) translateY(-2px) scale(.97) !important; }
   .extra-row{
     position:absolute; left:50%; bottom:10px; transform:translateX(-50%); z-index:5;
-    display:flex; flex-wrap:wrap;
-    justify-content:center;
-    gap:12px;
-    width:min(520px, calc(100% - 24px));
+    display:flex; justify-content:center;
+    width:min(120px, calc(100% - 24px));
     margin:0;
   }
-  .extra-row .chip{ position:relative; }
-  .extra-row .chip:hover{ transform:translateY(-6px) !important; }
-  .extra-row .chip:active{ transform:translateY(-2px) scale(.97) !important; }
   .extra-row.powered-off{
     position:absolute; right:24px; left:auto; top:24px; bottom:auto;
     transform:none;
@@ -1027,30 +1035,28 @@
     .chip-state{ font-size:3.5px; bottom:7px; left:4px; }
     .chip-badge{ font-size:8px; bottom:7px; right:4px; padding:1px 3px; }
 
-    /* New/custom cartridges stay in a clean bottom tray instead of being
-       randomly scattered into the console's footprint. */
-    .extra-row{
-      position:absolute;
-      left:50%; bottom:12px;
-      transform:translateX(-50%);
-      width:min(320px, calc(100% - 16px));
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:8px;
-      z-index:5;
+    /* Custom memories use the same scattered field as the built-in chips.
+       Their positions stay on the outer sides so the console and + area remain clear. */
+    .custom-chip{
+      width:68px;
+      right:auto !important;
+      pointer-events:auto;
     }
-    .extra-row .chip{ position:relative; right:auto !important; top:auto !important; width:68px; pointer-events:auto; }
-    .extra-row .chip:hover, .extra-row .chip:active{ transform:var(--chip-rot) !important; }
+    .custom-chip.custom-1{ left:2px !important; top:180px !important; --chip-rot:rotate(5deg); }
+    .custom-chip.custom-2{ right:2px !important; left:auto !important; top:195px !important; --chip-rot:rotate(-5deg); }
+    .custom-chip.custom-3{ left:2px !important; top:450px !important; bottom:auto !important; --chip-rot:rotate(-4deg); }
+    .custom-chip.custom-4{ right:2px !important; left:auto !important; top:465px !important; bottom:auto !important; --chip-rot:rotate(4deg); }
+    .custom-chip.custom-5{ left:2px !important; top:290px !important; --chip-rot:rotate(-3deg); }
+    .custom-chip.custom-6{ right:2px !important; left:auto !important; top:305px !important; --chip-rot:rotate(3deg); }
+    .custom-chip.custom-7{ left:2px !important; top:540px !important; --chip-rot:rotate(3deg); }
+    .custom-chip.custom-8{ right:2px !important; left:auto !important; top:555px !important; --chip-rot:rotate(-3deg); }
+    .custom-chip:hover, .custom-chip:active{ transform:var(--chip-rot) !important; }
     .extra-row.powered-off{
       left:auto; right:12px; top:18px; bottom:auto;
-      width:min(170px, calc(100% - 24px)); height:112px;
-      padding:0 8px 22px; gap:7px;
-      justify-content:flex-start; flex-wrap:nowrap;
-      transform:none; overflow-x:auto;
+      width:92px; height:112px;
+      padding:0; transform:none;
     }
-    .extra-row.powered-off::after{ left:6px; right:6px; bottom:14px; }
-    .extra-row.powered-off .chip{ flex:0 0 26px; width:26px; height:88px; }
+    .extra-row.powered-off::after{ display:none; }
     .chip.chip-add{ width:68px; height:88px; pointer-events:auto; }
     .chip-add-icon{ font-size:22px; }
   }
@@ -1738,7 +1744,10 @@
   function makeChipEl(m, idx){
     const el = document.createElement("div");
     const baseIndex = BASE.findIndex(x=>x.id===m.id);
-    el.className = "chip" + (baseIndex>-1 ? " c-"+(baseIndex+1) : "");
+    const customIndex = baseIndex > -1
+      ? -1
+      : memories.slice(0, idx).filter(x=>BASE.findIndex(b=>b.id===x.id)===-1).length;
+    el.className = "chip" + (baseIndex>-1 ? " c-"+(baseIndex+1) : " custom-chip custom-"+(Math.min(customIndex+1,8)));
     const rating = loadRating(m.id);
     const viewed = !!loadJSON("console:viewed:"+m.id, false);
     const state = rating ? "commented" : (viewed ? "viewed" : "unseen");
@@ -1942,8 +1951,7 @@
     chipEls = [];
     memories.forEach((m, idx)=>{
       const el = makeChipEl(m, idx);
-      if(BASE.some(base=>base.id===m.id)){ chipsEl.appendChild(el); }
-      else{ extraRow.insertBefore(el, addBtn); }
+      chipsEl.appendChild(el);
       chipEls.push(el);
     });
     if(current){
@@ -2427,9 +2435,9 @@
     if(inputLocked()) return;
     physicalReact("button");
     const blank = document.createElement("div");
-    blank.className = "chip chip-blank chip-drop";
+    blank.className = "chip chip-blank chip-drop custom-chip custom-1";
     blank.innerHTML = `<div class="chip-face"></div><div class="chip-edge"></div>`;
-    extraRow.insertBefore(blank, addBtn);
+    chipsEl.appendChild(blank);
     sfx.drop();
     setTimeout(()=>{
       blank.remove();
