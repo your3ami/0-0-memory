@@ -827,6 +827,9 @@
   .modal-from{ font-family:var(--font-hand); font-size:12px; color:var(--sub); margin-top:-7px; margin-bottom:7px; }
   .modal-title{ font-family:var(--font-ui); font-size:15px; font-weight:400; margin-bottom:10px; color:var(--ink); }
   .modal-label{ display:block; font-size:11px; color:var(--sub); margin:8px 0 4px; }
+   .modal-label-row{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
+   .modal-label-row .modal-label{ margin-bottom:4px; }
+   .modal-label-row .modal-char-count{ flex:0 0 auto; margin-top:0; }
    .modal-meta-row{
      display:grid;
      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
@@ -1189,9 +1192,11 @@
       <input type="text" id="field-title" class="modal-input" placeholder="예: 첫 여행">
       <input type="hidden" id="field-author" value="H">
 
-      <label class="modal-label">편지 내용</label>
+      <div class="modal-label-row">
+        <label class="modal-label">편지 내용</label>
+        <div class="modal-char-count" id="letter-count">0/100</div>
+      </div>
       <textarea id="field-letter" class="modal-textarea" maxlength="100" placeholder="그날의 이야기를 적어 주세요."></textarea>
-      <div class="modal-char-count" id="letter-count">0/100</div>
     </div>
 
     <div class="modal-step" id="modal-step-2">
