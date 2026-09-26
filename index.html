@@ -827,13 +827,13 @@
   .modal-from{ font-family:var(--font-hand); font-size:12px; color:var(--sub); margin-top:-7px; margin-bottom:7px; }
   .modal-title{ font-family:var(--font-ui); font-size:15px; font-weight:400; margin-bottom:10px; color:var(--ink); }
   .modal-label{ display:block; font-size:11px; color:var(--sub); margin:8px 0 4px; }
-   .modal-meta-row{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px; align-items:end; }
+   .modal-meta-row{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px; align-items:start; }
    .modal-field{ min-width:0; }
-   .modal-field .modal-label{ margin-top:7px; }
+   .modal-field .modal-label{ margin-top:0; }
    .modal-field .modal-input{ width:100%; }
    .modal-field .author-options{ width:100%; }
-  .author-options{ display:flex; gap:7px; }
-  .author-option{ flex:1; font-family:var(--font-ui); font-size:13px; padding:6px; border:1px solid #ddd8c9; border-radius:6px; background:#fff; color:var(--sub); cursor:pointer; }
+  .author-options{ display:flex; gap:7px; height:36px; }
+  .author-option{ flex:1; height:36px; box-sizing:border-box; font-family:var(--font-ui); font-size:13px; padding:0 6px; border:1px solid #ddd8c9; border-radius:6px; background:#fff; color:var(--sub); cursor:pointer; }
   .author-option.active{ background:var(--ink); color:#fdfcf8; border-color:var(--ink); }
   .modal-input{
      width:100%; max-width:100%; min-width:0; box-sizing:border-box; display:block;
@@ -852,7 +852,8 @@
    #field-date::placeholder{ color:#aaa7a0; }
   .modal-textarea{
      width:100%; min-height:70px; font-family:var(--font-hand); font-size:14px; line-height:1.4;
-    padding:10px; border:1px solid #ddd8c9; border-radius:6px;
+    padding:10px 10px 14px; margin-bottom:6px;
+    border:1px solid #ddd8c9; border-radius:6px;
     background:#fff; color:var(--ink); resize:vertical;
   }
   .memory-extra-label{
