@@ -375,7 +375,7 @@
     overflow-y:auto; overflow-x:hidden;
     display:grid; grid-template-columns:repeat(3,1fr);
     gap:6px; align-content:start;
-    padding:6px 1px 8px;
+    padding:14px 1px 8px;
     scrollbar-width:none;
   }
   .gallery-grid::-webkit-scrollbar{ display:none; }
@@ -826,10 +826,10 @@
   .modal-step.active::-webkit-scrollbar{ display:none; }
   .modal-from{ font-family:var(--font-hand); font-size:12px; color:var(--sub); margin-top:-7px; margin-bottom:7px; }
   .modal-title{ font-family:var(--font-ui); font-size:15px; font-weight:400; margin-bottom:10px; color:var(--ink); }
-  .modal-label{ display:block; font-size:11px; color:var(--sub); margin:9px 0 4px; }
+  .modal-label{ display:block; font-size:11px; color:var(--sub); margin:8px 0 4px; }
    .modal-meta-row{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px; align-items:end; }
    .modal-field{ min-width:0; }
-   .modal-field .modal-label{ margin-top:9px; }
+   .modal-field .modal-label{ margin-top:7px; }
    .modal-field .modal-input{ width:100%; }
    .modal-field .author-options{ width:100%; }
   .author-options{ display:flex; gap:7px; }
@@ -844,16 +844,14 @@
    #field-date{
      width:100%; max-width:100%; min-width:0; box-sizing:border-box; display:block;
      height:36px; min-height:36px;
-     padding:5px 8px;
+     padding:6px 9px;
      font-size:14px;
-     line-height:1;
-     -webkit-appearance:none; appearance:none;
-     -webkit-border-radius:6px;
+     line-height:1.2;
+     border-radius:6px;
    }
-   #field-date::-webkit-date-and-time-value{ min-height:1em; text-align:left; }
-   #field-date::-webkit-calendar-picker-indicator{ width:14px; height:14px; margin:0; padding:0; }
+   #field-date::placeholder{ color:#aaa7a0; }
   .modal-textarea{
-     width:100%; min-height:82px; font-family:var(--font-hand); font-size:14px; line-height:1.45;
+     width:100%; min-height:70px; font-family:var(--font-hand); font-size:14px; line-height:1.4;
     padding:10px; border:1px solid #ddd8c9; border-radius:6px;
     background:#fff; color:var(--ink); resize:vertical;
   }
@@ -912,7 +910,7 @@
   }
   .photo-picker img{ width:100%; height:100%; object-fit:cover; image-rendering:pixelated; }
   #photo-placeholder{ font-size:12px; color:var(--sub); text-align:center; padding:0 10px; }
-  .modal-char-count{ font-family:var(--font-hand); font-size:10px; color:var(--sub); margin-top:2px; text-align:right; transition:color .12s ease, text-shadow .12s ease; }
+  .modal-char-count{ font-family:var(--font-hand); font-size:10px; color:var(--sub); margin-top:1px; text-align:right; transition:color .12s ease, text-shadow .12s ease; }
   .modal-actions{ display:flex; justify-content:flex-end; align-items:center; margin-top:auto; padding-top:12px; flex:0 0 auto; }
   .modal-actions-right{ display:flex; gap:8px; margin-left:auto; }
   #modal-delete{ margin-right:auto; }
@@ -1162,7 +1160,7 @@
       <div class="modal-meta-row">
         <div class="modal-field">
           <label class="modal-label">날짜</label>
-          <input type="date" id="field-date" class="modal-input">
+          <input type="text" id="field-date" class="modal-input" inputmode="numeric" autocomplete="off" placeholder="YYYY. MM. DD.">
         </div>
         <div class="modal-field">
           <label class="modal-label">기록자</label>
@@ -2293,11 +2291,11 @@
   function toDateInputValue(value){
     const raw = String(value||"").trim();
     const m = raw.match(/^(\d{4})\s*[.\-/]\s*(\d{1,2})\s*[.\-/]\s*(\d{1,2})\s*$/);
-    return m ? m[1]+"-"+String(m[2]).padStart(2,"0")+"-"+String(m[3]).padStart(2,"0") : "";
+    return m ? m[1]+". "+String(m[2]).padStart(2,"0")+". "+String(m[3]).padStart(2,"0")+"." : "";
   }
   function todayStr(){
     const d = new Date();
-    return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    return d.getFullYear()+". "+String(d.getMonth()+1).padStart(2,"0")+". "+String(d.getDate()).padStart(2,"0")+".";
   }
   function selectAuthor(author){
     const value = author === "N" ? "N" : "H";
