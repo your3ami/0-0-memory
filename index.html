@@ -406,9 +406,9 @@
   }
   .gallery-empty{
     grid-column:1 / -1;
-    width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:8px;
-    padding:0 6px;
+    width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+    gap:5px;
+    padding:5px 6px 0;
     box-sizing:border-box;
     color:var(--screen-dim); font-family:var(--font-pixel); font-size:9px; line-height:1.7;
     text-align:center;
@@ -419,6 +419,7 @@
     white-space:nowrap;
     text-align:center;
   }
+  .gallery-empty span + span{ font-family:var(--font-hand); font-size:9px; line-height:1.65; }
   .gallery-hint{
     width:100%; flex:0 0 auto; padding-top:3px; text-align:center;
     color:var(--screen-dim); font-family:var(--font-pixel); font-size:4.5px;
@@ -811,9 +812,11 @@
      padding:16px;
      max-height:calc(100vh - 40px);
      overflow-y:auto;
+     display:flex;
+     flex-direction:column;
    }
-  .modal-step{ display:none; }
-  .modal-step.active{ display:block; }
+  .modal-step{ display:none; min-height:0; }
+  .modal-step.active{ display:block; flex:1 1 auto; }
   .modal-from{ font-family:var(--font-hand); font-size:12px; color:var(--sub); margin-top:-7px; margin-bottom:7px; }
   .modal-title{ font-family:var(--font-ui); font-size:15px; font-weight:400; margin-bottom:10px; color:var(--ink); }
   .modal-label{ display:block; font-size:11px; color:var(--sub); margin:9px 0 4px; }
@@ -833,8 +836,15 @@
    }
    #field-date{
      width:100%; max-width:100%; min-width:0; box-sizing:border-box;
+     height:44px; min-height:44px;
+     padding:7px 10px;
+     font-size:16px;
+     line-height:1.2;
      -webkit-appearance:none; appearance:none;
+     -webkit-border-radius:6px;
    }
+   #field-date::-webkit-date-and-time-value{ min-height:1.4em; text-align:left; }
+   #field-date::-webkit-calendar-picker-indicator{ margin:0; padding:0; }
   .modal-textarea{
      width:100%; min-height:82px; font-family:var(--font-hand); font-size:14px; line-height:1.45;
     padding:10px; border:1px solid #ddd8c9; border-radius:6px;
@@ -846,16 +856,16 @@
     margin-bottom:6px;
     font-size:11px;
     color:var(--sub);
-    text-align:center;
+    text-align:left;
   }
   .memory-extra-input{
-    text-align:center;
+    text-align:left;
     font-family:var(--font-hand);
     font-size:14px;
   }
   .memory-weather-options{
     display:flex;
-    justify-content:center;
+    justify-content:flex-start;
     gap:5px;
     flex-wrap:wrap;
   }
@@ -876,7 +886,7 @@
     color:#fdfcf8;
   }
   .memory-thought-input{
-    text-align:center;
+    text-align:left;
     font-family:var(--font-hand);
     font-size:14px;
   }
@@ -892,7 +902,7 @@
   .photo-picker img{ width:100%; height:100%; object-fit:cover; image-rendering:pixelated; }
   #photo-placeholder{ font-size:12px; color:var(--sub); text-align:center; padding:0 10px; }
   .modal-char-count{ font-family:var(--font-hand); font-size:10px; color:var(--sub); margin-top:2px; text-align:right; transition:color .12s ease, text-shadow .12s ease; }
-  .modal-actions{ display:flex; justify-content:flex-end; align-items:center; margin-top:12px; }
+  .modal-actions{ display:flex; justify-content:flex-end; align-items:center; margin-top:auto; padding-top:12px; flex:0 0 auto; }
   .modal-actions-right{ display:flex; gap:8px; margin-left:auto; }
   #modal-delete{ margin-right:auto; }
   .modal-btn{
@@ -1206,6 +1216,7 @@
   // Predefined memory tags. Keep this list in Korean 가나다 order.
   const TAG_OPTIONS = ["계절","기타","동물","사람","사진","여행","음식","일상","장소","카페","축제","취미"];
   const WEATHER_OPTIONS = ["맑음","흐림","비","눈"];
+  const WEATHER_SYMBOLS = { "맑음":"☀", "흐림":"☁", "비":"☂", "눈":"❄" };
 
   async function cloudRequest(url, options={}){
     const res = await fetch(url, {
@@ -1744,7 +1755,7 @@
     galleryGrid.innerHTML = "";
     renderGalleryTags();
     if(!entries.length){
-      galleryGrid.innerHTML = `<div class="gallery-empty"><span>NO SAVED MEMORY</span><span>기록을 남긴 추억이</span><span>여기에 쌓여요.</span></div>`;
+      galleryGrid.innerHTML = `<div class="gallery-empty"><span>NO SAVED MEMORY</span><span>기록을 남긴 추억이<br>여기에 쌓여요.</span></div>`;
       return;
     }
     galleryIndex = 0;
@@ -2287,7 +2298,7 @@
   function renderWeatherOptions(){
     if(!weatherOptions) return;
     weatherOptions.innerHTML = WEATHER_OPTIONS.map(weather=>
-      `<button type="button" class="memory-weather-option" data-weather="${weather}">${weather}</button>`
+      `<button type="button" class="memory-weather-option" data-weather="${weather}"><span class="weather-symbol" aria-hidden="true">${WEATHER_SYMBOLS[weather] || ""}</span><span>${weather}</span></button>`
     ).join("");
     weatherOptions.querySelectorAll(".memory-weather-option").forEach(btn=>{
       btn.addEventListener("click", ()=>{
