@@ -672,10 +672,12 @@
   .author-option{ flex:1; font-family:var(--font-ui); font-size:13px; padding:8px; border:1px solid #ddd8c9; border-radius:6px; background:#fff; color:var(--sub); cursor:pointer; }
   .author-option.active{ background:var(--ink); color:#fdfcf8; border-color:var(--ink); }
   .modal-input{
-    width:100%; font-family:var(--font-ui); font-size:13px;
-    padding:7px 8px; border:1px solid #ddd8c9; border-radius:6px;
-    background:#fff; color:var(--ink);
-  }
+     width:100%; max-width:100%; min-width:0; box-sizing:border-box; display:block;
+     font-family:var(--font-ui); font-size:13px;
+     padding:7px 8px; border:1px solid #ddd8c9; border-radius:6px;
+     background:#fff; color:var(--ink);
+   }
+   #field-date{ width:100%; max-width:100%; min-width:0; box-sizing:border-box; }
   .modal-textarea{
     width:100%; min-height:110px; font-family:var(--font-hand); font-size:14px; line-height:1.5;
     padding:10px; border:1px solid #ddd8c9; border-radius:6px;
