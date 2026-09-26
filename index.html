@@ -913,7 +913,7 @@
     <label class="modal-label">기록자</label>
     <div class="author-options" role="group" aria-label="기록자 선택">
       <button type="button" class="author-option active" data-author="H">H</button>
-      <button type="button" class="author-option" data-author="L">L</button>
+      <button type="button" class="author-option" data-author="N">N</button>
     </div>
     <input type="hidden" id="field-author" value="H">
 
@@ -1899,7 +1899,7 @@
     return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
   }
   function selectAuthor(author){
-    const value = author === "L" ? "L" : "H";
+    const value = author === "N" ? "N" : "H";
     fieldAuthor.value = value;
     document.querySelectorAll(".author-option").forEach(btn=>btn.classList.toggle("active", btn.dataset.author===value));
     modalFrom.textContent = "From. " + value;
