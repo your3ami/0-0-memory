@@ -925,7 +925,171 @@
 </div>
 
 <script>
-(function(){
+(async function(){
+
+  // ---- Supabase shared memory database ----
+  // This is a publishable browser key. RLS policies on the table are the security boundary.
+  const SUPABASE_URL = "https://emzdxboyouxphjqrgmsb.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_UESDd6vpOamDBwDE8b_mlw_sQ0gqj3n";
+  const SUPABASE_TABLE = encodeURIComponent("0+0");
+  const SUPABASE_ENDPOINT = SUPABASE_URL + "/rest/v1/" + SUPABASE_TABLE;
+  const SUPABASE_HEADERS = {
+    "apikey": SUPABASE_PUBLISHABLE_KEY,
+    "Content-Type": "application/json"
+  };
+
+  let cloudReady = false;
+  let cloudRows = [];
+  let cloudError = null;
+
+  async function cloudRequest(url, options={}){
+    const res = await fetch(url, {
+      ...options,
+      headers: Object.assign({}, SUPABASE_HEADERS, options.headers || {})
+    });
+    const text = await res.text();
+    let data = null;
+    try{ data = text ? JSON.parse(text) : null; }catch(e){ data = text; }
+    if(!res.ok){
+      const message = data && (data.message || data.error_description || data.hint) ? JSON.stringify(data) : String(data || res.statusText);
+      throw new Error("Supabase " + res.status + ": " + message);
+    }
+    return data;
+  }
+
+  async function cloudFetchRows(){
+    return await cloudRequest(SUPABASE_ENDPOINT + "?select=*");
+  }
+
+  function cloudMemoryFromRow(row){
+    if(!row || !row.memory_id) return null;
+    const preset = pickPreset(row.memory_id);
+    return {
+      id: row.memory_id,
+      title: row.title || "이름 없는 추억",
+      author: row.author || "H",
+      date: formatMemoryDate(row.date || ""),
+      letter: row.letter || "아직 적지 않은 이야기.",
+      photo: labelArt(preset.bg1, preset.bg2, preset.accent, preset.icon),
+      shot: row.photo || null
+    };
+  }
+
+  function cloudRatingFromRow(row){
+    if(!row || row.rating === null || row.rating === undefined) return null;
+    const stars = Number(row.rating) || 0;
+    const savedAt = row.created_at ? Date.parse(row.created_at) : 0;
+    return {
+      stars,
+      comment: row.comment || "",
+      savedAt: Number.isFinite(savedAt) ? savedAt : 0
+    };
+  }
+
+  function cloudRow(id){
+    return cloudRows.find(r=>r.memory_id===id) || null;
+  }
+
+  async function cloudUpsertMemory(memory, shotOverride){
+    const row = {
+      memory_id: memory.id,
+      title: memory.title || "이름 없는 추억",
+      date: formatMemoryDate(memory.date || ""),
+      author: memory.author || "H",
+      letter: memory.letter || "아직 적지 않은 이야기.",
+      photo: shotOverride !== undefined ? (shotOverride || null) : (memory.shot || null)
+    };
+    const data = await cloudRequest(SUPABASE_ENDPOINT + "?on_conflict=memory_id", {
+      method:"POST",
+      headers:{ "Prefer":"resolution=merge-duplicates,return=representation" },
+      body:JSON.stringify(row)
+    });
+    const saved = Array.isArray(data) ? data[0] : data;
+    if(saved){
+      const i = cloudRows.findIndex(r=>r.memory_id===saved.memory_id);
+      if(i>-1) cloudRows[i] = saved;
+      else cloudRows.push(saved);
+    }
+    return saved || row;
+  }
+
+  async function cloudSaveRating(id, rating){
+    const now = rating && rating.savedAt ? new Date(rating.savedAt).toISOString() : new Date().toISOString();
+    const data = await cloudRequest(SUPABASE_ENDPOINT + "?memory_id=eq." + encodeURIComponent(id), {
+      method:"PATCH",
+      headers:{ "Prefer":"return=representation" },
+      body:JSON.stringify({
+        rating: Number(rating.stars) || 0,
+        comment: rating.comment || "",
+        created_at: now
+      })
+    });
+    const saved = Array.isArray(data) ? data[0] : data;
+    if(saved){
+      const i = cloudRows.findIndex(r=>r.memory_id===saved.memory_id);
+      if(i>-1) cloudRows[i] = saved;
+    }
+  }
+
+  async function cloudDeleteMemory(id){
+    await cloudRequest(SUPABASE_ENDPOINT + "?memory_id=eq." + encodeURIComponent(id), {
+      method:"DELETE",
+      headers:{ "Prefer":"return=minimal" }
+    });
+    cloudRows = cloudRows.filter(r=>r.memory_id!==id);
+  }
+
+  function localMemoryList(){
+    return BASE
+      .filter(base=>!deleted.includes(base.id))
+      .map(applyOverride)
+      .concat(custom.filter(m=>!deleted.includes(m.id)));
+  }
+
+  async function initializeCloud(){
+    try{
+      cloudRows = await cloudFetchRows();
+      if(!Array.isArray(cloudRows)) cloudRows = [];
+
+      // Seed the four built-in memories once, using stable memory_id values.
+      for(const base of BASE){
+        if(!cloudRow(base.id)){
+          await cloudUpsertMemory(base, null);
+        }
+      }
+
+      // Migrate this browser's existing custom memories and edits into the shared database.
+      for(const m of custom){
+        if(!deleted.includes(m.id)){
+          await cloudUpsertMemory(m, m.shot || null);
+        }
+      }
+      for(const base of BASE){
+        if(deleted.includes(base.id)){
+          await cloudDeleteMemory(base.id);
+        } else if(overrides[base.id]){
+          const merged = Object.assign({}, base, overrides[base.id]);
+          await cloudUpsertMemory(merged, merged.shot || null);
+        }
+      }
+
+      // Migrate existing local ratings/comments so the current project state is not lost.
+      const localIds = new Set([...BASE.map(x=>x.id), ...custom.map(x=>x.id)]);
+      for(const id of localIds){
+        const localRating = loadJSON("console:rating:"+id, null);
+        if(localRating && !cloudRatingFromRow(cloudRow(id))){
+          await cloudSaveRating(id, localRating);
+        }
+      }
+
+      cloudReady = true;
+      cloudRows = await cloudFetchRows();
+    }catch(e){
+      cloudError = e;
+      cloudReady = false;
+      console.warn("Supabase connection is not ready yet:", e);
+    }
+  }
 
   // ---- tiny chiptune sound effects (Web Audio, no external files) ----
   let actx = null;
@@ -1079,8 +1243,16 @@
   function saveJSON(key, val){
     try{ localStorage.setItem(key, JSON.stringify(val)); } catch(e){}
   }
-  function loadRating(id){ return loadJSON("console:rating:"+id, null); }
-  function saveRating(id, data){ saveJSON("console:rating:"+id, data); }
+  function loadRating(id){
+    if(cloudReady) return cloudRatingFromRow(cloudRow(id));
+    return loadJSON("console:rating:"+id, null);
+  }
+  function saveRating(id, data){
+    saveJSON("console:rating:"+id, data);
+    if(cloudReady){
+      cloudSaveRating(id, data).catch(e=>console.warn("Supabase rating save failed:", e));
+    }
+  }
   function updateCharCount(input, counter, max){
     if(!input || !counter) return;
     const count = input.value.length;
@@ -1329,7 +1501,9 @@
   function layoutMobileChips(){ return; }
 
   function renderAll(){
-    memories = BASE.filter(base=>!deleted.includes(base.id)).map(applyOverride).concat(custom.filter(m=>!deleted.includes(m.id)));
+    memories = cloudReady
+      ? cloudRows.map(cloudMemoryFromRow).filter(Boolean)
+      : localMemoryList();
     chipsEl.innerHTML = "";
     Array.from(extraRow.querySelectorAll(".chip:not(.chip-add)")).forEach(n=>n.remove());
     chipEls = [];
@@ -1522,12 +1696,22 @@
       starsEl.appendChild(b);
     }
 
-    document.getElementById("save-btn").onclick = ()=>{
+    document.getElementById("save-btn").onclick = async ()=>{
       sfx.save();
       const comment = document.getElementById("comment-box").value.trim();
       const existingSaved = loadRating(current.id);
       const savedAt = existingSaved && existingSaved.savedAt ? existingSaved.savedAt : Date.now();
-      saveRating(current.id, { stars: stars, comment: comment, savedAt: savedAt });
+      const ratingData = { stars: stars, comment: comment, savedAt: savedAt };
+      saveRating(current.id, ratingData);
+      if(cloudReady){
+        try{
+          await cloudSaveRating(current.id, ratingData);
+        }catch(e){
+          console.error("Supabase rating save failed:", e);
+          document.getElementById("saved-msg").textContent = "기록을 저장하지 못했어요.";
+          return;
+        }
+      }
       document.getElementById("saved-msg").textContent = "메모리 슬롯에 기록했어요!";
       renderGallery();
       const idx = memories.indexOf(current);
@@ -1794,12 +1978,13 @@
     reader.readAsDataURL(file);
   });
 
-  document.getElementById("modal-save").addEventListener("click", ()=>{
+  document.getElementById("modal-save").addEventListener("click", async ()=>{
     const id = editingId || ("u"+Date.now());
     const title = fieldTitle.value.trim() || "이름 없는 추억";
     const preset = pickPreset(id);
     const author = fieldAuthor.value.trim() || "H";
     const data = {
+      id: id,
       title: title,
       author: author,
       date: formatMemoryDate(fieldDate.value.trim()),
@@ -1808,31 +1993,42 @@
       shot: editingShot || null
     };
     const wasEditingCurrent = !!(editingId && current && editingId === current.id);
-    if(editingId){
-      if(editingId.indexOf("u")===0){
-        const i = custom.findIndex(x=>x.id===editingId);
-        if(i>-1) custom[i] = Object.assign({id:editingId}, data);
+
+    try{
+      if(cloudReady){
+        await cloudUpsertMemory(data, data.shot || null);
+      } else if(editingId){
+        if(editingId.indexOf("u")===0){
+          const i = custom.findIndex(x=>x.id===editingId);
+          if(i>-1) custom[i] = Object.assign({}, data);
+        } else {
+          overrides[editingId] = Object.assign({}, data);
+          saveJSON("console:overrides", overrides);
+        }
+        saveJSON("console:custom", custom);
       } else {
-        overrides[editingId] = data;
-        saveJSON("console:overrides", overrides);
+        custom.push(Object.assign({}, data));
+        saveJSON("console:custom", custom);
       }
-    } else {
-      custom.push(Object.assign({id:id}, data));
-    }
-    saveJSON("console:custom", custom);
-    modalBackdrop.classList.remove("open");
-    renderAll();
-    if(wasEditingCurrent){
-      current = memories.find(x=>x.id===editingId) || current;
-      completionMode = "mission";
-      const idx = memories.findIndex(x=>x.id===current.id);
-      if(idx>-1){
-        chipEls[idx].classList.add("used");
-        chipEls[idx].classList.remove("selected");
-        selected = idx;
-        btnEject.disabled = false;
+
+      modalBackdrop.classList.remove("open");
+      renderAll();
+
+      if(wasEditingCurrent){
+        current = memories.find(x=>x.id===editingId) || current;
+        completionMode = "mission";
+        const idx = memories.findIndex(x=>x.id===current.id);
+        if(idx>-1){
+          chipEls[idx].classList.add("used");
+          chipEls[idx].classList.remove("selected");
+          selected = idx;
+          btnEject.disabled = false;
+        }
+        playMemory(current);
       }
-      playMemory(current);
+    }catch(e){
+      console.error("Supabase memory save failed:", e);
+      document.getElementById("modal-save").textContent = "다시 시도";
     }
   });
 
@@ -1849,29 +2045,38 @@
     showView(current ? "memory" : "idle");
   }
 
-  function confirmDelete(){
+  async function confirmDelete(){
     if(!pendingDeleteId) return;
     const id = pendingDeleteId;
-    const i = custom.findIndex(x=>x.id===id);
-    if(i>-1){
-      custom.splice(i,1);
-      saveJSON("console:custom", custom);
-    } else if(BASE.some(x=>x.id===id) && !deleted.includes(id)){
-      deleted.push(id);
-      saveJSON("console:deleted", deleted);
+
+    try{
+      if(cloudReady){
+        await cloudDeleteMemory(id);
+      } else {
+        const i = custom.findIndex(x=>x.id===id);
+        if(i>-1){
+          custom.splice(i,1);
+          saveJSON("console:custom", custom);
+        } else if(BASE.some(x=>x.id===id) && !deleted.includes(id)){
+          deleted.push(id);
+          saveJSON("console:deleted", deleted);
+        }
+        try{ localStorage.removeItem("console:rating:"+id); }catch(e){}
+        try{ localStorage.removeItem("console:viewed:"+id); }catch(e){}
+      }
+
+      pendingDeleteId = null;
+      current = null;
+      completionMode = null;
+      renderAll();
+      selected = Math.min(selected, Math.max(0, memories.length-1));
+      selectChip(selected);
+      btnEject.disabled = true;
+      showView("idle");
+      sfx.save();
+    }catch(e){
+      console.error("Supabase memory delete failed:", e);
     }
-    // A deleted memory should no longer remain in the album either.
-    try{ localStorage.removeItem("console:rating:"+id); }catch(e){}
-    try{ localStorage.removeItem("console:viewed:"+id); }catch(e){}
-    pendingDeleteId = null;
-    current = null;
-    completionMode = null;
-    renderAll();
-    selected = Math.min(selected, Math.max(0, memories.length-1));
-    selectChip(selected);
-    btnEject.disabled = true;
-    showView("idle");
-    sfx.save();
   }
 
   modalDelete.addEventListener("click", ()=>{
@@ -1879,11 +2084,14 @@
     openDeleteConfirm(editingId);
   });
 
+  await initializeCloud();
+
   renderAll();
 
   setTimeout(()=>{
     booting = false;
     showView("idle");
+    if(cloudError) console.warn("0+0 is using local storage until Supabase schema/setup is complete.");
   }, 1250);
 
 })();
