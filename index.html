@@ -327,12 +327,36 @@
   .gallery-head{
     width:100%;
     display:flex; align-items:center; justify-content:space-between;
-    padding:0 1px 6px;
+    padding:0 1px 5px;
     color:var(--gold);
     font-family:var(--font-pixel);
     font-size:6px;
     letter-spacing:.5px;
     flex:0 0 auto;
+  }
+  .gallery-tags{
+    width:100%;
+    display:flex;
+    flex-wrap:wrap;
+    gap:3px;
+    padding:0 1px 5px;
+    flex:0 0 auto;
+  }
+  .gallery-tag{
+    border:1px solid #31583c;
+    background:#07150d;
+    color:var(--screen-dim);
+    font-family:var(--font-pixel);
+    font-size:4px;
+    line-height:1;
+    padding:3px 4px;
+    border-radius:2px;
+    cursor:pointer;
+  }
+  .gallery-tag.active{
+    border-color:var(--screen-glow);
+    color:var(--screen-glow);
+    background:#0b1d12;
   }
   .gallery-close{
     position:static; z-index:4;
@@ -388,6 +412,29 @@
   .gallery-hint{
     width:100%; flex:0 0 auto; padding-top:3px; text-align:center;
     color:var(--screen-dim); font-family:var(--font-pixel); font-size:4.5px;
+  }
+
+  .tag-options{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+    margin-top:4px;
+  }
+  .tag-option{
+    border:1px solid #d7d1c2;
+    background:#fff;
+    color:var(--sub);
+    font-family:var(--font-ui);
+    font-size:11px;
+    line-height:1;
+    padding:6px 7px;
+    border-radius:6px;
+    cursor:pointer;
+  }
+  .tag-option.active{
+    background:var(--ink);
+    border-color:var(--ink);
+    color:#fdfcf8;
   }
 
   .album-btn{
@@ -964,6 +1011,7 @@
                 <span>MEMORY ALBUM</span>
                 <button class="gallery-close" id="gallery-close" type="button" title="앨범 닫기" aria-label="앨범 닫기">×</button>
               </div>
+              <div class="gallery-tags" id="gallery-tags"></div>
               <div class="gallery-grid" id="gallery-grid"></div>
               <div class="gallery-hint">↑↓ SCROLL · GO PLAY</div>
             </div>
@@ -1057,6 +1105,9 @@
     <textarea id="field-letter" class="modal-textarea" maxlength="100" placeholder="그날의 이야기를 적어 주세요."></textarea>
     <div class="modal-char-count" id="letter-count">0/100</div>
 
+    <label class="modal-label">태그</label>
+    <div class="tag-options" id="tag-options" role="group" aria-label="추억 태그"></div>
+
     <div class="modal-actions">
       <button class="modal-btn ghost" id="modal-delete" type="button">삭제</button>
       <div class="modal-actions-right">
@@ -1084,6 +1135,9 @@
   let cloudReady = false;
   let cloudRows = [];
   let cloudError = null;
+
+  // Predefined memory tags. Keep this list in Korean 가나다 order.
+  const TAG_OPTIONS = ["계절","기타","동물","사람","사진","여행","음식","일상","장소","카페","축제","취미"];
 
   async function cloudRequest(url, options={}){
     const res = await fetch(url, {
@@ -1114,7 +1168,8 @@
       date: formatMemoryDate(row.date || ""),
       letter: row.letter || "아직 적지 않은 이야기.",
       photo: labelArt(preset.bg1, preset.bg2, preset.accent, preset.icon),
-      shot: row.photo || null
+      shot: row.photo || null,
+      tags: Array.isArray(row.tags) ? row.tags.filter(tag=>TAG_OPTIONS.includes(tag)) : []
     };
   }
 
@@ -1141,6 +1196,7 @@
       author: memory.author || "H",
       letter: memory.letter || "아직 적지 않은 이야기.",
       photo: shotOverride !== undefined ? (shotOverride || null) : (memory.shot || null),
+      tags: Array.isArray(memory.tags) ? memory.tags.filter(tag=>TAG_OPTIONS.includes(tag)) : [],
       created_at: new Date().toISOString()
     };
     const data = await cloudRequest(SUPABASE_ENDPOINT + "?on_conflict=memory_id", {
@@ -1369,16 +1425,20 @@
   const BASE = [
     { id:"m1", title:"벚꽃 데이트", date:"2019.04.07", author:"H",
       photo: labelArt("#2a0f18", "#5c2036", "#f6c9d6", ICON_BLOSSOM),
-      letter:"바람이 불 때마다 꽃잎이 우리 위로 쏟아졌지. 사진 찍는 것도 잊고 한참을 그냥 서 있었던 날." },
+      letter:"바람이 불 때마다 꽃잎이 우리 위로 쏟아졌지. 사진 찍는 것도 잊고 한참을 그냥 서 있었던 날.",
+      tags:["계절","사람"] },
     { id:"m2", title:"여름 바다", date:"2020.08.15", author:"H",
       photo: labelArt("#062024", "#0d4a52", "#ffe27a", ICON_WAVE),
-      letter:"파도 소리 때문에 네가 하는 말이 하나도 안 들려서 계속 되물었잖아. 그래도 좋았어, 그날은." },
+      letter:"파도 소리 때문에 네가 하는 말이 하나도 안 들려서 계속 되물었잖아. 그래도 좋았어, 그날은.",
+      tags:["여행"] },
     { id:"m3", title:"여덟 살 생일", date:"2021.11.02", author:"H",
       photo: labelArt("#200818", "#4a1030", "#ffd76b", ICON_BDAY),
-      letter:"촛불을 세 번 만에 껐지. 소원은 끝까지 비밀이라며 알려주지 않았던 것도 기억나." },
+      letter:"촛불을 세 번 만에 껐지. 소원은 끝까지 비밀이라며 알려주지 않았던 것도 기억나.",
+      tags:["사람","축제"] },
     { id:"m4", title:"첫눈 오던 날", date:"2022.12.24", author:"H",
       photo: labelArt("#05071a", "#10163a", "#eaf3ff", ICON_SNOW),
-      letter:"창밖이 갑자기 하얘져서 서로 말도 없이 뛰어나갔었지. 손이 시렸는데 누구도 먼저 들어가자고 안 했어." }
+      letter:"창밖이 갑자기 하얘져서 서로 말도 없이 뛰어나갔었지. 손이 시렸는데 누구도 먼저 들어가자고 안 했어.",
+      tags:["계절","사람"] }
   ];
 
   function loadJSON(key, fallback){
@@ -1398,6 +1458,34 @@
       cloudSaveRating(id, data).catch(e=>console.warn("Supabase rating save failed:", e));
     }
   }
+  function normalizeTags(tags){
+    return Array.isArray(tags)
+      ? tags.filter(tag=>TAG_OPTIONS.includes(tag))
+      : [];
+  }
+
+  function renderTagOptions(){
+    const wrap = document.getElementById("tag-options");
+    if(!wrap) return;
+    wrap.innerHTML = TAG_OPTIONS.map(tag=>
+      `<button type="button" class="tag-option" data-tag="${tag}">#${tag}</button>`
+    ).join("");
+    wrap.querySelectorAll(".tag-option").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if(inputLocked()) return;
+        const tag = btn.dataset.tag;
+        const i = editingTags.indexOf(tag);
+        if(i>-1) editingTags.splice(i,1);
+        else editingTags.push(tag);
+        renderTagOptions();
+      });
+    });
+    const active = new Set(editingTags);
+    wrap.querySelectorAll(".tag-option").forEach(btn=>{
+      btn.classList.toggle("active", active.has(btn.dataset.tag));
+    });
+  }
+
   function updateCharCount(input, counter, max){
     if(!input || !counter) return;
     const count = input.value.length;
@@ -1422,8 +1510,12 @@
 
   function applyOverride(base){
     const o = overrides[base.id];
-    return o ? Object.assign({}, base, o) : Object.assign({}, base);
+    const merged = o ? Object.assign({}, base, o) : Object.assign({}, base);
+    merged.tags = normalizeTags(merged.tags);
+    return merged;
   }
+
+  renderTagOptions();
 
   const chipsEl = document.getElementById("chips");
   const extraRow = document.getElementById("extra-row");
@@ -1542,16 +1634,38 @@
     return el;
   }
 
+  let selectedGalleryTag = "ALL";
+  let galleryIndex = 0;
+
   function getGalleryMemories(){
     return memories
       .map((m)=>({m, rating:loadRating(m.id)}))
       .filter(x=>x.rating && x.rating.savedAt)
+      .filter(x=>selectedGalleryTag === "ALL" || normalizeTags(x.m.tags).includes(selectedGalleryTag))
       .sort((a,b)=>a.rating.savedAt-b.rating.savedAt);
+  }
+
+  function renderGalleryTags(){
+    const wrap = document.getElementById("gallery-tags");
+    if(!wrap) return;
+    const options = ["ALL", ...TAG_OPTIONS];
+    wrap.innerHTML = options.map(tag=>{
+      const label = tag === "ALL" ? "ALL" : "#" + tag;
+      return `<button type="button" class="gallery-tag${selectedGalleryTag===tag ? " active" : ""}" data-tag="${tag}">${label}</button>`;
+    }).join("");
+    wrap.querySelectorAll(".gallery-tag").forEach(btn=>{
+      btn.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        selectedGalleryTag = btn.dataset.tag;
+        renderGallery();
+      });
+    });
   }
 
   function renderGallery(){
     const entries = getGalleryMemories();
     galleryGrid.innerHTML = "";
+    renderGalleryTags();
     if(!entries.length){
       galleryGrid.innerHTML = `<div class="gallery-empty">NO SAVED MEMORY<br>기록을 남긴 추억이 여기에 쌓여요.</div>`;
       return;
@@ -1635,6 +1749,7 @@
   function openGallery(){
     if(inputLocked() || current) return;
     sfx.nav();
+    selectedGalleryTag = "ALL";
     renderGallery();
     btnAlbum.classList.add("active");
     showView("gallery");
@@ -2058,6 +2173,7 @@
 
   let editingId = null;
   let editingShot = null;
+  let editingTags = [];
 
   function toDateInputValue(value){
     const raw = String(value||"").trim();
@@ -2080,12 +2196,14 @@
     if(!m) return;
     editingId = id;
     editingShot = m.shot || null;
+    editingTags = normalizeTags(m.tags);
     modalTitle.textContent = "추억 수정";
     selectAuthor(m.author || "H");
     fieldDate.value = toDateInputValue(m.date || "");
     fieldTitle.value = m.title || "";
     fieldLetter.value = m.letter || "";
     updateCharCount(fieldLetter, document.getElementById("letter-count"), 100);
+    renderTagOptions();
     if(editingShot){ photoPreview.src = editingShot; photoPreview.style.display = "block"; photoPlaceholder.style.display = "none"; }
     else { photoPreview.style.display = "none"; photoPlaceholder.style.display = "block"; }
     modalDelete.style.display = "inline-block";
@@ -2096,12 +2214,14 @@
   function openAdder(){
     editingId = null;
     editingShot = null;
+    editingTags = [];
     modalTitle.textContent = "새 추억 만들기";
     selectAuthor("H");
     fieldDate.value = todayStr();
     fieldTitle.value = "";
     fieldLetter.value = "";
     updateCharCount(fieldLetter, document.getElementById("letter-count"), 100);
+    renderTagOptions();
     photoPreview.style.display = "none";
     photoPlaceholder.style.display = "block";
     modalDelete.style.display = "none";
@@ -2131,6 +2251,8 @@
         fieldTitle.value = m.title || "";
         fieldLetter.value = m.letter || "";
         updateCharCount(fieldLetter, document.getElementById("letter-count"), 100);
+        editingTags = normalizeTags(m.tags);
+        renderTagOptions();
       }
     }
     modalBackdrop.classList.remove("open");
@@ -2182,7 +2304,8 @@
       date: formatMemoryDate(fieldDate.value.trim()),
       letter: fieldLetter.value.trim() || "아직 적지 않은 이야기.",
       photo: labelArt(preset.bg1, preset.bg2, preset.accent, preset.icon),
-      shot: editingShot || null
+      shot: editingShot || null,
+      tags: normalizeTags(editingTags)
     };
     const wasEditingCurrent = !!(editingId && current && editingId === current.id);
 
