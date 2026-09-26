@@ -1537,8 +1537,11 @@
   function layoutMobileChips(){ return; }
 
   function renderAll(){
-    memories = cloudReady
-      ? cloudRows.map(cloudMemoryFromRow).filter(Boolean)
+    const cloudMemories = cloudRows.map(cloudMemoryFromRow).filter(Boolean);
+    // Never let an empty/temporarily unavailable cloud response blank the machine.
+    // Keep the built-in memories visible until the shared rows are actually available.
+    memories = (cloudReady && cloudMemories.length > 0)
+      ? cloudMemories
       : localMemoryList();
     chipsEl.innerHTML = "";
     Array.from(extraRow.querySelectorAll(".chip:not(.chip-add)")).forEach(n=>n.remove());
