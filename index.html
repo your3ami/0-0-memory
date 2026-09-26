@@ -839,6 +839,19 @@
     padding:10px; border:1px solid #ddd8c9; border-radius:6px;
     background:#fff; color:var(--ink); resize:vertical;
   }
+  .memory-extra-label{
+    display:block;
+    margin-top:22px;
+    margin-bottom:6px;
+    font-size:11px;
+    color:var(--sub);
+    text-align:center;
+  }
+  .memory-extra-input{
+    text-align:center;
+    font-family:var(--font-hand);
+    font-size:14px;
+  }
   .photo-picker{
      width:100%; height:76px;
     border:1.5px dashed #cfc8b4;
@@ -1123,6 +1136,8 @@
     <div class="modal-step" id="modal-step-2">
       <label class="modal-label">태그</label>
       <div class="tag-options" id="tag-options" role="group" aria-label="추억 태그"></div>
+      <label class="memory-extra-label" for="field-song-line">그때 들었던 노래나 문장을 적어 주세요.</label>
+      <input type="text" id="field-song-line" class="modal-input memory-extra-input" maxlength="80" placeholder="예: 그때 우리 둘이 들었던 노래">
     </div>
 
     <div class="modal-actions">
@@ -1188,7 +1203,8 @@
       letter: row.letter || "아직 적지 않은 이야기.",
       photo: labelArt(preset.bg1, preset.bg2, preset.accent, preset.icon),
       shot: row.photo || null,
-      tags: rowTags.length ? rowTags : normalizeTags(base ? base.tags : [])
+      tags: rowTags.length ? rowTags : normalizeTags(base ? base.tags : []),
+      songLine: row.song_line || (base ? base.songLine || "" : "")
     };
   }
 
@@ -1216,6 +1232,7 @@
       letter: memory.letter || "아직 적지 않은 이야기.",
       photo: shotOverride !== undefined ? (shotOverride || null) : (memory.shot || null),
       tags: Array.isArray(memory.tags) ? memory.tags.filter(tag=>TAG_OPTIONS.includes(tag)) : [],
+      song_line: memory.songLine || "",
       created_at: new Date().toISOString()
     };
     const data = await cloudRequest(SUPABASE_ENDPOINT + "?on_conflict=memory_id", {
@@ -2188,6 +2205,7 @@
   const fieldDate = document.getElementById("field-date");
   const fieldTitle = document.getElementById("field-title");
   const fieldLetter = document.getElementById("field-letter");
+  const fieldSongLine = document.getElementById("field-song-line");
   const fieldAuthor = document.getElementById("field-author");
   const modalFrom = document.getElementById("modal-from");
   const modalDelete = document.getElementById("modal-delete");
@@ -2232,6 +2250,7 @@
     fieldDate.value = toDateInputValue(m.date || "");
     fieldTitle.value = m.title || "";
     fieldLetter.value = m.letter || "";
+    fieldSongLine.value = m.songLine || "";
     updateCharCount(fieldLetter, document.getElementById("letter-count"), 100);
     renderTagOptions();
     if(editingShot){ photoPreview.src = editingShot; photoPreview.style.display = "block"; photoPlaceholder.style.display = "none"; }
@@ -2250,6 +2269,7 @@
     fieldDate.value = todayStr();
     fieldTitle.value = "";
     fieldLetter.value = "";
+    fieldSongLine.value = "";
     updateCharCount(fieldLetter, document.getElementById("letter-count"), 100);
     renderTagOptions();
     photoPreview.style.display = "none";
@@ -2284,6 +2304,7 @@
         selectAuthor(m.author || "H");
         fieldTitle.value = m.title || "";
         fieldLetter.value = m.letter || "";
+        fieldSongLine.value = m.songLine || "";
         updateCharCount(fieldLetter, document.getElementById("letter-count"), 100);
         editingTags = normalizeTags(m.tags);
         renderTagOptions();
@@ -2343,7 +2364,8 @@
       letter: fieldLetter.value.trim() || "아직 적지 않은 이야기.",
       photo: labelArt(preset.bg1, preset.bg2, preset.accent, preset.icon),
       shot: editingShot || null,
-      tags: normalizeTags(editingTags)
+      tags: normalizeTags(editingTags),
+      songLine: fieldSongLine.value.trim()
     };
     const wasEditingCurrent = !!(editingId && current && editingId === current.id);
 
