@@ -997,7 +997,8 @@
       date: formatMemoryDate(memory.date || ""),
       author: memory.author || "H",
       letter: memory.letter || "아직 적지 않은 이야기.",
-      photo: shotOverride !== undefined ? (shotOverride || null) : (memory.shot || null)
+      photo: shotOverride !== undefined ? (shotOverride || null) : (memory.shot || null),
+      created_at: new Date().toISOString()
     };
     const data = await cloudRequest(SUPABASE_ENDPOINT + "?on_conflict=memory_id", {
       method:"POST",
