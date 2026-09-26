@@ -406,7 +406,7 @@
   }
   .gallery-empty{
     width:100%; height:100%; display:flex; align-items:center; justify-content:center;
-    color:var(--screen-dim); font-family:var(--font-pixel); font-size:5px; line-height:2;
+    color:var(--screen-dim); font-family:var(--font-pixel); font-size:7px; line-height:2.1;
     text-align:center;
   }
   .gallery-hint{
@@ -801,6 +801,8 @@
      max-height:calc(100vh - 80px);
      overflow-y:auto;
    }
+  .modal-step{ display:none; }
+  .modal-step.active{ display:block; }
   .modal-from{ font-family:var(--font-hand); font-size:12px; color:var(--sub); margin-top:-7px; margin-bottom:7px; }
   .modal-title{ font-family:var(--font-ui); font-size:15px; font-weight:400; margin-bottom:10px; color:var(--ink); }
   .modal-label{ display:block; font-size:11px; color:var(--sub); margin:9px 0 4px; }
@@ -1077,43 +1079,47 @@
     <div class="modal-title" id="modal-title">새 추억 만들기</div>
     <div class="modal-from" id="modal-from">From. H</div>
 
-    <label class="modal-label">재생 화면용 사진 (선택하면 픽셀 아트로 바뀌어요. · 칩 라벨에는 표시되지 않아요.)</label>
-    <div class="photo-picker" id="photo-picker">
-      <img id="photo-preview" alt="" style="display:none;">
-      <span id="photo-placeholder">클릭해서 사진 선택 (선택 사항)</span>
-    </div>
-    <input type="file" id="photo-input" accept="image/*" hidden>
-
-    <div class="modal-meta-row">
-      <div class="modal-field">
-        <label class="modal-label">날짜</label>
-        <input type="date" id="field-date" class="modal-input">
+    <div class="modal-step active" id="modal-step-1">
+      <label class="modal-label">재생 화면용 사진 (선택하면 픽셀 아트로 바뀌어요. · 칩 라벨에는 표시되지 않아요.)</label>
+      <div class="photo-picker" id="photo-picker">
+        <img id="photo-preview" alt="" style="display:none;">
+        <span id="photo-placeholder">클릭해서 사진 선택 (선택 사항)</span>
       </div>
-      <div class="modal-field">
-        <label class="modal-label">기록자</label>
-        <div class="author-options" role="group" aria-label="기록자 선택">
-          <button type="button" class="author-option active" data-author="H">H</button>
-          <button type="button" class="author-option" data-author="N">N</button>
+      <input type="file" id="photo-input" accept="image/*" hidden>
+
+      <div class="modal-meta-row">
+        <div class="modal-field">
+          <label class="modal-label">날짜</label>
+          <input type="date" id="field-date" class="modal-input">
+        </div>
+        <div class="modal-field">
+          <label class="modal-label">기록자</label>
+          <div class="author-options" role="group" aria-label="기록자 선택">
+            <button type="button" class="author-option active" data-author="H">H</button>
+            <button type="button" class="author-option" data-author="N">N</button>
+          </div>
         </div>
       </div>
+
+      <label class="modal-label">제목 (재생 화면에만 표시돼요)</label>
+      <input type="text" id="field-title" class="modal-input" placeholder="예: 첫 여행">
+      <input type="hidden" id="field-author" value="H">
+
+      <label class="modal-label">편지 내용</label>
+      <textarea id="field-letter" class="modal-textarea" maxlength="100" placeholder="그날의 이야기를 적어 주세요."></textarea>
+      <div class="modal-char-count" id="letter-count">0/100</div>
     </div>
 
-    <label class="modal-label">제목 (재생 화면에만 표시돼요)</label>
-    <input type="text" id="field-title" class="modal-input" placeholder="예: 첫 여행">
-    <input type="hidden" id="field-author" value="H">
-
-    <label class="modal-label">편지 내용</label>
-    <textarea id="field-letter" class="modal-textarea" maxlength="100" placeholder="그날의 이야기를 적어 주세요."></textarea>
-    <div class="modal-char-count" id="letter-count">0/100</div>
-
-    <label class="modal-label">태그</label>
-    <div class="tag-options" id="tag-options" role="group" aria-label="추억 태그"></div>
+    <div class="modal-step" id="modal-step-2">
+      <label class="modal-label">태그</label>
+      <div class="tag-options" id="tag-options" role="group" aria-label="추억 태그"></div>
+    </div>
 
     <div class="modal-actions">
       <button class="modal-btn ghost" id="modal-delete" type="button">삭제</button>
       <div class="modal-actions-right">
         <button class="modal-btn ghost" id="modal-cancel" type="button">취소</button>
-        <button class="modal-btn primary" id="modal-save" type="button">완료</button>
+        <button class="modal-btn primary" id="modal-save" type="button">다음</button>
       </div>
     </div>
   </div>
@@ -2178,6 +2184,16 @@
 
   let editingId = null;
   let editingShot = null;
+  let modalStep = 1;
+
+  function setModalStep(step){
+    modalStep = step === 2 ? 2 : 1;
+    document.querySelectorAll(".modal-step").forEach((el,i)=>{
+      el.classList.toggle("active", i === modalStep - 1);
+    });
+    document.getElementById("modal-cancel").textContent = modalStep === 2 ? "이전" : "취소";
+    document.getElementById("modal-save").textContent = modalStep === 2 ? (editingId ? "완료" : "저장") : "다음";
+  }
 
   function toDateInputValue(value){
     const raw = String(value||"").trim();
@@ -2211,7 +2227,7 @@
     if(editingShot){ photoPreview.src = editingShot; photoPreview.style.display = "block"; photoPlaceholder.style.display = "none"; }
     else { photoPreview.style.display = "none"; photoPlaceholder.style.display = "block"; }
     modalDelete.style.display = "inline-block";
-    document.getElementById("modal-save").textContent = "완료";
+    setModalStep(1);
     modalBackdrop.classList.add("open");
   }
 
@@ -2229,7 +2245,7 @@
     photoPreview.style.display = "none";
     photoPlaceholder.style.display = "block";
     modalDelete.style.display = "none";
-    document.getElementById("modal-save").textContent = "저장";
+    setModalStep(1);
     modalBackdrop.classList.add("open");
   }
 
@@ -2247,6 +2263,10 @@
     }, 480);
   });
   document.getElementById("modal-cancel").addEventListener("click", ()=>{
+    if(modalStep === 2){
+      setModalStep(1);
+      return;
+    }
     if(editingId){
       const m = memories.find(x=>x.id===editingId);
       if(m){
@@ -2297,6 +2317,10 @@
   });
 
   document.getElementById("modal-save").addEventListener("click", async ()=>{
+    if(modalStep === 1){
+      setModalStep(2);
+      return;
+    }
     const id = editingId || ("u"+Date.now());
     const title = fieldTitle.value.trim() || "이름 없는 추억";
     const preset = pickPreset(id);
