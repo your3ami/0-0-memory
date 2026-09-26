@@ -339,7 +339,7 @@
     display:flex;
     flex-wrap:wrap;
     gap:3px;
-    padding:0 1px 5px;
+    padding:0 1px 8px;
     flex:0 0 auto;
   }
   .gallery-tag{
@@ -375,7 +375,7 @@
     overflow-y:auto; overflow-x:hidden;
     display:grid; grid-template-columns:repeat(3,1fr);
     gap:6px; align-content:start;
-    padding:1px 1px 8px;
+    padding:6px 1px 8px;
     scrollbar-width:none;
   }
   .gallery-grid::-webkit-scrollbar{ display:none; }
@@ -408,7 +408,7 @@
     grid-column:1 / -1;
     width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
     gap:5px;
-    padding:5px 6px 0;
+    padding:10px 6px 0;
     box-sizing:border-box;
     color:var(--screen-dim); font-family:var(--font-pixel); font-size:9px; line-height:1.7;
     text-align:center;
@@ -816,7 +816,14 @@
      flex-direction:column;
    }
   .modal-step{ display:none; min-height:0; }
-  .modal-step.active{ display:block; flex:1 1 auto; }
+  .modal-step.active{
+    display:block;
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    scrollbar-width:none;
+  }
+  .modal-step.active::-webkit-scrollbar{ display:none; }
   .modal-from{ font-family:var(--font-hand); font-size:12px; color:var(--sub); margin-top:-7px; margin-bottom:7px; }
   .modal-title{ font-family:var(--font-ui); font-size:15px; font-weight:400; margin-bottom:10px; color:var(--ink); }
   .modal-label{ display:block; font-size:11px; color:var(--sub); margin:9px 0 4px; }
@@ -835,16 +842,16 @@
      background:#fff; color:var(--ink);
    }
    #field-date{
-     width:100%; max-width:100%; min-width:0; box-sizing:border-box;
-     height:44px; min-height:44px;
-     padding:7px 10px;
-     font-size:16px;
-     line-height:1.2;
+     width:100%; max-width:100%; min-width:0; box-sizing:border-box; display:block;
+     height:36px; min-height:36px;
+     padding:5px 8px;
+     font-size:14px;
+     line-height:1;
      -webkit-appearance:none; appearance:none;
      -webkit-border-radius:6px;
    }
-   #field-date::-webkit-date-and-time-value{ min-height:1.4em; text-align:left; }
-   #field-date::-webkit-calendar-picker-indicator{ margin:0; padding:0; }
+   #field-date::-webkit-date-and-time-value{ min-height:1em; text-align:left; }
+   #field-date::-webkit-calendar-picker-indicator{ width:14px; height:14px; margin:0; padding:0; }
   .modal-textarea{
      width:100%; min-height:82px; font-family:var(--font-hand); font-size:14px; line-height:1.45;
     padding:10px; border:1px solid #ddd8c9; border-radius:6px;
@@ -852,8 +859,8 @@
   }
   .memory-extra-label{
     display:block;
-    margin-top:18px;
-    margin-bottom:6px;
+    margin-top:22px;
+    margin-bottom:7px;
     font-size:11px;
     color:var(--sub);
     text-align:left;
@@ -879,6 +886,10 @@
     padding:6px 9px;
     border-radius:6px;
     cursor:pointer;
+  }
+  .memory-weather-option .weather-symbol{
+    display:inline-block;
+    margin-right:5px;
   }
   .memory-weather-option.active{
     background:var(--ink);
@@ -1216,7 +1227,7 @@
   // Predefined memory tags. Keep this list in Korean 가나다 order.
   const TAG_OPTIONS = ["계절","기타","동물","사람","사진","여행","음식","일상","장소","카페","축제","취미"];
   const WEATHER_OPTIONS = ["맑음","흐림","비","눈"];
-  const WEATHER_SYMBOLS = { "맑음":"☀", "흐림":"☁", "비":"☂", "눈":"❄" };
+  const WEATHER_SYMBOLS = { "맑음":"☀️", "흐림":"☁️", "비":"☂️", "눈":"❄️" };
 
   async function cloudRequest(url, options={}){
     const res = await fetch(url, {
