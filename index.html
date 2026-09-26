@@ -217,6 +217,9 @@
   @keyframes bootTextIn{ to{ opacity:1; } }
   @keyframes bootTextOut{ to{ opacity:0; } }
 
+  .cloud-error-title{ font-family:var(--font-pixel); font-size:18px; line-height:1.7; text-align:center; color:var(--screen-glow); letter-spacing:1px; }
+  .cloud-error-sub{ margin-top:10px; font-family:var(--font-pixel); font-size:9px; line-height:1.8; text-align:center; color:var(--screen-glow); opacity:.9; }
+
   #view-loading .dots{ font-family:var(--font-pixel); font-size:9px; color:var(--screen-glow); }
   #view-loading .bar{ width:130px; height:9px; border:2px solid var(--screen-glow); margin-top:13px; position:relative; overflow:hidden; }
   #view-loading .bar i{ position:absolute; left:0; top:0; bottom:0; width:0%; background:var(--screen-glow); animation:load .9s steps(12) forwards; }
@@ -791,6 +794,11 @@
               <div class="idle-msg">START!<span class="cursor"></span></div>
             </div>
 
+            <div id="view-cloud-error" class="screen-view">
+              <div class="cloud-error-title">MEMORY ERROR!</div>
+              <div class="cloud-error-sub">클라우드에 추억을<br>보내지 못했어요.</div>
+            </div>
+
             <div id="view-loading" class="screen-view">
               <div class="dots">LOADING...</div>
               <div class="bar"><i></i></div>
@@ -1095,6 +1103,7 @@
     }catch(e){
       cloudError = e;
       cloudReady = false;
+      console.warn("Cloud initialization failed:", e);
       console.warn("Supabase connection is not ready yet:", e);
     }
   }
@@ -1297,6 +1306,7 @@
     off: document.getElementById("view-off"),
     idle: document.getElementById("view-idle"),
     loading: document.getElementById("view-loading"),
+    cloudError: document.getElementById("view-cloud-error"),
     memory: document.getElementById("view-memory"),
     complete: document.getElementById("view-complete"),
     deleteConfirm: document.getElementById("view-delete-confirm"),
@@ -1307,6 +1317,11 @@
     Object.values(views).forEach(v=>v.classList.remove("active"));
     views[name].classList.add("active");
     if(typeof screenEl !== "undefined" && poweredOn && name !== "off") physicalReact("screen");
+  }
+
+  function showCloudError(){
+    showView("cloudError");
+    setTimeout(()=>{ if(poweredOn && !cloudReady) showView("idle"); }, 2400);
   }
 
   let booting = true;
@@ -2073,7 +2088,7 @@
 
     try{
       if(cloudReady){
-        await cloudDeleteMemory(id);
+        try{ await cloudDeleteMemory(id); }catch(e){ cloudError=e; showCloudError(); }
       } else {
         const i = custom.findIndex(x=>x.id===id);
         if(i>-1){
