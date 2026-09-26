@@ -4,9 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>0+0</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <link rel="stylesheet" href="https://cdn.textyle.net/f/galmuri11.css">
 <style>
   :root{
@@ -27,8 +26,8 @@
     --accent-red-dark:#9c3a2e;
     --slot:#0b0b0d;
     --font-pixel:'Press Start 2P', monospace;
-    --font-crt:'VT323', 'Courier New', monospace;
-    --font-ui:'IBM Plex Mono', ui-monospace, monospace;
+    --font-crt:var(--font-ui);
+    --font-ui:'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-hand:'Galmuri11', monospace;
     box-sizing:border-box;
     padding-top:env(safe-area-inset-top,0px);
@@ -59,7 +58,7 @@
   }
   header .kicker{
     font-size:13px;
-    font-weight:500;
+    font-weight:400;
     color:var(--ink);
     margin-bottom:6px;
   }
@@ -218,7 +217,7 @@
   @keyframes bootTextOut{ to{ opacity:0; } }
 
   .cloud-error-title{ font-family:var(--font-pixel); font-size:18px; line-height:1.7; text-align:center; color:var(--screen-glow); letter-spacing:1px; }
-  .cloud-error-sub{ margin-top:10px; font-family:var(--font-pixel); font-size:9px; line-height:1.8; text-align:center; color:var(--screen-glow); opacity:.9; }
+  .cloud-error-sub{ margin-top:10px; font-family:var(--font-hand); font-size:9px; line-height:1.8; text-align:center; color:var(--screen-glow); opacity:.9; }
 
   #view-loading .dots{ font-family:var(--font-pixel); font-size:9px; color:var(--screen-glow); }
   #view-loading .bar{ width:130px; height:9px; border:2px solid var(--screen-glow); margin-top:13px; position:relative; overflow:hidden; }
@@ -230,7 +229,7 @@
   .memory-meta{ font-family:var(--font-pixel); font-size:6.5px; color:var(--gold); letter-spacing:1px; margin-bottom:7px; line-height:1.15; flex:0 0 auto; }
   .memory-photo{ width:116px; height:64px; object-fit:cover; image-rendering:pixelated; border:2px solid var(--screen-dim); margin-bottom:7px; opacity:0; transition:opacity .5s ease; flex:0 0 auto; }
   .memory-photo.show{ opacity:1; }
-  .memory-letter{ font-family:var(--font-crt); font-size:14px; line-height:1.2; color:var(--screen-glow); max-width:198px; width:100%; height:67px; margin:0 0 6px; flex:0 0 67px; display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden; }
+  .memory-letter{ font-family:var(--font-ui); font-size:14px; line-height:1.2; color:var(--screen-glow); max-width:198px; width:100%; height:67px; margin:0 0 6px; flex:0 0 67px; display:flex; align-items:center; justify-content:center; text-align:center; overflow:hidden; }
     .memory-footer{ display:flex; align-items:center; justify-content:center; gap:7px; min-height:10px; margin-top:1px; flex:0 0 auto; }
   .memory-stars,
   .memory-footer-dot,
@@ -256,14 +255,14 @@
     border-radius:50%;
     background:rgba(255,255,255,.08);
     border:none; color:var(--screen-dim);
-    font-family:var(--font-crt); font-size:16px; line-height:1;
+    font-family:var(--font-ui); font-size:16px; line-height:1;
     display:flex; align-items:center; justify-content:center;
     cursor:pointer;
   }
   .rating-close:hover{ color:var(--screen-glow); background:rgba(255,255,255,.14); }
   #view-rating .rate-title{ font-family:var(--font-pixel); font-size:6.5px; color:var(--gold); margin-bottom:6px; line-height:1.4; text-align:center; }
   .stars{ display:flex; gap:4px; margin-bottom:6px; }
-  .stars button{ background:none; border:none; cursor:pointer; font-size:15px; line-height:1; padding:1px; color:var(--star-empty); font-family:var(--font-crt); }
+  .stars button{ background:none; border:none; cursor:pointer; font-size:15px; line-height:1; padding:1px; color:var(--star-empty); font-family:var(--font-ui); }
   .stars button.filled{ color:var(--gold); }
   #comment-box{ width:100%; max-width:210px; height:60px; background:#04120a; border:2px solid var(--screen-dim); color:var(--paper); font-family:var(--font-hand); font-size:12px; line-height:1.35; padding:6px; resize:none; }
   #comment-box:focus{ outline:2px solid var(--screen-glow); }
@@ -273,7 +272,7 @@
   .char-count.critical, .modal-char-count.critical{ color:#d95b4f; text-shadow:0 0 6px rgba(217,91,79,.45); }
   .save-btn{ margin-top:14px; font-family:var(--font-pixel); font-size:6px; color:var(--screen-bg); background:var(--screen-glow); border:none; padding:6px 11px; cursor:pointer; letter-spacing:1px; }
   .save-btn:active{ transform:translateY(1px); }
-  .saved-msg{ font-family:var(--font-pixel); font-size:5px; color:var(--gold); margin-top:4px; min-height:7px; }
+  .saved-msg{ font-family:var(--font-hand); font-size:5px; color:var(--gold); margin-top:4px; min-height:7px; }
 
   /* ---------- memory album ---------- */
   #view-gallery{
@@ -297,7 +296,7 @@
     width:12px; height:12px; border-radius:2px;
     border:0;
     background:transparent; color:var(--screen-dim);
-    font-family:var(--font-crt); font-size:10px; line-height:1;
+    font-family:var(--font-ui); font-size:10px; line-height:1;
     display:flex; align-items:center; justify-content:center; cursor:pointer;
     padding:0;
     opacity:.8;
@@ -336,7 +335,7 @@
   .gallery-item .gallery-stars{ position:static;
     position:absolute; right:4px; bottom:4px;
     background:rgba(4,18,10,.84); color:var(--gold);
-    font-family:var(--font-crt); font-size:11px; line-height:1; padding:1px 3px;
+    font-family:var(--font-ui); font-size:11px; line-height:1; padding:1px 3px;
   }
   .gallery-empty{
     width:100%; height:100%; display:flex; align-items:center; justify-content:center;
@@ -362,7 +361,7 @@
     display:flex; justify-content:space-between; align-items:center;
     padding:10px 4px 0;
     font-family:var(--font-ui);
-    font-size:13px; font-weight:500;
+    font-size:13px; font-weight:400;
     color:#cfcdc4;
     letter-spacing:.5px;
   }
@@ -533,7 +532,7 @@
   }
   .chip-badge{
     position:absolute; bottom:10px; right:5px;
-    font-family:var(--font-ui); font-size:10px; font-weight:500;
+    font-family:var(--font-ui); font-size:10px; font-weight:400;
     color:var(--gold);
     background:rgba(10,10,12,.7);
     padding:2px 5px;
@@ -667,7 +666,7 @@
     overflow-y:auto;
   }
   .modal-from{ font-family:var(--font-hand); font-size:12px; color:var(--sub); margin-top:-8px; margin-bottom:10px; }
-  .modal-title{ font-size:15px; font-weight:700; margin-bottom:14px; color:var(--ink); }
+  .modal-title{ font-family:var(--font-ui); font-size:15px; font-weight:400; margin-bottom:14px; color:var(--ink); }
   .modal-label{ display:block; font-size:11px; color:var(--sub); margin:12px 0 5px; }
   .author-options{ display:flex; gap:8px; }
   .author-option{ flex:1; font-family:var(--font-ui); font-size:13px; padding:8px; border:1px solid #ddd8c9; border-radius:6px; background:#fff; color:var(--sub); cursor:pointer; }
@@ -697,7 +696,7 @@
   .modal-actions{ display:flex; justify-content:space-between; align-items:center; margin-top:18px; }
   .modal-actions-right{ display:flex; gap:8px; }
   .modal-btn{
-    font-family:var(--font-ui); font-size:12px; font-weight:500;
+    font-family:var(--font-ui); font-size:12px; font-weight:400;
     padding:8px 13px; border-radius:7px; border:none; cursor:pointer;
   }
   .modal-btn.ghost{ background:transparent; color:var(--sub); }
