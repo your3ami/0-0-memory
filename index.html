@@ -667,10 +667,10 @@
   .extra-row .chip:hover{ transform:translateY(-6px) !important; }
   .extra-row .chip:active{ transform:translateY(-2px) scale(.97) !important; }
   .extra-row.powered-off{
-    position:absolute; left:50%; top:18px; bottom:auto;
-    transform:translateX(-50%);
-    width:min(760px, calc(100% - 24px)); height:132px;
-    display:flex; flex-wrap:nowrap; align-items:flex-end; justify-content:center;
+    position:absolute; right:24px; left:auto; top:24px; bottom:auto;
+    transform:none;
+    width:min(230px, calc(100% - 48px)); height:132px;
+    display:flex; flex-wrap:nowrap; align-items:flex-end; justify-content:flex-start;
     gap:10px; padding:0 14px 22px; box-sizing:border-box;
     overflow-x:auto; overflow-y:hidden; z-index:6;
   }
@@ -879,13 +879,13 @@
     .extra-row .chip{ position:relative; right:auto !important; top:auto !important; width:68px; pointer-events:auto; }
     .extra-row .chip:hover, .extra-row .chip:active{ transform:var(--chip-rot) !important; }
     .extra-row.powered-off{
-      left:50%; top:12px; bottom:auto;
-      width:calc(100% - 12px); height:112px;
-      padding:0 10px 22px; gap:7px;
+      left:auto; right:12px; top:18px; bottom:auto;
+      width:min(170px, calc(100% - 24px)); height:112px;
+      padding:0 8px 22px; gap:7px;
       justify-content:flex-start; flex-wrap:nowrap;
-      transform:translateX(-50%); overflow-x:auto;
+      transform:none; overflow-x:auto;
     }
-    .extra-row.powered-off::after{ left:7px; right:7px; bottom:14px; }
+    .extra-row.powered-off::after{ left:6px; right:6px; bottom:14px; }
     .extra-row.powered-off .chip{ flex:0 0 26px; width:26px; height:88px; }
     .chip.chip-add{ width:68px; height:88px; pointer-events:auto; }
     .chip-add-icon{ font-size:22px; }
