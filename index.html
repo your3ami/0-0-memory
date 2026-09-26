@@ -669,9 +669,6 @@
   .author-options{ display:flex; gap:8px; }
   .author-option{ flex:1; font-family:var(--font-ui); font-size:13px; padding:8px; border:1px solid #ddd8c9; border-radius:6px; background:#fff; color:var(--sub); cursor:pointer; }
   .author-option.active{ background:var(--ink); color:#fdfcf8; border-color:var(--ink); }
-  .category-options{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
-  .category-option{ font-family:var(--font-ui); font-size:12px; padding:8px 4px; border:1px solid #ddd8c9; border-radius:6px; background:#fff; color:var(--sub); cursor:pointer; }
-  .category-option.active{ background:var(--ink); color:#fdfcf8; border-color:var(--ink); }
   .modal-input{
     width:100%; font-family:var(--font-ui); font-size:13px;
     padding:7px 8px; border:1px solid #ddd8c9; border-radius:6px;
@@ -920,14 +917,6 @@
     </div>
     <input type="hidden" id="field-author" value="H">
 
-    <label class="modal-label">분류</label>
-    <div class="category-options" role="group" aria-label="추억 분류">
-      <button type="button" class="category-option" data-category="여행">여행</button>
-      <button type="button" class="category-option" data-category="음식">음식</button>
-      <button type="button" class="category-option active" data-category="일상">일상</button>
-    </div>
-    <input type="hidden" id="field-category" value="일상">
-
     <label class="modal-label">편지 내용</label>
     <textarea id="field-letter" class="modal-textarea" maxlength="100" placeholder="그날의 이야기를 적어 주세요."></textarea>
     <div class="modal-char-count" id="letter-count">0/100</div>
@@ -986,7 +975,6 @@
       id: row.memory_id,
       title: row.title || "이름 없는 추억",
       author: row.author || "H",
-      category: row.category || "일상",
       date: formatMemoryDate(row.date || ""),
       letter: row.letter || "아직 적지 않은 이야기.",
       photo: labelArt(preset.bg1, preset.bg2, preset.accent, preset.icon),
@@ -1015,7 +1003,6 @@
       title: memory.title || "이름 없는 추억",
       date: formatMemoryDate(memory.date || ""),
       author: memory.author || "H",
-      category: memory.category || "일상",
       letter: memory.letter || "아직 적지 않은 이야기.",
       photo: shotOverride !== undefined ? (shotOverride || null) : (memory.shot || null),
       created_at: new Date().toISOString()
@@ -1146,20 +1133,7 @@
     drop: ()=>{ tone(180,0.05,0,"square",0.04); tone(90,0.09,0.05,"sine",0.05); }
   };
 
-  // ---- poster/label art generator
-
-  // ---- tiny category chiptune BGM (Web Audio, no external files) ----
-  const BGM = {
-    "여행": [[523,0],[659,.14],[784,.28],[1047,.42],[784,.60],[659,.74],[523,.88],[392,1.04]],
-    "음식": [[659,0],[784,.12],[988,.24],[784,.38],[659,.52],[523,.66],[659,.80],[784,.94]],
-    "일상": [[440,0],[523,.16],[659,.32],[587,.48],[523,.64],[440,.80],[392,.96],[440,1.12]]
-  };
-  function playCategoryBgm(category){
-    if(muted) return;
-    const notes = BGM[category] || BGM["일상"];
-    notes.forEach(([freq,delay])=>tone(freq,.11,delay,"triangle",.018));
-  }
- (reference-style cartridge labels) ----
+  // ---- poster/label art generator (reference-style cartridge labels) ----
   const LABEL_FONT = "'Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif";
 
   function labelArt(bg1, bg2, accent, iconSvg){
@@ -1256,16 +1230,16 @@
   }
 
   const BASE = [
-    { id:"m1", title:"벚꽃 데이트", date:"2019.04.07", author:"H", category:"여행",
+    { id:"m1", title:"벚꽃 데이트", date:"2019.04.07", author:"H",
       photo: labelArt("#2a0f18", "#5c2036", "#f6c9d6", ICON_BLOSSOM),
       letter:"바람이 불 때마다 꽃잎이 우리 위로 쏟아졌지. 사진 찍는 것도 잊고 한참을 그냥 서 있었던 날." },
-    { id:"m2", title:"여름 바다", date:"2020.08.15", author:"H", category:"여행",
+    { id:"m2", title:"여름 바다", date:"2020.08.15", author:"H",
       photo: labelArt("#062024", "#0d4a52", "#ffe27a", ICON_WAVE),
       letter:"파도 소리 때문에 네가 하는 말이 하나도 안 들려서 계속 되물었잖아. 그래도 좋았어, 그날은." },
-    { id:"m3", title:"여덟 살 생일", date:"2021.11.02", author:"H", category:"일상",
+    { id:"m3", title:"여덟 살 생일", date:"2021.11.02", author:"H",
       photo: labelArt("#200818", "#4a1030", "#ffd76b", ICON_BDAY),
       letter:"촛불을 세 번 만에 껐지. 소원은 끝까지 비밀이라며 알려주지 않았던 것도 기억나." },
-    { id:"m4", title:"첫눈 오던 날", date:"2022.12.24", author:"H", category:"일상",
+    { id:"m4", title:"첫눈 오던 날", date:"2022.12.24", author:"H",
       photo: labelArt("#05071a", "#10163a", "#eaf3ff", ICON_SNOW),
       letter:"창밖이 갑자기 하얘져서 서로 말도 없이 뛰어나갔었지. 손이 시렸는데 누구도 먼저 들어가자고 안 했어." }
   ];
@@ -1467,7 +1441,6 @@
     const target = chipEls[idx];
     if(!source || !target) return;
 
-    const galleryMemory = memories[idx];
     sfx.select();
     const from = source.getBoundingClientRect();
     const to = target.getBoundingClientRect();
@@ -1494,7 +1467,6 @@
 
     requestAnimationFrame(()=>{
       closeGallery(false);
-      if(galleryMemory) playCategoryBgm(galleryMemory.category || "일상");
       requestAnimationFrame(()=>{
         flight.style.transition = "transform .62s cubic-bezier(.18,.82,.28,1), opacity .62s ease";
         flight.style.transform = transform;
@@ -1537,11 +1509,8 @@
   function layoutMobileChips(){ return; }
 
   function renderAll(){
-    const cloudMemories = cloudRows.map(cloudMemoryFromRow).filter(Boolean);
-    // Never let an empty/temporarily unavailable cloud response blank the machine.
-    // Keep the built-in memories visible until the shared rows are actually available.
-    memories = (cloudReady && cloudMemories.length > 0)
-      ? cloudMemories
+    memories = cloudReady
+      ? cloudRows.map(cloudMemoryFromRow).filter(Boolean)
       : localMemoryList();
     chipsEl.innerHTML = "";
     Array.from(extraRow.querySelectorAll(".chip:not(.chip-add)")).forEach(n=>n.remove());
@@ -1914,7 +1883,6 @@
   const fieldTitle = document.getElementById("field-title");
   const fieldLetter = document.getElementById("field-letter");
   const fieldAuthor = document.getElementById("field-author");
-  const fieldCategory = document.getElementById("field-category");
   const modalFrom = document.getElementById("modal-from");
   const modalDelete = document.getElementById("modal-delete");
 
@@ -1930,12 +1898,6 @@
     const d = new Date();
     return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
   }
-  function selectCategory(category){
-    const value = ["여행","음식","일상"].includes(category) ? category : "일상";
-    fieldCategory.value = value;
-    document.querySelectorAll(".category-option").forEach(btn=>btn.classList.toggle("active", btn.dataset.category===value));
-  }
-
   function selectAuthor(author){
     const value = author === "N" ? "N" : "H";
     fieldAuthor.value = value;
@@ -1950,7 +1912,6 @@
     editingShot = m.shot || null;
     modalTitle.textContent = "추억 수정";
     selectAuthor(m.author || "H");
-    selectCategory(m.category || "일상");
     fieldDate.value = toDateInputValue(m.date || "");
     fieldTitle.value = m.title || "";
     fieldLetter.value = m.letter || "";
@@ -1967,7 +1928,6 @@
     editingShot = null;
     modalTitle.textContent = "새 추억 만들기";
     selectAuthor("H");
-    selectCategory("일상");
     fieldDate.value = todayStr();
     fieldTitle.value = "";
     fieldLetter.value = "";
@@ -1998,7 +1958,6 @@
       if(m){
         fieldDate.value = toDateInputValue(m.date || "");
         selectAuthor(m.author || "H");
-        selectCategory(m.category || "일상");
         fieldTitle.value = m.title || "";
         fieldLetter.value = m.letter || "";
         updateCharCount(fieldLetter, document.getElementById("letter-count"), 100);
@@ -2007,12 +1966,6 @@
     modalBackdrop.classList.remove("open");
   });
   modalBackdrop.addEventListener("click", (e)=>{ if(e.target===modalBackdrop) modalBackdrop.classList.remove("open"); });
-  document.querySelectorAll(".category-option").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      if(inputLocked()) return;
-      selectCategory(btn.dataset.category);
-    });
-  });
   document.querySelectorAll(".author-option").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       if(inputLocked()) return;
@@ -2056,7 +2009,6 @@
       id: id,
       title: title,
       author: author,
-      category: fieldCategory.value || "일상",
       date: formatMemoryDate(fieldDate.value.trim()),
       letter: fieldLetter.value.trim() || "아직 적지 않은 이야기.",
       photo: labelArt(preset.bg1, preset.bg2, preset.accent, preset.icon),
