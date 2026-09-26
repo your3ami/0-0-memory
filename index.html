@@ -139,6 +139,43 @@
     filter:grayscale(.7) brightness(.65);
     pointer-events:none;
   }
+  /* Power-off mode: gather every memory chip into one retro storage row. */
+  .chips-row.powered-off{
+    position:absolute;
+    left:50%;
+    top:18px;
+    bottom:auto;
+    width:min(760px, calc(100% - 24px));
+    height:132px;
+    transform:translateX(-50%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    padding:0 10px;
+    box-sizing:border-box;
+    overflow-x:auto;
+    overflow-y:hidden;
+    pointer-events:auto;
+    z-index:4;
+  }
+  .chips-row.powered-off .chip{
+    position:relative !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    bottom:auto !important;
+    flex:0 0 88px;
+    transform:none !important;
+    filter:grayscale(.7) brightness(.65);
+    pointer-events:none;
+    transition:transform .28s ease, filter .28s ease;
+  }
+  .chips-row.powered-off .chip:hover,
+  .chips-row.powered-off .chip:active{
+    transform:none !important;
+  }
+  .chips-row.powered-off::-webkit-scrollbar{ height:0; }
 
   #view-off{ background:#000; }
   #view-off .off-line{
@@ -745,6 +782,22 @@
     /* Four predictable mobile parking spots. The top pair sit beside the upper
        half of the machine; the lower pair sit beside the lower half. */
     .chips-row{ position:absolute; inset:0; display:block; margin:0; z-index:4; pointer-events:none; }
+    .chips-row.powered-off{
+      left:50%;
+      top:12px;
+      width:calc(100% - 12px);
+      height:104px;
+      padding:0 6px;
+      gap:8px;
+      justify-content:flex-start;
+      transform:translateX(-50%);
+      overflow-x:auto;
+    }
+    .chips-row.powered-off .chip{
+      flex:0 0 68px;
+      width:68px;
+      padding:5px 5px 7px;
+    }
     .chips-row .chip{
       position:absolute;
       right:auto !important;
@@ -1543,6 +1596,18 @@
   // embedded previews, and resized browser windows.
   function layoutMobileChips(){ return; }
 
+  function moveCustomChipsToStorageRow(){
+    Array.from(extraRow.querySelectorAll(".chip:not(.chip-add)")).forEach(el=>{
+      chipsEl.appendChild(el);
+    });
+  }
+
+  function restoreCustomChipsFromStorageRow(){
+    Array.from(chipsEl.querySelectorAll(".chip:not([class*=" c-"])")).forEach(el=>{
+      extraRow.insertBefore(el, addBtn);
+    });
+  }
+
   function renderAll(){
     memories = cloudReady
       ? cloudRows.map(cloudMemoryFromRow).filter(Boolean)
@@ -1823,6 +1888,7 @@
     btnPower.classList.remove("on");
     consoleBody.classList.add("powered-off");
     btnAlbum.classList.remove("active");
+    moveCustomChipsToStorageRow();
     chipsEl.classList.add("powered-off");
     extraRow.classList.add("powered-off");
     showView("off");
@@ -1834,6 +1900,7 @@
     sfx.powerOn();
     btnPower.classList.add("on");
     consoleBody.classList.remove("powered-off");
+    restoreCustomChipsFromStorageRow();
     chipsEl.classList.remove("powered-off");
     extraRow.classList.remove("powered-off");
     booting = true;
