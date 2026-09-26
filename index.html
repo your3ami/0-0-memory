@@ -666,6 +666,9 @@
   .modal-from{ font-family:var(--font-hand); font-size:12px; color:var(--sub); margin-top:-8px; margin-bottom:10px; }
   .modal-title{ font-size:15px; font-weight:700; margin-bottom:14px; color:var(--ink); }
   .modal-label{ display:block; font-size:11px; color:var(--sub); margin:12px 0 5px; }
+  .author-options{ display:flex; gap:8px; }
+  .author-option{ flex:1; font-family:var(--font-ui); font-size:13px; padding:8px; border:1px solid #ddd8c9; border-radius:6px; background:#fff; color:var(--sub); cursor:pointer; }
+  .author-option.active{ background:var(--ink); color:#fdfcf8; border-color:var(--ink); }
   .modal-input{
     width:100%; font-family:var(--font-ui); font-size:13px;
     padding:7px 8px; border:1px solid #ddd8c9; border-radius:6px;
@@ -902,13 +905,17 @@
     <input type="file" id="photo-input" accept="image/*" hidden>
 
     <label class="modal-label">날짜</label>
-    <input type="text" id="field-date" class="modal-input" placeholder="2024.01.01">
+    <input type="date" id="field-date" class="modal-input">
 
     <label class="modal-label">제목 (재생 화면에만 표시돼요)</label>
     <input type="text" id="field-title" class="modal-input" placeholder="예: 첫 여행">
 
     <label class="modal-label">기록자</label>
-    <input type="text" id="field-author" class="modal-input" maxlength="20" placeholder="H">
+    <div class="author-options" role="group" aria-label="기록자 선택">
+      <button type="button" class="author-option active" data-author="H">H</button>
+      <button type="button" class="author-option" data-author="L">L</button>
+    </div>
+    <input type="hidden" id="field-author" value="H">
 
     <label class="modal-label">편지 내용</label>
     <textarea id="field-letter" class="modal-textarea" maxlength="100" placeholder="그날의 이야기를 적어 주세요."></textarea>
@@ -1882,9 +1889,20 @@
   let editingId = null;
   let editingShot = null;
 
+  function toDateInputValue(value){
+    const raw = String(value||"").trim();
+    const m = raw.match(/^(\d{4})\s*[.\-/]\s*(\d{1,2})\s*[.\-/]\s*(\d{1,2})\s*$/);
+    return m ? m[1]+"-"+String(m[2]).padStart(2,"0")+"-"+String(m[3]).padStart(2,"0") : "";
+  }
   function todayStr(){
     const d = new Date();
-    return d.getFullYear()+". "+String(d.getMonth()+1).padStart(2,"0")+". "+String(d.getDate()).padStart(2,"0")+".";
+    return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  }
+  function selectAuthor(author){
+    const value = author === "L" ? "L" : "H";
+    fieldAuthor.value = value;
+    document.querySelectorAll(".author-option").forEach(btn=>btn.classList.toggle("active", btn.dataset.author===value));
+    modalFrom.textContent = "From. " + value;
   }
 
   function openEditor(id){
@@ -1893,9 +1911,8 @@
     editingId = id;
     editingShot = m.shot || null;
     modalTitle.textContent = "추억 수정";
-    fieldAuthor.value = m.author || "H";
-    modalFrom.textContent = "From. " + (m.author || "H");
-    fieldDate.value = formatMemoryDate(m.date || "");
+    selectAuthor(m.author || "H");
+    fieldDate.value = toDateInputValue(m.date || "");
     fieldTitle.value = m.title || "";
     fieldLetter.value = m.letter || "";
     updateCharCount(fieldLetter, document.getElementById("letter-count"), 100);
@@ -1910,8 +1927,7 @@
     editingId = null;
     editingShot = null;
     modalTitle.textContent = "새 추억 만들기";
-    fieldAuthor.value = "H";
-    modalFrom.textContent = "From. H";
+    selectAuthor("H");
     fieldDate.value = todayStr();
     fieldTitle.value = "";
     fieldLetter.value = "";
@@ -1940,9 +1956,8 @@
     if(editingId){
       const m = memories.find(x=>x.id===editingId);
       if(m){
-        fieldDate.value = formatMemoryDate(m.date || "");
-        fieldAuthor.value = m.author || "H";
-        modalFrom.textContent = "From. " + (m.author || "H");
+        fieldDate.value = toDateInputValue(m.date || "");
+        selectAuthor(m.author || "H");
         fieldTitle.value = m.title || "";
         fieldLetter.value = m.letter || "";
         updateCharCount(fieldLetter, document.getElementById("letter-count"), 100);
@@ -1951,6 +1966,12 @@
     modalBackdrop.classList.remove("open");
   });
   modalBackdrop.addEventListener("click", (e)=>{ if(e.target===modalBackdrop) modalBackdrop.classList.remove("open"); });
+  document.querySelectorAll(".author-option").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      if(inputLocked()) return;
+      selectAuthor(btn.dataset.author);
+    });
+  });
   document.getElementById("photo-picker").addEventListener("click", ()=> photoInput.click());
 
   photoInput.addEventListener("change", ()=>{
