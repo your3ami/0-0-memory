@@ -1161,6 +1161,8 @@
   function cloudMemoryFromRow(row){
     if(!row || !row.memory_id) return null;
     const preset = pickPreset(row.memory_id);
+    const base = BASE.find(x=>x.id===row.memory_id);
+    const rowTags = normalizeTags(row.tags);
     return {
       id: row.memory_id,
       title: row.title || "이름 없는 추억",
@@ -1169,7 +1171,7 @@
       letter: row.letter || "아직 적지 않은 이야기.",
       photo: labelArt(preset.bg1, preset.bg2, preset.accent, preset.icon),
       shot: row.photo || null,
-      tags: Array.isArray(row.tags) ? row.tags.filter(tag=>TAG_OPTIONS.includes(tag)) : []
+      tags: rowTags.length ? rowTags : normalizeTags(base ? base.tags : [])
     };
   }
 
@@ -1459,9 +1461,8 @@
     }
   }
   function normalizeTags(tags){
-    return Array.isArray(tags)
-      ? tags.filter(tag=>TAG_OPTIONS.includes(tag))
-      : [];
+    if(!Array.isArray(tags)) return [];
+    return TAG_OPTIONS.filter(tag=>tags.includes(tag));
   }
 
   function renderTagOptions(){
@@ -1514,8 +1515,6 @@
     merged.tags = normalizeTags(merged.tags);
     return merged;
   }
-
-  renderTagOptions();
 
   const chipsEl = document.getElementById("chips");
   const extraRow = document.getElementById("extra-row");
