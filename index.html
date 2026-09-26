@@ -1781,8 +1781,13 @@
   }
 
   function renderAll(){
-    memories = cloudReady
-      ? cloudRows.map(cloudMemoryFromRow).filter(Boolean)
+    const cloudMemories = cloudRows
+      .map(cloudMemoryFromRow)
+      .filter(Boolean);
+    // Never replace the visible memory shelf with an empty cloud response.
+    // If Supabase is empty or still initializing, keep the local/base memories visible.
+    memories = (cloudReady && cloudMemories.length)
+      ? cloudMemories
       : localMemoryList();
     chipsEl.innerHTML = "";
     Array.from(extraRow.querySelectorAll(".chip:not(.chip-add)")).forEach(n=>n.remove());
