@@ -808,13 +808,31 @@
      width:100%; max-width:300px;
      height:480px;
      background:var(--paper);
+     border:1px solid #ddd1bb;
      border-radius:12px;
-     padding:16px;
+     padding:14px 16px 16px;
      max-height:calc(100vh - 40px);
      overflow-y:auto;
      display:flex;
      flex-direction:column;
+     box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
    }
+  .modal-console-bar{
+     display:flex;
+     align-items:center;
+     justify-content:space-between;
+     flex:0 0 auto;
+     height:16px;
+     padding:0 1px 5px;
+     margin-bottom:9px;
+     border-bottom:1px solid #d8cdb8;
+     font-family:var(--font-pixel);
+     font-size:4.5px;
+     line-height:1;
+     letter-spacing:.35px;
+     color:#777265;
+   }
+   .modal-console-bar span:last-child{ color:#9a9385; }
   .modal-step{ display:none; min-height:0; }
   .modal-step.active{
     display:block;
@@ -1163,6 +1181,10 @@
 
 <div class="modal-backdrop" id="modal-backdrop">
   <div class="modal">
+    <div class="modal-console-bar" aria-hidden="true">
+      <span>MEMORY SYSTEM</span>
+      <span>STAGE 01</span>
+    </div>
     <div class="modal-title" id="modal-title">새 추억 만들기</div>
     <div class="modal-from" id="modal-from">From. H</div>
 
