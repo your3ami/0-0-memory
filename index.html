@@ -466,6 +466,24 @@
     color:#cfcdc4;
     letter-spacing:.5px;
   }
+  .console-add-btn{
+    display:none;
+    width:27px; height:27px;
+    padding:0;
+    border:1px solid #050505;
+    border-radius:7px;
+    background:#232227;
+    color:#8f8b82;
+    font-family:var(--font-ui);
+    font-size:18px;
+    line-height:1;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 2px 0 #151519;
+  }
+  .console-add-btn:hover{ color:#d6d2c6; background:#2b2a2f; }
+  .console-add-btn:active{ transform:translateY(1px); box-shadow:0 1px 0 #151519; }
   .sound-toggle{
     background:none; border:none; cursor:pointer;
     font-size:12px; line-height:1; padding:2px;
@@ -809,42 +827,44 @@
   .chip.chip-add:hover{ border-color:var(--ink); transform:translateY(-4px); }
   .chip-add-icon{ font-size:26px; color:#a39d8c; line-height:1; }
 
-  /* New-memory flight: + card -> cartridge slot. */
-  .add-flight-chip{
+  /* New-memory insert: a short, physical "click-in" instead of a long flight. */
+  .new-memory-insert{
     position:fixed;
     z-index:10000;
     pointer-events:none;
-    border:2px dashed #bcb6a6;
-    border-radius:8px;
-    background:#f3f0e7;
-    box-shadow:0 12px 24px rgba(35,32,25,.18);
-    transform-origin:center center;
+    width:30px;
+    height:42px;
+    border-radius:5px;
+    background:linear-gradient(165deg,#3a3940,#17161a 68%);
+    border:1px solid rgba(255,255,255,.1);
+    box-shadow:0 5px 10px rgba(20,18,14,.28), 0 0 0 1px rgba(0,0,0,.2);
+    transform-origin:center bottom;
     will-change:transform,opacity;
   }
-  .add-flight-face{
-    position:absolute; inset:7px;
-    border-radius:4px;
-    background:
-      radial-gradient(circle at 50% 38%, rgba(143,224,160,.16), transparent 35%),
-      linear-gradient(145deg,#28272c,#111116);
+  .new-memory-insert::before{
+    content:"";
+    position:absolute;
+    left:4px; right:4px; top:4px; bottom:10px;
+    border-radius:3px;
+    background:linear-gradient(145deg,#28272c,#111116);
   }
-  .add-flight-edge{
-    position:absolute; left:7px; right:7px; bottom:7px; height:7px;
+  .new-memory-insert::after{
+    content:"";
+    position:absolute;
+    left:4px; right:4px; bottom:4px; height:6px;
     border-radius:2px;
     background:repeating-linear-gradient(90deg,#050505 0 2px,#333136 2px 4px);
   }
-  .add-flight-chip.fly{
-    animation:addFlight .52s cubic-bezier(.18,.82,.28,1) forwards;
+  .new-memory-insert.snap{
+    animation:newMemoryInsert .28s cubic-bezier(.25,.85,.35,1) forwards;
   }
-  .chip.chip-add.add-launching{
-    opacity:.35;
-    transform:translateY(2px) scale(.96);
+  @keyframes newMemoryInsert{
+    0%{ opacity:1; transform:translate(0,0) rotate(-2deg) scale(1); }
+    62%{ opacity:1; transform:translate(var(--insert-x),var(--insert-y)) rotate(0) scale(.72,.55); }
+    82%{ opacity:1; transform:translate(var(--insert-x),var(--insert-y)) rotate(0) scale(.78,.38); }
+    100%{ opacity:0; transform:translate(var(--insert-x),var(--insert-y)) rotate(0) scale(.9,.16); }
   }
-  @keyframes addFlight{
-    0%{ opacity:1; transform:translate(0,0) rotate(-8deg) scale(1); }
-    70%{ opacity:1; }
-    100%{ opacity:.15; transform:var(--add-flight-transform); }
-  }
+  .console-add-btn.inserting{ opacity:.35; transform:translateY(1px) scale(.94); }
 
   .chip-blank{
     background:linear-gradient(165deg, #3a3940, #201f24 65%);
@@ -1221,6 +1241,7 @@
     }
     .extra-row:not(.powered-off) .chip-add{
       width:68px; height:88px;
+      display:none;
     }
 
     /* Reference-style mobile field: four memories around the console per page. */
@@ -1256,6 +1277,81 @@
       flex:0 0 20px;
     }
   }
+    /* Mobile composition: console above, memory-chip field below. */
+    .chips-row{
+      left:0;
+      right:0;
+      top:calc(50% + 215px);
+      bottom:auto;
+      width:100%;
+      height:150px;
+      transform:none;
+      z-index:4;
+    }
+    .chips-row::before{
+      content:"MEMORY CHIPS";
+      position:absolute;
+      left:50%;
+      top:-18px;
+      transform:translateX(-50%);
+      font-family:var(--font-pixel);
+      font-size:5px;
+      letter-spacing:.8px;
+      color:#aaa59a;
+      white-space:nowrap;
+    }
+    .chips-row::after{
+      content:"";
+      position:absolute;
+      left:12%;
+      right:12%;
+      top:-8px;
+      height:1px;
+      background:#ddd8cd;
+      pointer-events:none;
+    }
+    .chips-row .chip{
+      position:absolute;
+      width:68px;
+      right:auto !important;
+      top:auto !important;
+      bottom:auto !important;
+      padding:5px 5px 7px;
+      pointer-events:auto;
+    }
+    .console-add-btn{ display:flex; }
+    .extra-row.has-mobile-pages{
+      width:116px;
+      height:24px;
+      left:50%;
+      bottom:2px;
+      transform:translateX(-50%);
+      gap:7px;
+      align-items:center;
+      justify-content:center;
+      z-index:7;
+    }
+    .extra-row.has-mobile-pages .chip-add{ display:none; }
+    .extra-row.has-mobile-pages .shelf-nav{
+      position:static;
+      display:flex;
+      width:20px; height:22px;
+      font-size:23px;
+      color:#77736c;
+      background:transparent;
+    }
+    .extra-row.has-mobile-pages .shelf-page{
+      position:static;
+      transform:none;
+      font-size:6px;
+      color:#8b867c;
+    }
+    .extra-row.has-mobile-pages .shelf-prev,
+    .extra-row.has-mobile-pages .shelf-next{
+      flex:0 0 20px;
+    }
+    .extra-row:not(.powered-off) .chip-add{ display:none; }
+
   @media (min-width:761px){ .chips-row{ display:block; } }
 
 </style>
@@ -1338,7 +1434,11 @@
           </div>
         </div>
 
-        <div class="plate"><span class="game-pixel">STAGE 01</span><button class="sound-toggle" id="sound-toggle" type="button" title="소리">🔊</button></div>
+        <div class="plate">
+          <span class="game-pixel">STAGE 01</span>
+          <button class="console-add-btn" id="btn-add-console" type="button" aria-label="새 추억 칩 추가">+</button>
+          <button class="sound-toggle" id="sound-toggle" type="button" title="소리">🔊</button>
+        </div>
         <div class="slot-row">
           <button class="album-btn" id="btn-album" type="button" title="앨범">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1900,6 +2000,7 @@
   const chipsEl = document.getElementById("chips");
   const extraRow = document.getElementById("extra-row");
   const addBtn = document.getElementById("btn-add-chip");
+  const addConsoleBtn = document.getElementById("btn-add-console");
   const shelfPrev = document.getElementById("shelf-prev");
   const shelfNext = document.getElementById("shelf-next");
   const shelfPage = document.getElementById("shelf-page");
@@ -1907,9 +2008,24 @@
   const SHELF_PAGE_SIZE = 4;
   const MOBILE_PAGE_SIZE = 4;
   let mobilePageIndex = 0;
+  const mobilePageLayouts = new Map();
+  const MOBILE_CHIP_SPOTS = [
+    {left:"4%",  top:"8%",  rot:"-8deg"},
+    {left:"28%", top:"44%", rot:"5deg"},
+    {left:"53%", top:"8%",  rot:"7deg"},
+    {left:"76%", top:"45%", rot:"-6deg"}
+  ];
 
   function isMobileLayout(){
     return window.matchMedia("(max-width:760px)").matches;
+  }
+
+  function getMobileChipLayout(pageIndex){
+    if(!mobilePageLayouts.has(pageIndex)){
+      const spots = [...MOBILE_CHIP_SPOTS].sort(()=>Math.random()-.5);
+      mobilePageLayouts.set(pageIndex, spots);
+    }
+    return mobilePageLayouts.get(pageIndex);
   }
 
   function renderMobileChipPage(){
@@ -1917,9 +2033,20 @@
     const pageCount = Math.max(1, Math.ceil(memories.length / MOBILE_PAGE_SIZE));
     mobilePageIndex = Math.min(mobilePageIndex, pageCount - 1);
     const start = mobilePageIndex * MOBILE_PAGE_SIZE;
+    const layout = getMobileChipLayout(mobilePageIndex);
 
     chipEls.forEach((el, idx)=>{
-      el.style.display = (idx >= start && idx < start + MOBILE_PAGE_SIZE) ? "" : "none";
+      const visibleIndex = idx - start;
+      const visible = visibleIndex >= 0 && visibleIndex < MOBILE_PAGE_SIZE;
+      el.style.display = visible ? "" : "none";
+      if(visible){
+        const spot = layout[visibleIndex];
+        el.style.setProperty("left", spot.left, "important");
+        el.style.setProperty("top", spot.top, "important");
+        el.style.setProperty("right", "auto", "important");
+        el.style.setProperty("bottom", "auto", "important");
+        el.style.setProperty("--chip-rot", "rotate("+spot.rot+")");
+      }
     });
 
     const hasPages = pageCount > 1;
@@ -2537,6 +2664,7 @@
       chipsEl.classList.remove("powered-off");
       extraRow.classList.remove("powered-off");
       addBtn.style.display = "none";
+      addConsoleBtn.style.display = "none";
       renderMobileChipPage();
     } else {
       moveAllChipsToStorageRow();
@@ -2568,7 +2696,13 @@
         extraRow.classList.remove("powered-off");
         renderMobileChipPage();
       }
-      addBtn.style.display = "flex";
+      if(isMobileLayout()){
+        addBtn.style.display = "none";
+        addConsoleBtn.style.display = "flex";
+      } else {
+        addBtn.style.display = "flex";
+        addConsoleBtn.style.display = "none";
+      }
 
       showView("boot");
       const noise = document.querySelector("#view-boot .boot-noise");
@@ -2756,14 +2890,12 @@
     modalBackdrop.classList.add("open");
   }
 
-  addBtn.addEventListener("click", ()=>{
+  function triggerAddMemory(sourceBtn){
     if(inputLocked()) return;
     physicalReact("button");
-    sfx.drop();
+    sfx.insert();
 
-    /* Do not create a temporary chip in the scattered field. Animate the + card
-       itself toward the cartridge slot, then open the editor. */
-    const from = addBtn.getBoundingClientRect();
+    const from = sourceBtn.getBoundingClientRect();
     const slot = document.querySelector(".slot");
     const to = slot ? slot.getBoundingClientRect() : null;
 
@@ -2772,32 +2904,40 @@
       return;
     }
 
-    const flight = document.createElement("div");
-    flight.className = "add-flight-chip";
-    flight.innerHTML = `<div class="add-flight-face"></div><div class="add-flight-edge"></div>`;
-    flight.style.left = from.left + "px";
-    flight.style.top = from.top + "px";
-    flight.style.width = from.width + "px";
-    flight.style.height = from.height + "px";
-    document.body.appendChild(flight);
+    const chip = document.createElement("div");
+    chip.className = "new-memory-insert";
+    chip.style.left = (from.left + from.width/2 - 15) + "px";
+    chip.style.top = (from.top + from.height/2 - 21) + "px";
+    document.body.appendChild(chip);
 
     const dx = (to.left + to.width/2) - (from.left + from.width/2);
     const dy = (to.top + to.height/2) - (from.top + from.height/2);
-    const sx = Math.max(.22, to.width / from.width);
-    const sy = Math.max(.22, to.height / from.height);
-    flight.style.setProperty("--add-flight-transform",
-      `translate(${dx}px,${dy}px) rotate(-5deg) scale(${sx},${sy})`
-    );
+    chip.style.setProperty("--insert-x", dx + "px");
+    chip.style.setProperty("--insert-y", dy + "px");
 
-    addBtn.classList.add("add-launching");
-    requestAnimationFrame(()=> flight.classList.add("fly"));
+    sourceBtn.classList.add("inserting");
+    requestAnimationFrame(()=> chip.classList.add("snap"));
 
     setTimeout(()=>{
-      flight.remove();
-      addBtn.classList.remove("add-launching");
-      openAdder();
-    }, 520);
-  });
+      chip.remove();
+      sourceBtn.classList.remove("inserting");
+
+      slotTab.style.background = "linear-gradient(160deg,#3a3940,#17161a)";
+      slotTab.classList.remove("pop-out","pop-in");
+      void slotTab.offsetWidth;
+      slotTab.classList.add("pop-in");
+      physicalReact("insert");
+
+      setTimeout(()=>{
+        slotTab.classList.remove("pop-in");
+        slotTab.classList.add("pop-out");
+        openAdder();
+      }, 220);
+    }, 290);
+  }
+
+  addBtn.addEventListener("click", ()=> triggerAddMemory(addBtn));
+  addConsoleBtn.addEventListener("click", ()=> triggerAddMemory(addConsoleBtn));
   document.getElementById("modal-cancel").addEventListener("click", ()=>{
     if(modalStep === 2){
       setModalStep(1);
