@@ -1222,6 +1222,39 @@
     .extra-row:not(.powered-off) .chip-add{
       width:68px; height:88px;
     }
+
+    /* Reference-style mobile field: four memories around the console per page. */
+    .extra-row.has-mobile-pages{
+      width:156px;
+      height:30px;
+      bottom:14px;
+      gap:8px;
+      align-items:center;
+      z-index:7;
+    }
+    .extra-row.has-mobile-pages .chip-add{
+      width:52px; height:52px;
+      flex:0 0 52px;
+      margin-top:-1px;
+    }
+    .extra-row.has-mobile-pages .shelf-nav{
+      position:static;
+      display:flex;
+      width:20px; height:24px;
+      font-size:24px;
+      color:#77736c;
+      background:transparent;
+    }
+    .extra-row.has-mobile-pages .shelf-page{
+      position:static;
+      transform:none;
+      font-size:6px;
+      color:#8b867c;
+    }
+    .extra-row.has-mobile-pages .shelf-prev,
+    .extra-row.has-mobile-pages .shelf-next{
+      flex:0 0 20px;
+    }
   }
   @media (min-width:761px){ .chips-row{ display:block; } }
 
@@ -1872,6 +1905,31 @@
   const shelfPage = document.getElementById("shelf-page");
   let shelfPageIndex = 0;
   const SHELF_PAGE_SIZE = 4;
+  const MOBILE_PAGE_SIZE = 4;
+  let mobilePageIndex = 0;
+
+  function isMobileLayout(){
+    return window.matchMedia("(max-width:760px)").matches;
+  }
+
+  function renderMobileChipPage(){
+    if(!isMobileLayout()) return;
+    const pageCount = Math.max(1, Math.ceil(memories.length / MOBILE_PAGE_SIZE));
+    mobilePageIndex = Math.min(mobilePageIndex, pageCount - 1);
+    const start = mobilePageIndex * MOBILE_PAGE_SIZE;
+
+    chipEls.forEach((el, idx)=>{
+      el.style.display = (idx >= start && idx < start + MOBILE_PAGE_SIZE) ? "" : "none";
+    });
+
+    const hasPages = pageCount > 1;
+    extraRow.classList.toggle("has-mobile-pages", hasPages);
+    shelfPrev.hidden = !hasPages;
+    shelfNext.hidden = !hasPages;
+    shelfPage.hidden = !hasPages;
+    shelfPage.textContent = (mobilePageIndex + 1) + " / " + pageCount;
+  }
+
 
   const views = {
     boot: document.getElementById("view-boot"),
@@ -2186,6 +2244,7 @@
     } else {
       selectChip(Math.min(selected, memories.length-1));
     }
+    renderMobileChipPage();
   }
 
   btnPrev.addEventListener("click", ()=>{ if(views.gallery.classList.contains("active")){ physicalReact("button"); moveGallerySelection(-1); return; } if(current || inputLocked()) return; physicalReact("button"); sfx.nav(); selectChip((selected-1+memories.length)%memories.length); });
@@ -2422,6 +2481,11 @@
 
   shelfPrev.addEventListener("click", (e)=>{
     e.stopPropagation();
+    if(isMobileLayout()){
+      mobilePageIndex = Math.max(0, mobilePageIndex - 1);
+      renderMobileChipPage();
+      return;
+    }
     if(!poweredOn) {
       shelfPageIndex = Math.max(0, shelfPageIndex - 1);
       renderStorageShelf();
@@ -2429,6 +2493,12 @@
   });
   shelfNext.addEventListener("click", (e)=>{
     e.stopPropagation();
+    if(isMobileLayout()){
+      const pageCount = Math.max(1, Math.ceil(memories.length / MOBILE_PAGE_SIZE));
+      mobilePageIndex = Math.min(pageCount - 1, mobilePageIndex + 1);
+      renderMobileChipPage();
+      return;
+    }
     if(!poweredOn) {
       const count = extraRow.querySelectorAll(".chip:not(.chip-add)").length;
       const pageCount = Math.max(1, Math.ceil(count / SHELF_PAGE_SIZE));
@@ -2460,10 +2530,20 @@
     btnPower.classList.remove("on");
     consoleBody.classList.add("powered-off");
     btnAlbum.classList.remove("active");
-    moveAllChipsToStorageRow();
-    chipsEl.classList.add("powered-off");
-    extraRow.classList.add("powered-off");
-    addBtn.style.display = "none";
+
+    if(isMobileLayout()){
+      /* Mobile keeps the reference-like scattered chip field even when the
+         console is off. Only the add button is hidden. */
+      chipsEl.classList.remove("powered-off");
+      extraRow.classList.remove("powered-off");
+      addBtn.style.display = "none";
+      renderMobileChipPage();
+    } else {
+      moveAllChipsToStorageRow();
+      chipsEl.classList.add("powered-off");
+      extraRow.classList.add("powered-off");
+      addBtn.style.display = "none";
+    }
     showView("off");
   }
 
@@ -2479,9 +2559,15 @@
 
     setTimeout(()=>{
       consoleBody.classList.remove("powered-off");
-      restoreChipsFromStorageRow();
-      chipsEl.classList.remove("powered-off");
-      extraRow.classList.remove("powered-off");
+      if(!isMobileLayout()){
+        restoreChipsFromStorageRow();
+        chipsEl.classList.remove("powered-off");
+        extraRow.classList.remove("powered-off");
+      } else {
+        chipsEl.classList.remove("powered-off");
+        extraRow.classList.remove("powered-off");
+        renderMobileChipPage();
+      }
       addBtn.style.display = "flex";
 
       showView("boot");
