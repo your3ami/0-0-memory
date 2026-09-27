@@ -1071,6 +1071,144 @@
    }
   .modal-btn.primary{ background:var(--ink); color:#fdfcf8; }
 
+  /* ---------- material skin: retro hardware texture ---------- */
+  .console{
+    background:
+      radial-gradient(circle at 28% 14%, rgba(255,255,255,.055), transparent 26%),
+      radial-gradient(circle at 78% 88%, rgba(0,0,0,.18), transparent 32%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, rgba(0,0,0,.012) 1px 3px),
+      linear-gradient(160deg, var(--console-1), var(--console-2) 55%, var(--console-3));
+    border:1px solid rgba(0,0,0,.62);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.09) inset,
+      0 -1px 0 rgba(0,0,0,.5) inset,
+      0 30px 60px -20px rgba(20,20,25,.42),
+      0 10px 20px -8px rgba(20,20,25,.30);
+  }
+  .console::before{
+    content:"";
+    position:absolute;
+    inset:1px;
+    pointer-events:none;
+    border-radius:25px;
+    background:
+      repeating-linear-gradient(115deg, rgba(255,255,255,.018) 0 1px, transparent 1px 5px),
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,.035), transparent 42%);
+    opacity:.75;
+    mix-blend-mode:screen;
+  }
+  .power-btn,
+  .console-add-btn,
+  .random-btn,
+  .album-btn,
+  .plate-tab{
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.055),
+      inset 0 -2px 0 rgba(0,0,0,.34),
+      0 1px 0 rgba(0,0,0,.65);
+  }
+  .power-btn:active,
+  .console-add-btn:active,
+  .random-btn:active,
+  .album-btn:active{
+    box-shadow:
+      inset 0 2px 3px rgba(0,0,0,.38),
+      0 0 0 rgba(0,0,0,0);
+  }
+
+  /* Hardware-style editor surface: same dark plastic family as the console. */
+  .modal-backdrop{
+    background:
+      radial-gradient(circle at 50% 50%, rgba(54,58,62,.18), transparent 55%),
+      rgba(5,7,9,.74);
+    backdrop-filter:blur(3px);
+  }
+  .modal{
+    position:relative;
+    isolation:isolate;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 4px),
+      radial-gradient(circle at 18% 8%, rgba(255,255,255,.055), transparent 28%),
+      linear-gradient(145deg,#303238 0%,#25262b 58%,#1d1e22 100%);
+    border:1px solid #55565d;
+    box-shadow:
+      0 28px 65px rgba(0,0,0,.58),
+      0 2px 0 rgba(255,255,255,.07) inset,
+      0 -2px 0 rgba(0,0,0,.42) inset,
+      inset 0 0 0 1px rgba(0,0,0,.22);
+  }
+  .modal::before{
+    content:"";
+    position:absolute;
+    inset:7px;
+    border:1px solid rgba(0,0,0,.24);
+    border-radius:6px;
+    pointer-events:none;
+    z-index:-1;
+  }
+  .modal-console-bar{
+    height:20px;
+    padding:0 2px 6px;
+    margin-bottom:10px;
+    border-bottom-color:#55565c;
+    position:relative;
+  }
+  .modal-console-bar::before{
+    content:"";
+    width:28px;
+    height:3px;
+    border-radius:2px;
+    background:#111216;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    position:absolute;
+    left:50%;
+    top:-1px;
+    transform:translateX(-50%);
+  }
+  .modal-title{
+    letter-spacing:.2px;
+    text-shadow:0 1px 0 rgba(0,0,0,.45);
+  }
+  .modal-input,
+  #field-date,
+  .modal-textarea{
+    border-radius:5px;
+    border:1px solid #4b4d53;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px),
+      linear-gradient(180deg,#15171a,#1b1c20);
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,.38),
+      inset 0 1px 0 rgba(255,255,255,.025),
+      0 1px 0 rgba(255,255,255,.025);
+  }
+  .photo-picker{
+    border-style:solid;
+    border-width:1px;
+    border-color:#4e6656;
+    background:
+      repeating-linear-gradient(0deg, rgba(130,190,145,.025) 0 1px, transparent 1px 4px),
+      linear-gradient(145deg,#101719,#171d1b);
+    box-shadow:
+      inset 0 2px 5px rgba(0,0,0,.38),
+      0 1px 0 rgba(255,255,255,.025);
+  }
+  .author-option,
+  .tag-option,
+  .memory-weather-option{
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.035),
+      inset 0 -2px 0 rgba(0,0,0,.22);
+  }
+  .modal-btn.primary{
+    border:1px solid #713028;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.10),
+      inset 0 -2px 0 rgba(70,20,16,.32),
+      0 3px 0 #713028,
+      0 5px 10px rgba(0,0,0,.22);
+  }
+
   /* ---------- memory editor: console-matched skin ---------- */
   .modal-backdrop{
     background:rgba(8,9,11,.68);
@@ -1167,6 +1305,58 @@
   .modal-btn.primary:active{
     transform:translateY(2px);
     box-shadow:0 1px 0 #713028;
+  }
+
+  /* Final material pass: keep the console-matched palette, then add subtle molded-plastic texture. */
+  .modal{
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 4px),
+      radial-gradient(circle at 18% 8%, rgba(255,255,255,.055), transparent 28%),
+      linear-gradient(145deg,#303238 0%,#25262b 58%,#1d1e22 100%);
+    border-color:#55565d;
+    box-shadow:
+      0 28px 65px rgba(0,0,0,.58),
+      0 2px 0 rgba(255,255,255,.07) inset,
+      0 -2px 0 rgba(0,0,0,.42) inset,
+      inset 0 0 0 1px rgba(0,0,0,.22);
+  }
+  .modal::before{
+    content:"";
+    position:absolute;
+    inset:7px;
+    border:1px solid rgba(0,0,0,.24);
+    border-radius:6px;
+    pointer-events:none;
+  }
+  .modal-input,
+  #field-date,
+  .modal-textarea{
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px),
+      linear-gradient(180deg,#15171a,#1b1c20);
+    border-color:#4b4d53;
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,.38),
+      inset 0 1px 0 rgba(255,255,255,.025),
+      0 1px 0 rgba(255,255,255,.025);
+  }
+  .photo-picker{
+    border-style:solid;
+    border-width:1px;
+    border-color:#4e6656;
+    background:
+      repeating-linear-gradient(0deg, rgba(130,190,145,.025) 0 1px, transparent 1px 4px),
+      linear-gradient(145deg,#101719,#171d1b);
+    box-shadow:
+      inset 0 2px 5px rgba(0,0,0,.38),
+      0 1px 0 rgba(255,255,255,.025);
+  }
+  .author-option,
+  .tag-option,
+  .memory-weather-option{
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.035),
+      inset 0 -2px 0 rgba(0,0,0,.22);
   }
 
   footer{
