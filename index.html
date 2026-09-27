@@ -1942,7 +1942,24 @@
   }
 
   function renderMobileChipPage(){
-    if(!isMobileLayout()) return;
+    /*
+     * Important: mobile positioning uses inline styles, so when the same page
+     * is resized back to desktop those styles must be cleared. Otherwise a
+     * chip that was on a mobile rail can remain frozen over the console.
+     */
+    if(!isMobileLayout()){
+      chipEls.forEach(el=>{
+        el.style.display = "";
+        ["left","top","right","bottom","width"].forEach(prop=>el.style.removeProperty(prop));
+        el.style.removeProperty("--chip-rot");
+      });
+      extraRow.classList.remove("has-mobile-pages");
+      shelfPrev.hidden = true;
+      shelfNext.hidden = true;
+      shelfPage.hidden = true;
+      return;
+    }
+
     const pageCount = Math.max(1, Math.ceil(memories.length / MOBILE_PAGE_SIZE));
     mobilePageIndex = Math.min(mobilePageIndex, pageCount - 1);
     const start = mobilePageIndex * MOBILE_PAGE_SIZE;
@@ -1970,6 +1987,12 @@
     shelfPage.hidden = !hasPages;
     shelfPage.textContent = (mobilePageIndex + 1) + " / " + pageCount;
   }
+
+  let mobileLayoutTimer = null;
+  window.addEventListener("resize", ()=>{
+    clearTimeout(mobileLayoutTimer);
+    mobileLayoutTimer = setTimeout(()=>renderMobileChipPage(), 80);
+  });
 
 
   const views = {
