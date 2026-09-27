@@ -3,6 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+  // Android smartphones such as Galaxy S22 Ultra can expose a wide CSS viewport
+  // when "desktop site" or an in-app browser is involved. Detect the phone screen
+  // separately so they still use the existing mobile composition.
+  (function(){
+    const ua = navigator.userAgent || "";
+    const sw = Number(window.screen && window.screen.width) || 0;
+    const sh = Number(window.screen && window.screen.height) || 0;
+    const shortScreen = Math.min(sw, sh);
+    if(/Android/i.test(ua) && shortScreen > 0 && shortScreen <= 500){
+      document.documentElement.classList.add("android-phone");
+    }
+  })();
+</script>
 <title>0+0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -555,7 +569,7 @@
     display:flex; align-items:center; justify-content:center;
     flex:0 0 auto;
   }
-  .random-btn svg{ width:22px; height:22px; }
+  .random-btn svg{ width:25px; height:25px; }
   .random-btn:hover{ color:#c7c4ba; }
   .random-btn:active{ transform:translateY(1px); }
 
@@ -1235,9 +1249,8 @@
       pointer-events:auto;
     }
 
-    /* Tablet / desktop use the same compact dice button as the original layout.
-       The icon is enlarged inside the original 27px button. */
-    .random-btn svg{ width:25px; height:25px; display:block; }
+    /* Tablet / desktop keep the original 27px button; only the dice artwork is enlarged. */
+    .random-btn svg{ width:29px; height:29px; display:block; overflow:visible; }
     .random-btn svg rect{ stroke-width:2.2; }
   }
 
@@ -1253,6 +1266,138 @@
   outline:none !important;
   -webkit-tap-highlight-color:transparent !important;
 }
+  /*
+   * Android phone compatibility:
+   * Galaxy S22 Ultra may expose a tablet-sized CSS viewport, so the normal
+   * max-width:760px media query does not fire. Re-apply the existing mobile
+   * geometry only when the head script has positively identified an Android
+   * smartphone. iPad/tablet layouts are untouched.
+   */
+  html.android-phone body{
+    align-items:flex-start;
+    padding:0 16px;
+    min-height:100svh;
+    overflow-x:hidden;
+    overflow-y:hidden;
+  }
+  html.android-phone .composition{
+    height:calc(100svh - 48px);
+    min-height:0;
+    margin-top:12px;
+  }
+  html.android-phone .console-col{
+    position:absolute;
+    left:50%; top:46%;
+    transform:translate(-50%,-50%);
+    margin:0; z-index:3;
+  }
+  html.android-phone .console{ width:264px; }
+
+  html.android-phone .chips-row{
+    position:absolute; inset:0; display:block; margin:0; z-index:4;
+    pointer-events:none; overflow:visible;
+  }
+  html.android-phone .chips-row.powered-off{
+    position:absolute; inset:0; width:100%; height:100%;
+    padding:0; transform:none; display:block;
+    overflow:visible; pointer-events:none;
+  }
+  html.android-phone .chips-row .chip{
+    position:absolute;
+    right:auto !important;
+    top:auto !important;
+    width:80px;
+    padding:5px 5px 7px;
+    pointer-events:auto;
+  }
+  html.android-phone .chip-edit{
+    top:7px; right:7px;
+    width:24px; height:24px;
+    border-radius:50%;
+    border-left:1px solid rgba(255,255,255,.14);
+    box-shadow:0 3px 8px rgba(0,0,0,.28);
+    transform:none;
+  }
+  html.android-phone .chip.used .chip-edit:hover{ transform:scale(1.08); }
+  html.android-phone .chip.used .chip-edit:active{ transform:scale(.94); }
+
+  html.android-phone .chip.c-1{ left:-24px; top:18px !important; bottom:auto; --chip-rot:rotate(-8deg); }
+  html.android-phone .chip.c-2{ left:-24px; top:690px !important; bottom:auto; --chip-rot:rotate(6deg); }
+  html.android-phone .chip.c-3{ right:10px !important; left:auto !important; top:58px !important; bottom:auto; --chip-rot:rotate(7deg); }
+  html.android-phone .chip.c-4{ right:12px !important; left:auto !important; top:696px !important; bottom:auto; --chip-rot:rotate(-6deg); }
+  html.android-phone .chips-row .chip{
+    --chip-scale:1.16;
+    transform:var(--chip-rot) scale(var(--chip-scale)) !important;
+  }
+  html.android-phone .chips-row .chip:nth-child(odd){ transform-origin:100% 50%; }
+  html.android-phone .chips-row .chip:nth-child(even){ transform-origin:0 50%; }
+  html.android-phone .chip:hover,
+  html.android-phone .chip:active,
+  html.android-phone .chip.used{
+    transform:var(--chip-rot) scale(var(--chip-scale,1.16)) !important;
+  }
+  html.android-phone .chip.selected,
+  html.android-phone .chip:focus,
+  html.android-phone .chip:focus-visible{
+    outline:none !important;
+    outline-offset:0 !important;
+    -webkit-tap-highlight-color:transparent;
+  }
+  html.android-phone .chip-face{ height:66px; margin-bottom:6px; }
+  html.android-phone .chip-edge{ height:11px; }
+  html.android-phone .chip-author{ left:8px; top:8px; font-size:4px; }
+  html.android-phone .chip-state{ font-size:4px; bottom:7px; left:4px; }
+  html.android-phone .chip-badge{ font-size:9px; bottom:7px; right:4px; padding:1px 3px; }
+
+  html.android-phone .custom-chip{
+    width:108px;
+    right:auto !important;
+    pointer-events:auto;
+  }
+  html.android-phone .custom-chip.custom-1{ left:-38px !important; top:18px !important; --chip-rot:rotate(5deg); }
+  html.android-phone .custom-chip.custom-2{ right:10px !important; left:auto !important; top:58px !important; --chip-rot:rotate(-5deg); }
+  html.android-phone .custom-chip.custom-3{ left:-38px !important; top:690px !important; bottom:auto !important; --chip-rot:rotate(-4deg); }
+  html.android-phone .custom-chip.custom-4{ right:12px !important; left:auto !important; top:696px !important; --chip-rot:rotate(4deg); }
+  html.android-phone .custom-chip.custom-5{ left:-38px !important; top:42px !important; --chip-rot:rotate(-3deg); }
+  html.android-phone .custom-chip.custom-6{ right:10px !important; left:auto !important; top:58px !important; --chip-rot:rotate(3deg); }
+  html.android-phone .custom-chip.custom-7{ left:-38px !important; top:690px !important; --chip-rot:rotate(3deg); }
+  html.android-phone .custom-chip.custom-8{ right:12px !important; left:auto !important; top:696px !important; --chip-rot:rotate(-3deg); }
+  html.android-phone .custom-chip:hover,
+  html.android-phone .custom-chip:active{ transform:var(--chip-rot) !important; }
+
+  html.android-phone .extra-row.powered-off{ display:none; }
+  html.android-phone .controls-row{
+    align-items:center;
+    margin-top:20px;
+  }
+  html.android-phone .action-cluster{ width:96px; height:68px; flex:0 0 96px; overflow:visible; }
+  html.android-phone .action-stack{ left:0; top:0; width:62px; height:62px; }
+  html.android-phone .action-cluster .random-btn{ right:0; top:0; }
+  html.android-phone .action-cluster .console-add-btn{ right:0; top:34px; bottom:auto; display:flex; }
+  html.android-phone .plate-power{ display:flex; }
+  html.android-phone .slot-mute{ margin-left:auto; }
+  html.android-phone .extra-row:not(.has-mobile-pages){ display:none; }
+  html.android-phone .extra-row.has-mobile-pages{
+    display:flex;
+    position:absolute; left:50%; top:calc(46% + 292px); bottom:auto;
+    width:156px; height:30px; transform:translateX(-50%);
+    gap:8px; align-items:center; justify-content:center; z-index:7;
+  }
+  html.android-phone .extra-row.has-mobile-pages .shelf-nav{
+    position:static; display:flex;
+    width:20px; height:24px;
+    font-size:24px;
+    color:#77736c;
+    background:transparent;
+  }
+  html.android-phone .extra-row.has-mobile-pages .shelf-page{
+    position:static; transform:none; font-size:6px; color:#8b867c;
+  }
+  html.android-phone .extra-row.has-mobile-pages .shelf-prev,
+  html.android-phone .extra-row.has-mobile-pages .shelf-next{
+    flex:0 0 20px;
+  }
+
 </style>
 </head>
 <body>
@@ -1908,14 +2053,12 @@
   const shelfPage = document.getElementById("shelf-page");
   const MOBILE_PAGE_SIZE = 4;
   let mobilePageIndex = 0;
+  function isAndroidPhoneLayout(){
+    return document.documentElement.classList.contains("android-phone");
+  }
+
   function isMobileLayout(){
-    /*
-     * Treat tablet/landscape widths as the safe side-rail layout too.
-     * A 1792px screenshot can still be an iPad CSS viewport (~896px),
-     * so using only the physical screenshot width caused chips to fall back
-     * to the old desktop coordinates and cross the console.
-     */
-    return window.matchMedia("(max-width:760px)").matches;
+    return window.matchMedia("(max-width:760px)").matches || isAndroidPhoneLayout();
   }
 
   /*
@@ -1973,7 +2116,7 @@
   function isTabletLayout(){
     const width = window.innerWidth || document.documentElement.clientWidth || 0;
     const landscapeTouch = window.matchMedia("(orientation:landscape)").matches && (navigator.maxTouchPoints || 0) > 0;
-    return width >= 761 && width <= 1400;
+    return !isAndroidPhoneLayout() && width >= 761 && width <= 1400;
   }
 
   function renderTabletChipLayout(){
