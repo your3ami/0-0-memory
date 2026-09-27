@@ -1348,7 +1348,7 @@
     }
 
     /* Tablet / desktop keep the original 27px button; only the dice artwork is enlarged. */
-    .random-btn svg{ width:25px; height:25px; display:block; overflow:visible; }
+    .random-btn svg{ width:22px; height:22px; display:block; overflow:visible; }
     .random-btn svg rect{ stroke-width:2.2; }
   }
 
@@ -1563,8 +1563,8 @@
               <button class="rating-close" id="rating-close" type="button" title="나가기">×</button>
               <div class="rate-title" id="rating-title">별점을 남겨 주세요.</div>
               <div class="stars" id="stars"></div>
-              <textarea id="comment-box" rows="3" placeholder="다시 본 소감을 적어 주세요." maxlength="57"></textarea>
-              <div class="char-count" id="comment-count">0/57</div>
+              <textarea id="comment-box" rows="3" placeholder="다시 본 소감을 적어 주세요." maxlength="61"></textarea>
+              <div class="char-count" id="comment-count">0/61</div>
               <button class="save-btn" id="save-btn">저장하기</button>
               <div class="saved-msg" id="saved-msg"></div>
             </div>
@@ -1678,9 +1678,9 @@
 
       <div class="modal-label-row">
         <label class="modal-label">편지 내용</label>
-        <div class="modal-char-count" id="letter-count">0/57</div>
+        <div class="modal-char-count" id="letter-count">0/61</div>
       </div>
-      <textarea id="field-letter" class="modal-textarea" maxlength="57" placeholder="그날의 이야기를 적어 주세요."></textarea>
+      <textarea id="field-letter" class="modal-textarea" maxlength="61" placeholder="그날의 이야기를 적어 주세요."></textarea>
     </div>
 
     <div class="modal-step" id="modal-step-2">
@@ -2725,10 +2725,10 @@
     .forEach(el=>el && el.addEventListener("click", e=>e.stopPropagation()));
   document.getElementById("comment-box").addEventListener("pointerdown", e=>e.stopPropagation());
   document.getElementById("comment-box").addEventListener("input", ()=>{
-    updateCharCount(document.getElementById("comment-box"), document.getElementById("comment-count"), 57);
+    updateCharCount(document.getElementById("comment-box"), document.getElementById("comment-count"), 61);
   });
   document.getElementById("field-letter").addEventListener("input", ()=>{
-    updateCharCount(document.getElementById("field-letter"), document.getElementById("letter-count"), 57);
+    updateCharCount(document.getElementById("field-letter"), document.getElementById("letter-count"), 61);
   });
   btnAction.addEventListener("click", (e)=>{ e.stopPropagation(); if(inputLocked()) return; physicalReact("go"); sfx.go(); advance(); });
 
@@ -2751,7 +2751,7 @@
     const existing = loadRating(current.id);
     if(existing) stars = existing.stars;
     document.getElementById("comment-box").value = existing ? existing.comment : "";
-    updateCharCount(document.getElementById("comment-box"), document.getElementById("comment-count"), 57);
+    updateCharCount(document.getElementById("comment-box"), document.getElementById("comment-count"), 61);
     document.getElementById("saved-msg").textContent = existing ? "이전 기록을 불러왔어요." : "";
 
     for(let s=1;s<=5;s++){
@@ -3071,7 +3071,7 @@
     fieldThought.value = m.thought || "";
     fieldSongLine.value = m.songLine || "";
     fieldWeatherValue = WEATHER_OPTIONS.includes(m.weather) ? m.weather : "";
-    updateCharCount(fieldLetter, document.getElementById("letter-count"), 57);
+    updateCharCount(fieldLetter, document.getElementById("letter-count"), 61);
     renderWeatherOptions();
     renderTagOptions();
     if(editingShot){ photoPreview.src = editingShot; photoPreview.style.display = "block"; photoPlaceholder.style.display = "none"; }
@@ -3093,7 +3093,7 @@
     fieldThought.value = "";
     fieldSongLine.value = "";
     fieldWeatherValue = "";
-    updateCharCount(fieldLetter, document.getElementById("letter-count"), 57);
+    updateCharCount(fieldLetter, document.getElementById("letter-count"), 61);
     renderWeatherOptions();
     renderTagOptions();
     photoPreview.style.display = "none";
@@ -3165,7 +3165,7 @@
         fieldThought.value = m.thought || "";
         fieldSongLine.value = m.songLine || "";
         fieldWeatherValue = WEATHER_OPTIONS.includes(m.weather) ? m.weather : "";
-        updateCharCount(fieldLetter, document.getElementById("letter-count"), 57);
+        updateCharCount(fieldLetter, document.getElementById("letter-count"), 61);
         renderWeatherOptions();
         editingTags = normalizeTags(m.tags);
         renderTagOptions();
