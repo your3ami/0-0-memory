@@ -11,8 +11,10 @@
     const ua = navigator.userAgent || "";
     const sw = Number(window.screen && window.screen.width) || 0;
     const sh = Number(window.screen && window.screen.height) || 0;
+    const dpr = Number(window.devicePixelRatio) || 1;
     const shortScreen = Math.min(sw, sh);
-    if(/Android/i.test(ua) && shortScreen > 0 && shortScreen <= 500){
+    const shortPhysicalCss = shortScreen > 0 ? shortScreen / dpr : 0;
+    if(/Android/i.test(ua) && shortPhysicalCss > 0 && shortPhysicalCss <= 500){
       document.documentElement.classList.add("android-phone");
     }
   })();
@@ -517,11 +519,11 @@
   }
   .action-cluster .random-btn{
     position:absolute;
-    right:0; top:3.5px;
+    right:0; top:1.5px;
   }
   .action-cluster .console-add-btn{
     position:absolute;
-    right:0; top:37.5px;
+    right:0; top:35.5px;
     display:flex;
   }
   .plate-power{ margin-left:auto; }
@@ -569,7 +571,7 @@
     display:flex; align-items:center; justify-content:center;
     flex:0 0 auto;
   }
-  .random-btn svg{ width:25px; height:25px; }
+  .random-btn svg{ width:22px; height:22px; display:block; }
   .random-btn:hover{ color:#c7c4ba; }
   .random-btn:active{ transform:translateY(1px); }
 
@@ -1264,8 +1266,8 @@
     /* Mobile control layout: keep GO and the compact dice/+ stack aligned. */
     .action-cluster{ width:96px; height:68px; flex:0 0 96px; overflow:visible; }
     .action-stack{ left:0; top:0; width:62px; height:62px; }
-    .action-cluster .random-btn{ right:0; top:3.5px; }
-    .action-cluster .console-add-btn{ right:0; top:37.5px; bottom:auto; display:flex; }
+     .action-cluster .random-btn{ right:0; top:1.5px; }
+     .action-cluster .console-add-btn{ right:0; top:35.5px; bottom:auto; display:flex; }
     .plate-power{ display:flex; }
     .slot-mute{ margin-left:auto; }
     .extra-row:not(.has-mobile-pages){ display:none; }
