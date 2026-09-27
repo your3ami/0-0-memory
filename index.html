@@ -1132,10 +1132,11 @@
       padding:5px 5px 7px;
       pointer-events:auto;
     }
-    .chip.c-1{ left:2px; top:34px !important; bottom:auto; --chip-rot:rotate(-8deg); }
-    .chip.c-2{ left:2px; top:620px !important; bottom:auto; --chip-rot:rotate(6deg); }
-    .chip.c-3{ right:2px !important; left:auto; top:48px !important; bottom:auto; --chip-rot:rotate(7deg); }
-    .chip.c-4{ right:2px !important; left:auto; top:636px !important; bottom:auto; --chip-rot:rotate(-6deg); }
+    /* Mobile: four corner parking spots — chips stay outside the console footprint. */
+    .chip.c-1{ left:10px; top:42px !important; bottom:auto; --chip-rot:rotate(-8deg); }
+    .chip.c-2{ left:12px; top:680px !important; bottom:auto; --chip-rot:rotate(6deg); }
+    .chip.c-3{ right:10px !important; left:auto; top:58px !important; bottom:auto; --chip-rot:rotate(7deg); }
+    .chip.c-4{ right:12px !important; left:auto; top:696px !important; bottom:auto; --chip-rot:rotate(-6deg); }
     .chip:hover, .chip:active, .chip.used{ transform:var(--chip-rot) !important; }
     .chip-face{ height:58px; margin-bottom:5px; }
     .chip-edge{ height:9px; }
@@ -1150,14 +1151,14 @@
       right:auto !important;
       pointer-events:auto;
     }
-    .custom-chip.custom-1{ left:2px !important; top:180px !important; --chip-rot:rotate(5deg); }
-    .custom-chip.custom-2{ right:2px !important; left:auto !important; top:195px !important; --chip-rot:rotate(-5deg); }
-    .custom-chip.custom-3{ left:2px !important; top:450px !important; bottom:auto !important; --chip-rot:rotate(-4deg); }
-    .custom-chip.custom-4{ right:2px !important; left:auto !important; top:465px !important; --chip-rot:rotate(4deg); }
-    .custom-chip.custom-5{ left:2px !important; top:290px !important; --chip-rot:rotate(-3deg); }
-    .custom-chip.custom-6{ right:2px !important; left:auto !important; top:305px !important; --chip-rot:rotate(3deg); }
-    .custom-chip.custom-7{ left:2px !important; top:540px !important; --chip-rot:rotate(3deg); }
-    .custom-chip.custom-8{ right:2px !important; left:auto !important; top:555px !important; --chip-rot:rotate(-3deg); }
+    .custom-chip.custom-1{ left:10px !important; top:42px !important; --chip-rot:rotate(5deg); }
+    .custom-chip.custom-2{ right:10px !important; left:auto !important; top:58px !important; --chip-rot:rotate(-5deg); }
+    .custom-chip.custom-3{ left:12px !important; top:680px !important; bottom:auto !important; --chip-rot:rotate(-4deg); }
+    .custom-chip.custom-4{ right:12px !important; left:auto !important; top:696px !important; --chip-rot:rotate(4deg); }
+    .custom-chip.custom-5{ left:10px !important; top:42px !important; --chip-rot:rotate(-3deg); }
+    .custom-chip.custom-6{ right:10px !important; left:auto !important; top:58px !important; --chip-rot:rotate(3deg); }
+    .custom-chip.custom-7{ left:12px !important; top:680px !important; --chip-rot:rotate(3deg); }
+    .custom-chip.custom-8{ right:12px !important; left:auto !important; top:696px !important; --chip-rot:rotate(-3deg); }
     .custom-chip:hover, .custom-chip:active{ transform:var(--chip-rot) !important; }
     /* Mobile: keep the original bookshelf concept, but anchor it above the console. */
     .extra-row.powered-off{ display:none; }
@@ -1166,10 +1167,11 @@
       align-items:center;
       margin-top:20px;
     }
-    .action-cluster{ width:100px; height:112px; flex:0 0 100px; }
-    .action-stack{ left:0; top:10px; width:62px; height:62px; }
-    .action-cluster .console-add-btn{ right:0; top:27px; bottom:auto; }
-    .action-cluster .random-btn{ right:0; top:84px; }
+    /* Mobile control layout: GO | dice, with + tucked below the dice. */
+    .action-cluster{ width:100px; height:65px; flex:0 0 100px; }
+    .action-stack{ left:0; top:0; width:62px; height:62px; }
+    .action-cluster .random-btn{ right:0; top:0; }
+    .action-cluster .console-add-btn{ right:0; top:38px; bottom:auto; display:flex; }
     .plate-power{ display:flex; }
     .slot-mute{ margin-left:auto; }
     .extra-row:not(.has-mobile-pages){ display:none; }
