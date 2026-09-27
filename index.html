@@ -1307,6 +1307,58 @@
     box-shadow:0 1px 0 #713028;
   }
 
+  /* Final material pass: keep the console-matched palette, then add subtle molded-plastic texture. */
+  .modal{
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 4px),
+      radial-gradient(circle at 18% 8%, rgba(255,255,255,.055), transparent 28%),
+      linear-gradient(145deg,#303238 0%,#25262b 58%,#1d1e22 100%);
+    border-color:#55565d;
+    box-shadow:
+      0 28px 65px rgba(0,0,0,.58),
+      0 2px 0 rgba(255,255,255,.07) inset,
+      0 -2px 0 rgba(0,0,0,.42) inset,
+      inset 0 0 0 1px rgba(0,0,0,.22);
+  }
+  .modal::before{
+    content:"";
+    position:absolute;
+    inset:7px;
+    border:1px solid rgba(0,0,0,.24);
+    border-radius:6px;
+    pointer-events:none;
+  }
+  .modal-input,
+  #field-date,
+  .modal-textarea{
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px),
+      linear-gradient(180deg,#15171a,#1b1c20);
+    border-color:#4b4d53;
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,.38),
+      inset 0 1px 0 rgba(255,255,255,.025),
+      0 1px 0 rgba(255,255,255,.025);
+  }
+  .photo-picker{
+    border-style:solid;
+    border-width:1px;
+    border-color:#4e6656;
+    background:
+      repeating-linear-gradient(0deg, rgba(130,190,145,.025) 0 1px, transparent 1px 4px),
+      linear-gradient(145deg,#101719,#171d1b);
+    box-shadow:
+      inset 0 2px 5px rgba(0,0,0,.38),
+      0 1px 0 rgba(255,255,255,.025);
+  }
+  .author-option,
+  .tag-option,
+  .memory-weather-option{
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.035),
+      inset 0 -2px 0 rgba(0,0,0,.22);
+  }
+
   footer{
     margin-top:26px;
     font-size:12px;
