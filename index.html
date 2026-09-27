@@ -455,11 +455,12 @@
   .plate{
     display:flex; justify-content:space-between; align-items:center;
     padding:10px 4px 0;
-    font-family:var(--font-pixel);
+    font-family:var(--font-hand);
     font-size:13px; font-weight:400;
     color:#cfcdc4;
-    letter-spacing:.5px;
+    letter-spacing:.35px;
   }
+  .stage-label{font-family:var(--font-hand);}
   .console-add-btn{
     display:none;
     width:27px; height:27px;
@@ -521,30 +522,17 @@
   }
   .action-cluster{
     display:grid;
-    grid-template-columns:28px 62px 28px;
-    grid-template-rows:28px 62px;
+    grid-template-columns:62px 28px;
+    grid-template-rows:62px 28px;
     align-items:center;
     justify-items:center;
-    width:122px;
-    height:92px;
+    width:100px; height:94px;
     position:relative;
+    column-gap:10px; row-gap:4px;
   }
-  .action-stack{
-    grid-column:2;
-    grid-row:2;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .action-cluster .console-add-btn{
-    grid-column:1;
-    grid-row:1;
-    display:flex;
-  }
-  .action-cluster .random-btn{
-    grid-column:3;
-    grid-row:1;
-  }
+  .action-stack{ grid-column:1; grid-row:1; display:flex; align-items:center; justify-content:center; }
+  .action-cluster .random-btn{ grid-column:2; grid-row:1; }
+  .action-cluster .console-add-btn{ grid-column:2; grid-row:2; display:flex; }
   .dpad{
     display:grid;
     grid-template-columns:26px 26px 26px;
@@ -1120,20 +1108,12 @@
        half of the machine; the lower pair sit beside the lower half. */
     .chips-row{ position:absolute; inset:0; display:block; margin:0; z-index:4; pointer-events:none; }
     .chips-row.powered-off{
-      left:50%;
-      top:12px;
-      width:calc(100% - 12px);
-      height:104px;
-      padding:0 6px;
-      gap:8px;
-      justify-content:flex-start;
-      transform:translateX(-50%);
-      overflow-x:auto;
+      position:absolute; inset:0; width:100%; height:100%;
+      padding:0; transform:none; display:block; overflow:visible; pointer-events:none;
     }
     .chips-row.powered-off .chip{
-      flex:0 0 68px;
-      width:68px;
-      padding:5px 5px 7px;
+      position:absolute !important; flex:none; width:68px;
+      padding:5px 5px 7px; filter:grayscale(1) brightness(.58) !important; pointer-events:none;
     }
     .chips-row .chip{
       position:absolute;
@@ -1143,10 +1123,10 @@
       padding:5px 5px 7px;
       pointer-events:auto;
     }
-    .chip.c-1{ left:2px; top:34px !important; bottom:auto; --chip-rot:rotate(-8deg); }
-    .chip.c-2{ left:2px; top:620px !important; bottom:auto; --chip-rot:rotate(6deg); }
-    .chip.c-3{ right:2px !important; left:auto; top:48px !important; bottom:auto; --chip-rot:rotate(7deg); }
-    .chip.c-4{ right:2px !important; left:auto; top:636px !important; bottom:auto; --chip-rot:rotate(-6deg); }
+    .chip.c-1{ left:5px; top:205px !important; bottom:auto; --chip-rot:rotate(-11deg); }
+    .chip.c-2{ left:72px; top:535px !important; bottom:auto; --chip-rot:rotate(7deg); }
+    .chip.c-3{ right:7px !important; left:auto; top:285px !important; bottom:auto; --chip-rot:rotate(8deg); }
+    .chip.c-4{ right:62px !important; left:auto; top:500px !important; bottom:auto; --chip-rot:rotate(-9deg); }
     .chip:hover, .chip:active, .chip.used{ transform:var(--chip-rot) !important; }
     .chip-face{ height:58px; margin-bottom:5px; }
     .chip-edge{ height:9px; }
@@ -1161,103 +1141,34 @@
       right:auto !important;
       pointer-events:auto;
     }
-    .custom-chip.custom-1{ left:2px !important; top:180px !important; --chip-rot:rotate(5deg); }
-    .custom-chip.custom-2{ right:2px !important; left:auto !important; top:195px !important; --chip-rot:rotate(-5deg); }
-    .custom-chip.custom-3{ left:2px !important; top:450px !important; bottom:auto !important; --chip-rot:rotate(-4deg); }
-    .custom-chip.custom-4{ right:2px !important; left:auto !important; top:465px !important; bottom:auto !important; --chip-rot:rotate(4deg); }
-    .custom-chip.custom-5{ left:2px !important; top:290px !important; --chip-rot:rotate(-3deg); }
-    .custom-chip.custom-6{ right:2px !important; left:auto !important; top:305px !important; --chip-rot:rotate(3deg); }
-    .custom-chip.custom-7{ left:2px !important; top:540px !important; --chip-rot:rotate(3deg); }
-    .custom-chip.custom-8{ right:2px !important; left:auto !important; top:555px !important; --chip-rot:rotate(-3deg); }
+    .custom-chip.custom-1{ left:16px !important; top:315px !important; --chip-rot:rotate(5deg); }
+    .custom-chip.custom-2{ right:18px !important; left:auto !important; top:175px !important; --chip-rot:rotate(-6deg); }
+    .custom-chip.custom-3{ left:92px !important; top:610px !important; bottom:auto !important; --chip-rot:rotate(-8deg); }
+    .custom-chip.custom-4{ right:6px !important; left:auto !important; top:430px !important; --chip-rot:rotate(6deg); }
+    .custom-chip.custom-5{ left:2px !important; top:415px !important; --chip-rot:rotate(-4deg); }
+    .custom-chip.custom-6{ right:82px !important; left:auto !important; top:335px !important; --chip-rot:rotate(10deg); }
+    .custom-chip.custom-7{ left:48px !important; top:465px !important; --chip-rot:rotate(3deg); }
+    .custom-chip.custom-8{ right:10px !important; left:auto !important; top:575px !important; --chip-rot:rotate(-5deg); }
     .custom-chip:hover, .custom-chip:active{ transform:var(--chip-rot) !important; }
     /* Mobile: keep the original bookshelf concept, but anchor it above the console. */
-    .extra-row.powered-off{
-      left:50%; right:auto;
-      top:calc(50% - 330px);
-      bottom:auto;
-      width:min(276px, calc(100% - 38px));
-      height:92px;
-      padding:11px 28px 13px;
-      transform:translateX(-50%);
-      gap:7px;
-      overflow:hidden;
-      border:2px solid #4b4944;
-      border-radius:4px;
-      background:linear-gradient(180deg,#d7d2c7 0%,#c6c0b4 100%);
-      box-shadow:
-        0 9px 16px rgba(35,32,25,.16),
-        0 3px 0 #8e887d,
-        0 1px 0 rgba(255,255,255,.7) inset;
-    }
-    /* top shelf board */
-    .extra-row.powered-off::before{
-      content:"";
-      position:absolute;
-      left:-2px; right:-2px; top:-7px;
-      height:10px;
-      border:2px solid #4b4944;
-      border-radius:4px 4px 1px 1px;
-      background:#bcb6aa;
-      box-shadow:0 2px 0 #8e887d;
-      pointer-events:none;
-      z-index:5;
-    }
-    /* bottom shelf board */
-    .extra-row.powered-off::after{
-      display:block;
-      content:"";
-      position:absolute;
-      left:-2px; right:-2px; bottom:-5px;
-      height:9px;
-      border:2px solid #4b4944;
-      border-radius:1px 1px 4px 4px;
-      background:#bcb6aa;
-      box-shadow:0 -1px 0 rgba(255,255,255,.35) inset;
-      pointer-events:none;
-      z-index:5;
-    }
-    .extra-row.powered-off .chip{
-      flex:0 0 42px;
-      width:42px; height:67px;
-      padding:0 !important;
-      margin-top:2px;
-      border-radius:4px 4px 2px 2px;
-      overflow:hidden;
-      box-shadow:2px 4px 5px rgba(20,18,14,.22);
-      z-index:2;
-    }
-    .extra-row.powered-off .chip-face{
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      margin:0;
-      object-fit:cover;
-      opacity:.88;
-    }
-    .extra-row.powered-off .chip-edge{
-      position:absolute; inset:0;
-      width:100%; height:100%;
-      border-left:2px solid rgba(255,255,255,.16);
-      border-right:1px solid rgba(0,0,0,.28);
-      background:linear-gradient(90deg,rgba(255,255,255,.08),transparent 35%,rgba(0,0,0,.2));
-      z-index:2;
-    }
-    .extra-row.powered-off.has-pages{
-      width:min(276px, calc(100% - 38px));
-      padding-left:28px; padding-right:28px; gap:7px;
-    }
-    .extra-row.powered-off.has-pages .chip{ flex-basis:42px; width:42px; }
-    .extra-row.powered-off .shelf-nav{
-      top:32px; width:22px; height:26px; font-size:25px; color:#4d4a44;
-      z-index:8;
-      background:rgba(246,244,238,.7);
-      border-radius:3px;
-    }
-    .extra-row.powered-off .shelf-prev{ left:4px; }
-    .extra-row.powered-off .shelf-next{ right:4px; }
-    .extra-row.powered-off .shelf-page{
-      bottom:1px; font-size:6px; color:#5f5b53; z-index:8;
-    }
+    .extra-row.powered-off{ display:none; }
     .chip.chip-add{ width:68px; height:88px; pointer-events:auto; }
+    .extra-row:not(.has-mobile-pages){ display:none; }
+    .extra-row.has-mobile-pages{
+      display:flex; position:absolute; left:50%; top:calc(46% + 292px); bottom:auto;
+      width:108px; height:24px; transform:translateX(-50%);
+      gap:7px; align-items:center; justify-content:center; z-index:7;
+    }
+    .extra-row.has-mobile-pages .chip-add{ display:none; }
+    .extra-row.has-mobile-pages .shelf-nav{
+      position:static; display:flex; width:20px; height:22px;
+      font-size:23px; color:#77736c; background:transparent;
+    }
+    .extra-row.has-mobile-pages .shelf-page{
+      position:static; transform:none; font-size:6px; color:#8b867c;
+    }
+    .extra-row.has-mobile-pages .shelf-prev,
+    .extra-row.has-mobile-pages .shelf-next{ flex:0 0 20px; }
     .chip-add-icon{ font-size:22px; }
 
     /* On mobile the + card stays below the machine; a new memory flies from here
@@ -1307,61 +1218,6 @@
       flex:0 0 20px;
     }
   }
-    /* Mobile composition: console above, memory-chip field below. */
-    .chips-row{
-      left:0;
-      right:0;
-      top:calc(50% + 215px);
-      bottom:auto;
-      width:100%;
-      height:150px;
-      transform:none;
-      z-index:4;
-    }
-    .chips-row .chip{
-      position:absolute;
-      width:68px;
-      right:auto !important;
-      top:auto !important;
-      bottom:auto !important;
-      padding:5px 5px 7px;
-      pointer-events:auto;
-    }
-    .top-slot{ top:-8px; }
-    .console-add-btn{ display:flex; }
-    .console-texture{ font-size:4.5px; letter-spacing:.8px; }
-    .extra-row.has-mobile-pages{
-      width:116px;
-      height:24px;
-      left:50%;
-      bottom:2px;
-      transform:translateX(-50%);
-      gap:7px;
-      align-items:center;
-      justify-content:center;
-      z-index:7;
-    }
-    .extra-row.has-mobile-pages .chip-add{ display:none; }
-    .extra-row.has-mobile-pages .shelf-nav{
-      position:static;
-      display:flex;
-      width:20px; height:22px;
-      font-size:23px;
-      color:#77736c;
-      background:transparent;
-    }
-    .extra-row.has-mobile-pages .shelf-page{
-      position:static;
-      transform:none;
-      font-size:6px;
-      color:#8b867c;
-    }
-    .extra-row.has-mobile-pages .shelf-prev,
-    .extra-row.has-mobile-pages .shelf-next{
-      flex:0 0 20px;
-    }
-    .extra-row:not(.powered-off) .chip-add{ display:none; }
-
   @media (min-width:761px){ .chips-row{ display:block; } }
 
 </style>
@@ -1446,8 +1302,8 @@
         </div>
 
         <div class="plate">
-          <span class="game-pixel">STAGE 01</span>
-          <button class="sound-toggle" id="sound-toggle" type="button" title="소리">🔊</button>
+          <span class="stage-label">STAGE 01</span>
+          <button class="sound-toggle" id="sound-toggle" type="button" title="소리">🔊</button>n>
         </div>
         <div class="slot-row">
           <button class="album-btn" id="btn-album" type="button" title="앨범">
@@ -1474,10 +1330,10 @@
             <button class="down" id="btn-replay" title="다시 재생">▼</button>
           </div>
           <div class="action-cluster">
-            <button class="console-add-btn" id="btn-add-console" type="button" aria-label="새 추억 칩 추가">+</button>
             <div class="action-stack">
               <button class="action-btn" id="btn-action">GO</button>
-            </div>
+              <button class="console-add-btn" id="btn-add-console" type="button" aria-label="새 추억 칩 추가">+</button>
+          </div>
             <button class="random-btn" id="btn-random" type="button" title="랜덤 재생">
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" stroke-width="1.8"/>
