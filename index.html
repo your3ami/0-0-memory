@@ -14,7 +14,17 @@
     const dpr = Number(window.devicePixelRatio) || 1;
     const shortScreen = Math.min(sw, sh);
     const shortPhysicalCss = shortScreen > 0 ? shortScreen / dpr : 0;
-    if(/Android/i.test(ua) && shortPhysicalCss > 0 && shortPhysicalCss <= 500){
+    const androidMobileUA = /Android/i.test(ua) && /Mobile/i.test(ua);
+    const mobileUAData = !!(navigator.userAgentData && navigator.userAgentData.mobile);
+    /*
+     * Some Samsung browsers / in-app browsers report a desktop-sized
+     * screen.width even on a phone. Prefer the Android mobile UA signal,
+     * then keep the physical-size fallback for unusual UA strings.
+     */
+    if(
+      /Android/i.test(ua) &&
+      (androidMobileUA || mobileUAData || (shortPhysicalCss > 0 && shortPhysicalCss <= 500))
+    ){
       document.documentElement.classList.add("android-phone");
     }
   })();
