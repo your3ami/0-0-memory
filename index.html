@@ -1359,6 +1359,163 @@
       inset 0 -2px 0 rgba(0,0,0,.22);
   }
 
+  /* ---------- final hardware finish: molded plastic + tactile controls ---------- */
+  .console{
+    background:
+      radial-gradient(circle at 22% 12%, rgba(255,255,255,.065), transparent 24%),
+      radial-gradient(circle at 82% 92%, rgba(0,0,0,.24), transparent 34%),
+      radial-gradient(circle, rgba(255,255,255,.018) 0 .65px, transparent .75px) 0 0/4px 4px,
+      repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, rgba(0,0,0,.016) 1px 3px),
+      linear-gradient(160deg,#303037 0%,#27282e 52%,#1f2025 100%);
+    border:1px solid rgba(0,0,0,.72);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.10) inset,
+      0 -2px 0 rgba(0,0,0,.52) inset,
+      0 30px 60px -20px rgba(20,20,25,.46),
+      0 10px 20px -8px rgba(20,20,25,.32);
+  }
+  .screen-frame{
+    background:linear-gradient(145deg,#111115,#050506 62%,#15151a);
+    border:1px solid #09090a;
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,.035),
+      inset 0 -3px 0 rgba(0,0,0,.65),
+      0 1px 0 rgba(255,255,255,.025);
+  }
+  .plate,
+  .slot-row{ text-shadow:0 1px 0 rgba(0,0,0,.55); }
+  .dpad button{
+    background:
+      radial-gradient(circle at 35% 25%, rgba(255,255,255,.035), transparent 38%),
+      linear-gradient(145deg,#23242a,#18191e);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.035),
+      inset 0 -2px 0 rgba(0,0,0,.34),
+      0 1px 0 rgba(0,0,0,.45);
+  }
+  .dpad button:active{
+    background:#111216;
+    box-shadow:inset 0 2px 3px rgba(0,0,0,.42);
+  }
+  .action-btn{
+    background:
+      radial-gradient(circle at 32% 20%, rgba(255,255,255,.11), transparent 32%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 3px),
+      linear-gradient(160deg,#cf5546,#a93f34);
+    border:1px solid rgba(75,22,18,.72);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.13),
+      inset 0 -3px 0 rgba(92,28,22,.30),
+      0 4px 0 #702a23,
+      0 8px 14px rgba(0,0,0,.28);
+  }
+  .action-btn:active{
+    box-shadow:inset 0 2px 3px rgba(80,20,16,.34), 0 1px 0 #702a23;
+  }
+  .power-btn,
+  .console-add-btn,
+  .random-btn,
+  .album-btn{
+    background:
+      radial-gradient(circle at 30% 20%, rgba(255,255,255,.04), transparent 38%),
+      linear-gradient(145deg,#292a30,#1b1c21);
+    border-color:#090a0c;
+  }
+
+  /* ---------- editor: console-matched removable-module skin ---------- */
+  .modal-backdrop{
+    background:
+      radial-gradient(circle at 50% 42%, rgba(104,113,118,.13), transparent 42%),
+      rgba(4,6,8,.78);
+    backdrop-filter:blur(3px);
+  }
+  .modal{
+    background:
+      radial-gradient(circle at 18% 7%, rgba(255,255,255,.065), transparent 26%),
+      radial-gradient(circle at 84% 92%, rgba(0,0,0,.24), transparent 35%),
+      radial-gradient(circle, rgba(255,255,255,.016) 0 .6px, transparent .7px) 0 0/4px 4px,
+      repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 4px),
+      linear-gradient(145deg,#303238,#25262b 58%,#1d1e22);
+    border:1px solid #5a5b62;
+    border-radius:11px;
+    color:#eee9dc;
+    box-shadow:
+      0 30px 70px rgba(0,0,0,.62),
+      0 2px 0 rgba(255,255,255,.075) inset,
+      0 -3px 0 rgba(0,0,0,.48) inset,
+      inset 0 0 0 1px rgba(0,0,0,.25);
+  }
+  .modal-console-bar{
+    color:#9c9b94;
+    border-bottom-color:#4c4d53;
+  }
+  .modal-console-bar span:last-child{ color:#d3aa50; }
+  .modal-title{
+    color:#f0eadc;
+    text-shadow:0 1px 0 rgba(0,0,0,.55);
+  }
+  .modal-from{ color:#91a493; }
+  .modal-input,
+  #field-date,
+  .modal-textarea{
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.014) 0 1px, transparent 1px 3px),
+      linear-gradient(180deg,#131519,#1a1b1f);
+    border:1px solid #494b52;
+    color:#eee9dc;
+    box-shadow:
+      inset 0 2px 5px rgba(0,0,0,.40),
+      inset 0 1px 0 rgba(255,255,255,.025),
+      0 1px 0 rgba(255,255,255,.018);
+  }
+  .modal-input:focus,
+  #field-date:focus,
+  .modal-textarea:focus{
+    border-color:#718d77;
+    box-shadow:
+      0 0 0 1px rgba(113,141,119,.32),
+      inset 0 2px 5px rgba(0,0,0,.40);
+  }
+  .photo-picker{
+    background:
+      repeating-linear-gradient(0deg, rgba(125,184,139,.026) 0 1px, transparent 1px 4px),
+      linear-gradient(145deg,#0e1415,#17201d);
+    border-color:#526c59;
+    box-shadow:
+      inset 0 2px 6px rgba(0,0,0,.42),
+      inset 0 1px 0 rgba(255,255,255,.025);
+  }
+  .author-option,
+  .memory-weather-option,
+  .tag-option{
+    background:linear-gradient(145deg,#292a2f,#1b1c20);
+    border-color:#45474e;
+    color:#a4a39c;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.035),
+      inset 0 -2px 0 rgba(0,0,0,.24);
+  }
+  .author-option.active,
+  .memory-weather-option.active,
+  .tag-option.active{
+    background:linear-gradient(145deg,#34353a,#292a2f);
+    border-color:#d0a84e;
+    color:#f0d57c;
+  }
+  .modal-btn.ghost{ color:#aaa9a1; }
+  .modal-btn.primary{
+    background:
+      radial-gradient(circle at 32% 18%, rgba(255,255,255,.10), transparent 34%),
+      linear-gradient(160deg,#c65242,#a93e34);
+    border:1px solid #713028;
+    color:#fff5e8;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.11),
+      inset 0 -2px 0 rgba(70,20,16,.30),
+      0 3px 0 #713028,
+      0 6px 12px rgba(0,0,0,.25);
+  }
+
   footer{
     margin-top:26px;
     font-size:12px;
