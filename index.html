@@ -521,18 +521,27 @@
     padding:0 2px;
   }
   .action-cluster{
-    display:grid;
-    grid-template-columns:62px 28px;
-    grid-template-rows:62px 28px;
-    align-items:center;
-    justify-items:center;
-    width:100px; height:94px;
     position:relative;
-    column-gap:10px; row-gap:4px;
+    width:100px; height:82px;
+    flex:0 0 100px;
   }
-  .action-stack{ grid-column:1; grid-row:1; display:flex; align-items:center; justify-content:center; }
-  .action-cluster .random-btn{ grid-column:2; grid-row:1; }
-  .action-cluster .console-add-btn{ grid-column:2; grid-row:2; display:flex; }
+  .action-stack{
+    position:absolute;
+    left:0; top:10px;
+    width:62px; height:62px;
+    display:block;
+  }
+  .action-cluster .random-btn{
+    position:absolute;
+    right:0; top:28px;
+  }
+  .action-cluster .console-add-btn{
+    position:absolute;
+    right:0; bottom:0;
+    display:flex;
+  }
+  .plate-power{ margin-left:auto; }
+  .slot-mute{ margin-left:auto; }
   .dpad{
     display:grid;
     grid-template-columns:26px 26px 26px;
@@ -1123,10 +1132,10 @@
       padding:5px 5px 7px;
       pointer-events:auto;
     }
-    .chip.c-1{ left:5px; top:205px !important; bottom:auto; --chip-rot:rotate(-11deg); }
-    .chip.c-2{ left:72px; top:535px !important; bottom:auto; --chip-rot:rotate(7deg); }
-    .chip.c-3{ right:7px !important; left:auto; top:285px !important; bottom:auto; --chip-rot:rotate(8deg); }
-    .chip.c-4{ right:62px !important; left:auto; top:500px !important; bottom:auto; --chip-rot:rotate(-9deg); }
+    .chip.c-1{ left:8px; top:170px !important; bottom:auto; --chip-rot:rotate(-10deg); }
+    .chip.c-2{ left:76px; top:675px !important; bottom:auto; --chip-rot:rotate(7deg); }
+    .chip.c-3{ right:8px !important; left:auto; top:205px !important; bottom:auto; --chip-rot:rotate(8deg); }
+    .chip.c-4{ right:70px !important; left:auto; top:710px !important; bottom:auto; --chip-rot:rotate(-9deg); }
     .chip:hover, .chip:active, .chip.used{ transform:var(--chip-rot) !important; }
     .chip-face{ height:58px; margin-bottom:5px; }
     .chip-edge{ height:9px; }
@@ -1141,18 +1150,28 @@
       right:auto !important;
       pointer-events:auto;
     }
-    .custom-chip.custom-1{ left:16px !important; top:315px !important; --chip-rot:rotate(5deg); }
-    .custom-chip.custom-2{ right:18px !important; left:auto !important; top:175px !important; --chip-rot:rotate(-6deg); }
-    .custom-chip.custom-3{ left:92px !important; top:610px !important; bottom:auto !important; --chip-rot:rotate(-8deg); }
-    .custom-chip.custom-4{ right:6px !important; left:auto !important; top:430px !important; --chip-rot:rotate(6deg); }
-    .custom-chip.custom-5{ left:2px !important; top:415px !important; --chip-rot:rotate(-4deg); }
-    .custom-chip.custom-6{ right:82px !important; left:auto !important; top:335px !important; --chip-rot:rotate(10deg); }
-    .custom-chip.custom-7{ left:48px !important; top:465px !important; --chip-rot:rotate(3deg); }
-    .custom-chip.custom-8{ right:10px !important; left:auto !important; top:575px !important; --chip-rot:rotate(-5deg); }
+    .custom-chip.custom-1{ left:18px !important; top:235px !important; --chip-rot:rotate(5deg); }
+    .custom-chip.custom-2{ right:18px !important; left:auto !important; top:150px !important; --chip-rot:rotate(-6deg); }
+    .custom-chip.custom-3{ left:105px !important; top:690px !important; bottom:auto !important; --chip-rot:rotate(-8deg); }
+    .custom-chip.custom-4{ right:10px !important; left:auto !important; top:655px !important; --chip-rot:rotate(6deg); }
+    .custom-chip.custom-5{ left:2px !important; top:210px !important; --chip-rot:rotate(-4deg); }
+    .custom-chip.custom-6{ right:88px !important; left:auto !important; top:245px !important; --chip-rot:rotate(10deg); }
+    .custom-chip.custom-7{ left:52px !important; top:735px !important; --chip-rot:rotate(3deg); }
+    .custom-chip.custom-8{ right:8px !important; left:auto !important; top:730px !important; --chip-rot:rotate(-5deg); }
     .custom-chip:hover, .custom-chip:active{ transform:var(--chip-rot) !important; }
     /* Mobile: keep the original bookshelf concept, but anchor it above the console. */
     .extra-row.powered-off{ display:none; }
     .chip.chip-add{ width:68px; height:88px; pointer-events:auto; }
+    .controls-row{
+      align-items:center;
+      margin-top:20px;
+    }
+    .action-cluster{ width:100px; height:82px; flex:0 0 100px; }
+    .action-stack{ left:0; top:10px; width:62px; height:62px; }
+    .action-cluster .random-btn{ right:0; top:28px; }
+    .action-cluster .console-add-btn{ right:0; bottom:0; }
+    .plate-power{ display:flex; }
+    .slot-mute{ margin-left:auto; }
     .extra-row:not(.has-mobile-pages){ display:none; }
     .extra-row.has-mobile-pages{
       display:flex; position:absolute; left:50%; top:calc(46% + 292px); bottom:auto;
@@ -1303,7 +1322,12 @@
 
         <div class="plate">
           <span class="stage-label">STAGE 01</span>
-          <button class="sound-toggle" id="sound-toggle" type="button" title="소리">🔊</button>n>
+          <button class="power-btn plate-power" id="btn-power" type="button" title="전원">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3v8" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+              <path d="M6.3 6.3a8 8 0 1 0 11.4 0" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
         <div class="slot-row">
           <button class="album-btn" id="btn-album" type="button" title="앨범">
@@ -1313,12 +1337,7 @@
               <circle cx="9" cy="9.5" r="1.4" fill="currentColor"/>
             </svg>
           </button>
-          <button class="power-btn" id="btn-power" type="button" title="전원">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 3v8" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
-              <path d="M6.3 6.3a8 8 0 1 0 11.4 0" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
-            </svg>
-          </button>
+          <button class="sound-toggle slot-mute" id="sound-toggle" type="button" title="소리">🔊</button>
         </div>
 
         <div class="controls-row">
