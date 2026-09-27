@@ -1065,11 +1065,18 @@
     .custom-chip.custom-8{ right:2px !important; left:auto !important; top:555px !important; --chip-rot:rotate(-3deg); }
     .custom-chip:hover, .custom-chip:active{ transform:var(--chip-rot) !important; }
     .extra-row.powered-off{
-      left:auto; right:12px; top:18px; bottom:auto;
-      width:92px; height:112px;
+      left:auto; right:8px; top:18px; bottom:auto;
+      width:116px; height:112px;
       padding:0; transform:none;
+      gap:5px;
+      overflow:hidden;
     }
     .extra-row.powered-off::after{ display:none; }
+    .extra-row.powered-off .chip{
+      flex:0 0 24px;
+      width:24px;
+      height:104px;
+    }
     .chip.chip-add{ width:68px; height:88px; pointer-events:auto; }
     .chip-add-icon{ font-size:22px; }
   }
