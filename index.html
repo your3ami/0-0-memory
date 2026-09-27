@@ -1116,8 +1116,8 @@
     }
     .console{ width:264px; }
 
-    /* Four predictable mobile parking spots. The top pair sit beside the upper
-       half of the machine; the lower pair sit beside the lower half. */
+    /* Mobile chips use calculated side gutters around the real console bounds.
+       They are never placed by fixed viewport percentages. */
     .chips-row{ position:absolute; inset:0; display:block; margin:0; z-index:4; pointer-events:none; }
     .chips-row.powered-off{
       position:absolute; inset:0; width:100%; height:100%;
@@ -1131,7 +1131,7 @@
       position:absolute;
       right:auto !important;
       top:auto !important;
-      width:64px;
+      width:56px;
       padding:5px 5px 7px;
       pointer-events:auto;
     }
@@ -1150,7 +1150,7 @@
     /* Custom memories use the same scattered field as the built-in chips.
        Their positions stay on the outer sides so the console and + area remain clear. */
     .custom-chip{
-      width:68px;
+      width:56px;
       right:auto !important;
       pointer-events:auto;
     }
@@ -1171,10 +1171,10 @@
       margin-top:20px;
     }
     /* Mobile control layout: GO | dice, with + tucked below the dice. */
-    .action-cluster{ width:100px; height:65px; flex:0 0 100px; }
+    .action-cluster{ width:100px; height:65px; flex:0 0 100px; overflow:visible; }
     .action-stack{ left:0; top:0; width:62px; height:62px; }
     .action-cluster .random-btn{ right:0; top:0; }
-    .action-cluster .console-add-btn{ right:0; top:38px; bottom:auto; display:flex; }
+    .action-cluster .console-add-btn{ right:0; top:74px; bottom:auto; display:flex; }
     .plate-power{ display:flex; }
     .slot-mute{ margin-left:auto; }
     .extra-row:not(.has-mobile-pages){ display:none; }
@@ -1902,24 +1902,43 @@
   const SHELF_PAGE_SIZE = 4;
   const MOBILE_PAGE_SIZE = 4;
   let mobilePageIndex = 0;
-  const mobilePageLayouts = new Map();
-  const MOBILE_CHIP_SPOTS = [
-    {left:"0%",  top:"10%", rot:"-8deg"},
-    {left:"84%", top:"13%", rot:"6deg"},
-    {left:"0%",  top:"62%", rot:"7deg"},
-    {left:"84%", top:"70%", rot:"-9deg"}
-  ];
-
   function isMobileLayout(){
     return window.matchMedia("(max-width:760px)").matches;
   }
 
-  function getMobileChipLayout(pageIndex){
-    if(!mobilePageLayouts.has(pageIndex)){
-      const spots = [...MOBILE_CHIP_SPOTS];
-      mobilePageLayouts.set(pageIndex, spots);
+  /*
+   * Mobile chip field is calculated from the console's actual bounds.
+   * The chips get their own left/right gutters, so changing the phone width
+   * or the console position cannot push a chip underneath the machine.
+   */
+  function getMobileChipLayout(){
+    const composition = document.getElementById("composition");
+    const consoleEl = document.getElementById("console-body");
+    if(!composition || !consoleEl){
+      return [
+        {left:"0px", top:"0px", width:"54px", rot:"-8deg"},
+        {left:"calc(100% - 54px)", top:"8px", width:"54px", rot:"6deg"},
+        {left:"0px", top:"120px", width:"54px", rot:"7deg"},
+        {left:"calc(100% - 54px)", top:"140px", width:"54px", rot:"-9deg"}
+      ];
     }
-    return mobilePageLayouts.get(pageIndex);
+
+    const cr = composition.getBoundingClientRect();
+    const rr = consoleEl.getBoundingClientRect();
+    const sideGutter = Math.max(42, (cr.width - rr.width) / 2);
+    const chipWidth = Math.min(58, Math.max(46, Math.floor(sideGutter - 8)));
+    const chipHeight = Math.round(chipWidth * 1.34);
+    const leftX = Math.max(0, rr.left - cr.left - chipWidth - 8);
+    const rightX = Math.min(cr.width - chipWidth, rr.right - cr.left + 8);
+    const topY = Math.max(6, rr.top - cr.top - 18);
+    const lowerY = Math.min(cr.height - chipHeight - 6, rr.bottom - cr.top - chipHeight + 14);
+
+    return [
+      {left:leftX+"px", top:topY+"px", width:chipWidth+"px", rot:"-8deg"},
+      {left:rightX+"px", top:(topY + 12)+"px", width:chipWidth+"px", rot:"6deg"},
+      {left:leftX+"px", top:lowerY+"px", width:chipWidth+"px", rot:"7deg"},
+      {left:rightX+"px", top:(lowerY + 16)+"px", width:chipWidth+"px", rot:"-9deg"}
+    ];
   }
 
   function renderMobileChipPage(){
@@ -1927,7 +1946,7 @@
     const pageCount = Math.max(1, Math.ceil(memories.length / MOBILE_PAGE_SIZE));
     mobilePageIndex = Math.min(mobilePageIndex, pageCount - 1);
     const start = mobilePageIndex * MOBILE_PAGE_SIZE;
-    const layout = getMobileChipLayout(mobilePageIndex);
+    const layout = getMobileChipLayout();
 
     chipEls.forEach((el, idx)=>{
       const visibleIndex = idx - start;
@@ -1939,6 +1958,7 @@
         el.style.setProperty("top", spot.top, "important");
         el.style.setProperty("right", "auto", "important");
         el.style.setProperty("bottom", "auto", "important");
+        el.style.setProperty("width", spot.width, "important");
         el.style.setProperty("--chip-rot", "rotate("+spot.rot+")");
       }
     });
