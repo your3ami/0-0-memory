@@ -523,7 +523,7 @@
   }
   .action-cluster{
     position:relative;
-    width:96px; height:86px;
+    width:96px; height:68px;
     flex:0 0 96px;
   }
   .action-stack{
@@ -538,7 +538,7 @@
   }
   .action-cluster .console-add-btn{
     position:absolute;
-    right:0; top:54px;
+    right:0; top:34px;
     display:flex;
   }
   .plate-power{ margin-left:auto; }
@@ -1147,7 +1147,16 @@
      .chip.c-2{ left:-24px; top:690px !important; bottom:auto; --chip-rot:rotate(6deg); }
     .chip.c-3{ right:10px !important; left:auto; top:58px !important; bottom:auto; --chip-rot:rotate(7deg); }
     .chip.c-4{ right:12px !important; left:auto; top:696px !important; bottom:auto; --chip-rot:rotate(-6deg); }
-    .chip:hover, .chip:active, .chip.used{ transform:var(--chip-rot) !important; }
+    /* Enlarge the chips visually without moving their inner edge into the console. */
+    .chips-row .chip{
+      --chip-scale:1.16;
+      transform:var(--chip-rot) scale(var(--chip-scale)) !important;
+    }
+    .chips-row .chip:nth-child(odd){ transform-origin:100% 50%; }
+    .chips-row .chip:nth-child(even){ transform-origin:0 50%; }
+    .chip:hover, .chip:active, .chip.used{
+      transform:var(--chip-rot) scale(var(--chip-scale,1.16)) !important;
+    }
     .chip-face{ height:66px; margin-bottom:6px; }
     .chip-edge{ height:11px; }
     .chip-author{ left:8px; top:8px; font-size:4px; }
@@ -1178,10 +1187,10 @@
       margin-top:20px;
     }
     /* Mobile control layout: the same rigid GO / dice / + geometry as desktop. */
-    .action-cluster{ width:96px; height:86px; flex:0 0 96px; overflow:visible; }
+    .action-cluster{ width:96px; height:68px; flex:0 0 96px; overflow:visible; }
     .action-stack{ left:0; top:0; width:62px; height:62px; }
     .action-cluster .random-btn{ right:0; top:0; }
-    .action-cluster .console-add-btn{ right:0; top:54px; bottom:auto; display:flex; }
+    .action-cluster .console-add-btn{ right:0; top:34px; bottom:auto; display:flex; }
     .plate-power{ display:flex; }
     .slot-mute{ margin-left:auto; }
     .extra-row:not(.has-mobile-pages){ display:none; }
@@ -1275,8 +1284,14 @@
     .chips-row .chip:hover,
     .chips-row .chip:active,
     .chips-row .chip.used{
-      transform:var(--chip-rot) !important;
+      transform:var(--chip-rot) scale(1.16) !important;
     }
+    /* Same visual enlargement on landscape/tablet, while the rail positions stay fixed. */
+    .chips-row .chip{
+      transform:var(--chip-rot) scale(1.16) !important;
+    }
+    .chips-row .chip:nth-child(odd){ transform-origin:100% 50%; }
+    .chips-row .chip:nth-child(even){ transform-origin:0 50%; }
     .custom-chip{
       position:absolute;
       width:72px;
