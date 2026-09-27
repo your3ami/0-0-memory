@@ -750,23 +750,23 @@
     filter:grayscale(1) brightness(.62) !important;
     pointer-events:none;
   }
-  .chip.c-1{ top:250px; left:4px; --chip-rot:rotate(-9deg); transform:var(--chip-rot); }
-  .chip.c-2{ top:515px; left:8px; --chip-rot:rotate(6deg); transform:var(--chip-rot); }
-  .chip.c-3{ top:270px; right:4px; --chip-rot:rotate(7deg); transform:var(--chip-rot); }
-  .chip.c-4{ top:500px; right:8px; --chip-rot:rotate(-6deg); transform:var(--chip-rot); }
+  .chip.c-1{ top:130px; left:4px; --chip-rot:rotate(-9deg); transform:var(--chip-rot); }
+  .chip.c-2{ top:395px; left:8px; --chip-rot:rotate(6deg); transform:var(--chip-rot); }
+  .chip.c-3{ top:150px; right:4px; --chip-rot:rotate(7deg); transform:var(--chip-rot); }
+  .chip.c-4{ top:380px; right:8px; --chip-rot:rotate(-6deg); transform:var(--chip-rot); }
 
   /* ---------- add button + custom memory chips ---------- */
   /* New memories join the same scattered chip field as the built-in memories.
      The + button remains the only item in the separate add area. */
   .custom-chip{ position:absolute; }
-  .custom-chip.custom-1{ top:290px; left:4px; --chip-rot:rotate(5deg); transform:var(--chip-rot); }
-  .custom-chip.custom-2{ top:305px; right:4px; --chip-rot:rotate(-5deg); transform:var(--chip-rot); }
-  .custom-chip.custom-3{ top:555px; left:8px; --chip-rot:rotate(-4deg); transform:var(--chip-rot); }
-  .custom-chip.custom-4{ top:540px; right:8px; --chip-rot:rotate(4deg); transform:var(--chip-rot); }
-  .custom-chip.custom-5{ top:350px; left:2px; --chip-rot:rotate(-3deg); transform:var(--chip-rot); }
-  .custom-chip.custom-6{ top:365px; right:2px; --chip-rot:rotate(3deg); transform:var(--chip-rot); }
-  .custom-chip.custom-7{ top:585px; left:12px; --chip-rot:rotate(3deg); transform:var(--chip-rot); }
-  .custom-chip.custom-8{ top:570px; right:12px; --chip-rot:rotate(-3deg); transform:var(--chip-rot); }
+  .custom-chip.custom-1{ top:170px; left:4px; --chip-rot:rotate(5deg); transform:var(--chip-rot); }
+  .custom-chip.custom-2{ top:185px; right:4px; --chip-rot:rotate(-5deg); transform:var(--chip-rot); }
+  .custom-chip.custom-3{ top:435px; left:8px; --chip-rot:rotate(-4deg); transform:var(--chip-rot); }
+  .custom-chip.custom-4{ top:420px; right:8px; --chip-rot:rotate(4deg); transform:var(--chip-rot); }
+  .custom-chip.custom-5{ top:230px; left:2px; --chip-rot:rotate(-3deg); transform:var(--chip-rot); }
+  .custom-chip.custom-6{ top:245px; right:2px; --chip-rot:rotate(3deg); transform:var(--chip-rot); }
+  .custom-chip.custom-7{ top:465px; left:12px; --chip-rot:rotate(3deg); transform:var(--chip-rot); }
+  .custom-chip.custom-8{ top:450px; right:12px; --chip-rot:rotate(-3deg); transform:var(--chip-rot); }
   .custom-chip:hover{ transform:var(--chip-rot) translateY(-6px) !important; }
   .custom-chip:active{ transform:var(--chip-rot) translateY(-2px) scale(.97) !important; }
   .extra-row{
@@ -1156,6 +1156,10 @@
     .chips-row .chip:nth-child(even){ transform-origin:0 50%; }
     .chip:hover, .chip:active, .chip.used{
       transform:var(--chip-rot) scale(var(--chip-scale,1.16)) !important;
+    }
+    .chip.selected{
+      outline:none !important;
+      outline-offset:0 !important;
     }
     .chip-face{ height:66px; margin-bottom:6px; }
     .chip-edge{ height:11px; }
