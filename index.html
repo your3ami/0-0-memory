@@ -735,11 +735,30 @@
   .extra-row.powered-off{
     position:absolute; right:24px; left:auto; top:24px; bottom:auto;
     transform:none;
-    width:min(230px, calc(100% - 48px)); height:132px;
+    width:230px; height:132px;
     display:flex; flex-wrap:nowrap; align-items:flex-end; justify-content:flex-start;
     gap:10px; padding:0 14px 22px; box-sizing:border-box;
-    overflow-x:auto; overflow-y:hidden; z-index:6;
+    overflow:hidden; z-index:6;
   }
+  .shelf-nav{
+    position:absolute; top:42px; width:18px; height:24px;
+    padding:0; border:0; background:transparent; color:#8b8880;
+    font-family:Arial,sans-serif; font-size:25px; line-height:20px;
+    display:none; align-items:center; justify-content:center;
+    cursor:pointer; z-index:5;
+  }
+  .shelf-nav:active{ transform:scale(.9); }
+  .shelf-prev{ left:0; }
+  .shelf-next{ right:0; }
+  .shelf-page{
+    position:absolute; left:50%; bottom:3px; transform:translateX(-50%);
+    font-family:var(--font-ui); font-size:8px; color:#858179;
+    letter-spacing:.5px; white-space:nowrap; z-index:5;
+  }
+  .extra-row.powered-off.has-pages .shelf-nav{ display:flex; }
+  .extra-row.powered-off.has-pages .shelf-page{ display:block; }
+  .extra-row.powered-off.has-pages{ padding-left:32px; padding-right:32px; gap:5px; }
+  .extra-row.powered-off.has-pages .chip{ flex-basis:24px; width:24px; }
   .extra-row.powered-off::after{
     content:""; position:absolute; left:10px; right:10px; bottom:14px;
     height:7px; border-radius:2px;
@@ -1066,8 +1085,9 @@
     .custom-chip:hover, .custom-chip:active{ transform:var(--chip-rot) !important; }
     .extra-row.powered-off{
       left:auto; right:8px; top:18px; bottom:auto;
-      width:116px; height:112px;
-      padding:0; transform:none;
+      width:154px; height:112px;
+      padding:0 19px;
+      transform:none;
       gap:5px;
       overflow:hidden;
     }
@@ -1077,6 +1097,14 @@
       width:24px;
       height:104px;
     }
+    .extra-row.powered-off.has-pages{ padding-left:19px; padding-right:19px; gap:5px; }
+    .extra-row.powered-off.has-pages .chip{ flex-basis:24px; width:24px; }
+    .extra-row.powered-off .shelf-nav{
+      top:39px; width:18px; height:28px; font-size:26px; color:#77736c;
+    }
+    .extra-row.powered-off .shelf-prev{ left:0; }
+    .extra-row.powered-off .shelf-next{ right:0; }
+    .extra-row.powered-off .shelf-page{ bottom:3px; font-size:8px; }
     .chip.chip-add{ width:68px; height:88px; pointer-events:auto; }
     .chip-add-icon{ font-size:22px; }
   }
@@ -1206,6 +1234,9 @@
     <div class="chips-row" id="chips"></div>
 
     <div class="extra-row" id="extra-row">
+      <button class="shelf-nav shelf-prev" id="shelf-prev" type="button" aria-label="이전 책장" hidden>‹</button>
+      <span class="shelf-page" id="shelf-page" aria-live="polite" hidden>1 / 1</span>
+      <button class="shelf-nav shelf-next" id="shelf-next" type="button" aria-label="다음 책장" hidden>›</button>
       <button class="chip chip-add" id="btn-add-chip" type="button" aria-label="새 추억 칩 추가">
         <span class="chip-add-icon">+</span>
       </button>
@@ -1721,6 +1752,11 @@
   const chipsEl = document.getElementById("chips");
   const extraRow = document.getElementById("extra-row");
   const addBtn = document.getElementById("btn-add-chip");
+  const shelfPrev = document.getElementById("shelf-prev");
+  const shelfNext = document.getElementById("shelf-next");
+  const shelfPage = document.getElementById("shelf-page");
+  let shelfPageIndex = 0;
+  const SHELF_PAGE_SIZE = 4;
 
   const views = {
     boot: document.getElementById("view-boot"),
@@ -1975,15 +2011,37 @@
     Array.from(chipsEl.querySelectorAll(".chip")).forEach(el=>{
       extraRow.insertBefore(el, addBtn);
     });
+    shelfPageIndex = 0;
+    renderStorageShelf();
+  }
+
+  function renderStorageShelf(){
+    const shelfChips = Array.from(extraRow.querySelectorAll(".chip:not(.chip-add)"));
+    const pageCount = Math.max(1, Math.ceil(shelfChips.length / SHELF_PAGE_SIZE));
+    shelfPageIndex = Math.min(shelfPageIndex, pageCount - 1);
+    const start = shelfPageIndex * SHELF_PAGE_SIZE;
+    shelfChips.forEach((el, idx)=>{
+      el.style.display = (idx >= start && idx < start + SHELF_PAGE_SIZE) ? "" : "none";
+    });
+    const hasPages = pageCount > 1;
+    extraRow.classList.toggle("has-pages", hasPages);
+    shelfPrev.hidden = !hasPages;
+    shelfNext.hidden = !hasPages;
+    shelfPage.hidden = !hasPages;
+    shelfPage.textContent = (shelfPageIndex + 1) + " / " + pageCount;
   }
 
   function restoreChipsFromStorageRow(){
     Array.from(extraRow.querySelectorAll(".chip")).forEach(el=>{
       if(el.classList.contains("chip-add")) return;
-      if(Array.from(el.classList).some(cls=>/^c-[1-4]$/.test(cls))){
-        chipsEl.appendChild(el);
-      }
+      el.style.display = "";
+      chipsEl.appendChild(el);
     });
+    shelfPageIndex = 0;
+    extraRow.classList.remove("has-pages");
+    shelfPrev.hidden = true;
+    shelfNext.hidden = true;
+    shelfPage.hidden = true;
   }
 
   function renderAll(){
@@ -2246,6 +2304,23 @@
     showView("memory");
     document.getElementById("memory-hint").style.visibility = "visible";
   }
+
+  shelfPrev.addEventListener("click", (e)=>{
+    e.stopPropagation();
+    if(!poweredOn) {
+      shelfPageIndex = Math.max(0, shelfPageIndex - 1);
+      renderStorageShelf();
+    }
+  });
+  shelfNext.addEventListener("click", (e)=>{
+    e.stopPropagation();
+    if(!poweredOn) {
+      const count = extraRow.querySelectorAll(".chip:not(.chip-add)").length;
+      const pageCount = Math.max(1, Math.ceil(count / SHELF_PAGE_SIZE));
+      shelfPageIndex = Math.min(pageCount - 1, shelfPageIndex + 1);
+      renderStorageShelf();
+    }
+  });
 
   btnEject.addEventListener("click", ()=>{ if(!inputLocked()) physicalReact("button"); ejectCurrent(); });
   ratingClose.addEventListener("click", (e)=>{ e.stopPropagation(); sfx.close(); backToMemory(); });
