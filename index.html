@@ -81,7 +81,7 @@
   .composition{
     position:relative;
     width:100%;
-    height:min(760px, calc(100vh - 68px));
+    height:min(760px, calc(100svh - 68px));
     min-height:760px;
     margin-top:0;
   }
@@ -1244,7 +1244,7 @@
      * JS-calculated side rails control every visible chip.
      */
     .composition{
-      height:min(760px, calc(100vh - 28px));
+      height:min(760px, calc(100svh - 28px));
       min-height:0;
       margin-top:0;
     }
@@ -2011,7 +2011,7 @@
   function isTabletLayout(){
     const width = window.innerWidth || document.documentElement.clientWidth || 0;
     const landscapeTouch = window.matchMedia("(orientation:landscape)").matches && (navigator.maxTouchPoints || 0) > 0;
-    return (width >= 761 && width <= 1100) || (landscapeTouch && width <= 1400);
+    return width >= 761 && width <= 1400;
   }
 
   function renderTabletChipLayout(){
@@ -2433,6 +2433,7 @@
       selectChip(Math.min(selected, memories.length-1));
     }
     renderMobileChipPage();
+    renderTabletChipLayout();
   }
 
   btnPrev.addEventListener("click", ()=>{ if(views.gallery.classList.contains("active")){ physicalReact("button"); moveGallerySelection(-1); return; } if(current || inputLocked()) return; physicalReact("button"); sfx.nav(); selectChip((selected-1+memories.length)%memories.length); });
