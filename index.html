@@ -523,8 +523,8 @@
   }
   .action-cluster{
     position:relative;
-    width:100px; height:104px;
-    flex:0 0 100px;
+    width:96px; height:86px;
+    flex:0 0 96px;
   }
   .action-stack{
     position:absolute;
@@ -538,7 +538,7 @@
   }
   .action-cluster .console-add-btn{
     position:absolute;
-    right:0; top:74px;
+    right:0; top:54px;
     display:flex;
   }
   .plate-power{ margin-left:auto; }
@@ -1138,7 +1138,7 @@
       position:absolute;
       right:auto !important;
       top:auto !important;
-      width:56px;
+      width:72px;
       padding:5px 5px 7px;
       pointer-events:auto;
     }
@@ -1148,16 +1148,16 @@
     .chip.c-3{ right:10px !important; left:auto; top:58px !important; bottom:auto; --chip-rot:rotate(7deg); }
     .chip.c-4{ right:12px !important; left:auto; top:696px !important; bottom:auto; --chip-rot:rotate(-6deg); }
     .chip:hover, .chip:active, .chip.used{ transform:var(--chip-rot) !important; }
-    .chip-face{ height:58px; margin-bottom:5px; }
-    .chip-edge{ height:9px; }
-    .chip-author{ left:8px; top:8px; font-size:3.5px; }
-    .chip-state{ font-size:3.5px; bottom:7px; left:4px; }
-    .chip-badge{ font-size:8px; bottom:7px; right:4px; padding:1px 3px; }
+    .chip-face{ height:66px; margin-bottom:6px; }
+    .chip-edge{ height:11px; }
+    .chip-author{ left:8px; top:8px; font-size:4px; }
+    .chip-state{ font-size:4px; bottom:7px; left:4px; }
+    .chip-badge{ font-size:9px; bottom:7px; right:4px; padding:1px 3px; }
 
     /* Custom memories use the same scattered field as the built-in chips.
        Their positions stay on the outer sides so the console and + area remain clear. */
     .custom-chip{
-      width:56px;
+      width:72px;
       right:auto !important;
       pointer-events:auto;
     }
@@ -1177,11 +1177,11 @@
       align-items:center;
       margin-top:20px;
     }
-    /* Mobile control layout: GO | dice, with + tucked below the dice. */
-    .action-cluster{ width:100px; height:65px; flex:0 0 100px; overflow:visible; }
+    /* Mobile control layout: the same rigid GO / dice / + geometry as desktop. */
+    .action-cluster{ width:96px; height:86px; flex:0 0 96px; overflow:visible; }
     .action-stack{ left:0; top:0; width:62px; height:62px; }
     .action-cluster .random-btn{ right:0; top:0; }
-    .action-cluster .console-add-btn{ right:0; top:74px; bottom:auto; display:flex; }
+    .action-cluster .console-add-btn{ right:0; top:54px; bottom:auto; display:flex; }
     .plate-power{ display:flex; }
     .slot-mute{ margin-left:auto; }
     .extra-row:not(.has-mobile-pages){ display:none; }
@@ -1279,6 +1279,7 @@
     }
     .custom-chip{
       position:absolute;
+      width:72px;
       pointer-events:auto;
     }
   }
@@ -1973,10 +1974,10 @@
     const cr = composition.getBoundingClientRect();
     const rr = consoleEl.getBoundingClientRect();
     const sideGutter = Math.max(42, (cr.width - rr.width) / 2);
-    const chipWidth = Math.min(58, Math.max(46, Math.floor(sideGutter - 8)));
+    const chipWidth = Math.min(72, Math.max(46, Math.floor(sideGutter - 2)));
     const chipHeight = Math.round(chipWidth * 1.34);
-    const leftX = Math.max(0, rr.left - cr.left - chipWidth - 8);
-    const rightX = Math.min(cr.width - chipWidth, rr.right - cr.left + 8);
+    const leftX = Math.max(0, rr.left - cr.left - chipWidth - 2);
+    const rightX = Math.min(cr.width - chipWidth, rr.right - cr.left + 2);
     const topY = Math.max(6, rr.top - cr.top - 18);
     const lowerY = Math.min(cr.height - chipHeight - 6, rr.bottom - cr.top - chipHeight + 14);
 
