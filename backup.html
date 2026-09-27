@@ -510,6 +510,11 @@
     position:relative;
     width:96px; height:68px;
     flex:0 0 96px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    justify-content:center;
+    gap:7px;
   }
   .action-stack{
     position:absolute;
@@ -518,12 +523,14 @@
     display:block;
   }
   .action-cluster .random-btn{
-    position:absolute;
-    right:0; top:1.5px;
+    position:relative;
+    right:auto; top:auto;
+    flex:0 0 27px;
   }
   .action-cluster .console-add-btn{
-    position:absolute;
-    right:0; top:35.5px;
+    position:relative;
+    right:auto; top:auto;
+    flex:0 0 27px;
     display:flex;
   }
   .plate-power{ margin-left:auto; }
