@@ -1240,8 +1240,10 @@
   }
   @media (min-width:761px) and (max-width:1400px){
     /*
-     * Tablet / landscape: keep the console at its normal size but let the
-     * JS-calculated side rails control every visible chip.
+     * Tablet / landscape: keep the console at its normal size and keep
+     * every chip in fixed composition coordinates. Never derive chip
+     * positions from getBoundingClientRect(), because browser chrome
+     * changes can otherwise make the chips jump toward the console.
      */
     .composition{
       height:min(760px, calc(100svh - 28px));
@@ -1270,6 +1272,23 @@
       position:absolute;
       width:72px;
       pointer-events:auto;
+    }
+
+    /* Tablet: the old lower + card is permanently removed.
+       The only add control is the + button beside GO. */
+    .extra-row .chip-add{
+      display:none !important;
+    }
+
+    /* Make the dice button readable on tablet. */
+    .random-btn{
+      width:40px;
+      height:40px;
+      border-radius:9px;
+    }
+    .random-btn svg{
+      width:22px;
+      height:22px;
     }
   }
 
