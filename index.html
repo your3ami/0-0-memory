@@ -48,6 +48,7 @@
     justify-content:center;
     align-items:center;
     padding:28px 24px 40px;
+    overflow-x:hidden;
   }
 
   .page{
@@ -1103,6 +1104,12 @@
 
   @media (max-width:760px){
     body{ align-items:flex-start; padding:18px 10px 30px; }
+    body{
+      padding:0 16px;
+      min-height:100svh;
+      overflow-x:hidden;
+      overflow-y:hidden;
+    }
     .composition{
       height:calc(100svh - 48px);
       min-height:0;
@@ -1242,6 +1249,40 @@
       flex:0 0 20px;
     }
   }
+  @media (min-width:761px) and (max-width:1100px){
+    /*
+     * Tablet / landscape: keep the console at its normal size but let the
+     * JS-calculated side rails control every visible chip.
+     */
+    .composition{
+      height:min(760px, calc(100vh - 28px));
+      min-height:0;
+      margin-top:0;
+    }
+    .chips-row{
+      position:absolute;
+      inset:0;
+      display:block;
+      margin:0;
+      z-index:4;
+      pointer-events:none;
+    }
+    .chips-row .chip{
+      position:absolute;
+      padding:5px 5px 7px;
+      pointer-events:auto;
+    }
+    .chips-row .chip:hover,
+    .chips-row .chip:active,
+    .chips-row .chip.used{
+      transform:var(--chip-rot) !important;
+    }
+    .custom-chip{
+      position:absolute;
+      pointer-events:auto;
+    }
+  }
+
   @media (min-width:761px){ .chips-row{ display:block; } }
 
 </style>
@@ -1903,7 +1944,13 @@
   const MOBILE_PAGE_SIZE = 4;
   let mobilePageIndex = 0;
   function isMobileLayout(){
-    return window.matchMedia("(max-width:760px)").matches;
+    /*
+     * Treat tablet/landscape widths as the safe side-rail layout too.
+     * A 1792px screenshot can still be an iPad CSS viewport (~896px),
+     * so using only the physical screenshot width caused chips to fall back
+     * to the old desktop coordinates and cross the console.
+     */
+    return window.matchMedia("(max-width:1100px)").matches;
   }
 
   /*
