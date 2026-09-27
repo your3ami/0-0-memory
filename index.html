@@ -3147,3 +3147,13 @@
 </script>
 </body>
 </html>
+
+/* Remove browser selection/focus outlines from memory chips on every layout. */
+.chips-row .chip,
+.chips-row .chip:focus,
+.chips-row .chip:focus-visible,
+.chips-row .chip:active,
+.chips-row .chip.selected{
+  outline:none !important;
+  -webkit-tap-highlight-color:transparent !important;
+}
