@@ -1131,15 +1131,15 @@
       padding:0; transform:none; display:block; overflow:visible; pointer-events:none;
     }
     .chips-row.powered-off .chip{
-      position:absolute !important; flex:none; width:100px;
+      position:absolute !important; flex:none; width:140px;
       padding:5px 5px 7px; filter:grayscale(1) brightness(.58) !important; pointer-events:none;
     }
     .chips-row .chip{
       position:absolute;
       right:auto !important;
       top:auto !important;
-      width:100px;
-      padding:5px 5px 7px;
+      width:140px;
+      padding:7px 7px 9px;
       pointer-events:auto;
     }
     /* Mobile: four corner parking spots — chips stay outside the console footprint. */
@@ -1166,7 +1166,7 @@
     /* Custom memories use the same scattered field as the built-in chips.
        Their positions stay on the outer sides so the console and + area remain clear. */
     .custom-chip{
-      width:100px;
+      width:140px;
       right:auto !important;
       pointer-events:auto;
     }
@@ -1990,7 +1990,7 @@
     const rr = consoleEl.getBoundingClientRect();
     const sideGutter = Math.max(42, (cr.width - rr.width) / 2);
     // Make the actual chip itself larger; keep its inner edge anchored just outside the console.
-    const chipWidth = Math.min(104, Math.max(100, Math.floor(sideGutter + 24)));
+    const chipWidth = Math.min(140, Math.max(132, Math.floor(sideGutter * 0.52)));
     const chipHeight = Math.round(chipWidth * 1.34);
     const leftX = rr.left - cr.left - chipWidth - 2;
     const rightX = rr.right - cr.left + 2;
