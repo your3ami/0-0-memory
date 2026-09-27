@@ -537,7 +537,7 @@
   }
   .action-cluster .console-add-btn{
     position:absolute;
-    right:0; bottom:0;
+    right:0; top:61px;
     display:flex;
   }
   .plate-power{ margin-left:auto; }
@@ -1132,10 +1132,10 @@
       padding:5px 5px 7px;
       pointer-events:auto;
     }
-    .chip.c-1{ left:8px; top:170px !important; bottom:auto; --chip-rot:rotate(-10deg); }
-    .chip.c-2{ left:76px; top:675px !important; bottom:auto; --chip-rot:rotate(7deg); }
-    .chip.c-3{ right:8px !important; left:auto; top:205px !important; bottom:auto; --chip-rot:rotate(8deg); }
-    .chip.c-4{ right:70px !important; left:auto; top:710px !important; bottom:auto; --chip-rot:rotate(-9deg); }
+    .chip.c-1{ left:6px; top:72px !important; bottom:auto; --chip-rot:rotate(-11deg); }
+    .chip.c-2{ left:10px; top:655px !important; bottom:auto; --chip-rot:rotate(7deg); }
+    .chip.c-3{ right:6px !important; left:auto; top:118px !important; bottom:auto; --chip-rot:rotate(8deg); }
+    .chip.c-4{ right:8px !important; left:auto; top:700px !important; bottom:auto; --chip-rot:rotate(-9deg); }
     .chip:hover, .chip:active, .chip.used{ transform:var(--chip-rot) !important; }
     .chip-face{ height:58px; margin-bottom:5px; }
     .chip-edge{ height:9px; }
@@ -1150,14 +1150,14 @@
       right:auto !important;
       pointer-events:auto;
     }
-    .custom-chip.custom-1{ left:18px !important; top:235px !important; --chip-rot:rotate(5deg); }
-    .custom-chip.custom-2{ right:18px !important; left:auto !important; top:150px !important; --chip-rot:rotate(-6deg); }
-    .custom-chip.custom-3{ left:105px !important; top:690px !important; bottom:auto !important; --chip-rot:rotate(-8deg); }
-    .custom-chip.custom-4{ right:10px !important; left:auto !important; top:655px !important; --chip-rot:rotate(6deg); }
-    .custom-chip.custom-5{ left:2px !important; top:210px !important; --chip-rot:rotate(-4deg); }
-    .custom-chip.custom-6{ right:88px !important; left:auto !important; top:245px !important; --chip-rot:rotate(10deg); }
-    .custom-chip.custom-7{ left:52px !important; top:735px !important; --chip-rot:rotate(3deg); }
-    .custom-chip.custom-8{ right:8px !important; left:auto !important; top:730px !important; --chip-rot:rotate(-5deg); }
+    .custom-chip.custom-1{ left:4px !important; top:145px !important; --chip-rot:rotate(5deg); }
+    .custom-chip.custom-2{ right:5px !important; left:auto !important; top:72px !important; --chip-rot:rotate(-6deg); }
+    .custom-chip.custom-3{ left:22px !important; top:710px !important; bottom:auto !important; --chip-rot:rotate(-8deg); }
+    .custom-chip.custom-4{ right:4px !important; left:auto !important; top:645px !important; --chip-rot:rotate(6deg); }
+    .custom-chip.custom-5{ left:6px !important; top:110px !important; --chip-rot:rotate(-4deg); }
+    .custom-chip.custom-6{ right:8px !important; left:auto !important; top:155px !important; --chip-rot:rotate(10deg); }
+    .custom-chip.custom-7{ left:12px !important; top:690px !important; --chip-rot:rotate(3deg); }
+    .custom-chip.custom-8{ right:6px !important; left:auto !important; top:735px !important; --chip-rot:rotate(-5deg); }
     .custom-chip:hover, .custom-chip:active{ transform:var(--chip-rot) !important; }
     /* Mobile: keep the original bookshelf concept, but anchor it above the console. */
     .extra-row.powered-off{ display:none; }
@@ -1169,7 +1169,7 @@
     .action-cluster{ width:100px; height:82px; flex:0 0 100px; }
     .action-stack{ left:0; top:10px; width:62px; height:62px; }
     .action-cluster .random-btn{ right:0; top:28px; }
-    .action-cluster .console-add-btn{ right:0; bottom:0; }
+    .action-cluster .console-add-btn{ right:0; top:61px; bottom:auto; }
     .plate-power{ display:flex; }
     .slot-mute{ margin-left:auto; }
     .extra-row:not(.has-mobile-pages){ display:none; }
@@ -1351,8 +1351,7 @@
           <div class="action-cluster">
             <div class="action-stack">
               <button class="action-btn" id="btn-action">GO</button>
-              <button class="console-add-btn" id="btn-add-console" type="button" aria-label="새 추억 칩 추가">+</button>
-          </div>
+            </div>
             <button class="random-btn" id="btn-random" type="button" title="랜덤 재생">
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" stroke-width="1.8"/>
@@ -1363,6 +1362,7 @@
                 <circle cx="16" cy="16" r="1.4" fill="currentColor"/>
               </svg>
             </button>
+            <button class="console-add-btn" id="btn-add-console" type="button" aria-label="새 추억 칩 추가">+</button>
           </div>
         </div>
       </div>
