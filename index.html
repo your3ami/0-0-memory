@@ -2725,10 +2725,10 @@
     .forEach(el=>el && el.addEventListener("click", e=>e.stopPropagation()));
   document.getElementById("comment-box").addEventListener("pointerdown", e=>e.stopPropagation());
   document.getElementById("comment-box").addEventListener("input", ()=>{
-    updateCharCount(document.getElementById("comment-box"), document.getElementById("comment-count"), 57);
+    updateCharCount(document.getElementById("comment-box"), document.getElementById("comment-count"), 61);
   });
   document.getElementById("field-letter").addEventListener("input", ()=>{
-    updateCharCount(document.getElementById("field-letter"), document.getElementById("letter-count"), 57);
+    updateCharCount(document.getElementById("field-letter"), document.getElementById("letter-count"), 61);
   });
   btnAction.addEventListener("click", (e)=>{ e.stopPropagation(); if(inputLocked()) return; physicalReact("go"); sfx.go(); advance(); });
 
@@ -2751,7 +2751,7 @@
     const existing = loadRating(current.id);
     if(existing) stars = existing.stars;
     document.getElementById("comment-box").value = existing ? existing.comment : "";
-    updateCharCount(document.getElementById("comment-box"), document.getElementById("comment-count"), 57);
+    updateCharCount(document.getElementById("comment-box"), document.getElementById("comment-count"), 61);
     document.getElementById("saved-msg").textContent = existing ? "이전 기록을 불러왔어요." : "";
 
     for(let s=1;s<=5;s++){
@@ -3071,7 +3071,7 @@
     fieldThought.value = m.thought || "";
     fieldSongLine.value = m.songLine || "";
     fieldWeatherValue = WEATHER_OPTIONS.includes(m.weather) ? m.weather : "";
-    updateCharCount(fieldLetter, document.getElementById("letter-count"), 57);
+    updateCharCount(fieldLetter, document.getElementById("letter-count"), 61);
     renderWeatherOptions();
     renderTagOptions();
     if(editingShot){ photoPreview.src = editingShot; photoPreview.style.display = "block"; photoPlaceholder.style.display = "none"; }
@@ -3093,7 +3093,7 @@
     fieldThought.value = "";
     fieldSongLine.value = "";
     fieldWeatherValue = "";
-    updateCharCount(fieldLetter, document.getElementById("letter-count"), 57);
+    updateCharCount(fieldLetter, document.getElementById("letter-count"), 61);
     renderWeatherOptions();
     renderTagOptions();
     photoPreview.style.display = "none";
@@ -3165,7 +3165,7 @@
         fieldThought.value = m.thought || "";
         fieldSongLine.value = m.songLine || "";
         fieldWeatherValue = WEATHER_OPTIONS.includes(m.weather) ? m.weather : "";
-        updateCharCount(fieldLetter, document.getElementById("letter-count"), 57);
+        updateCharCount(fieldLetter, document.getElementById("letter-count"), 61);
         renderWeatherOptions();
         editingTags = normalizeTags(m.tags);
         renderTagOptions();
