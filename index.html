@@ -1239,38 +1239,22 @@
     }
   }
   @media (min-width:761px) and (max-width:1400px){
-    /*
-     * Tablet / landscape: keep the console at its normal size but let the
-     * JS-calculated side rails control every visible chip.
-     */
-    .composition{
-      height:min(760px, calc(100svh - 28px));
-      min-height:0;
-      margin-top:0;
+    /* Tablet: the old lower + card is permanently removed.
+       The only add control is the + button beside GO. */
+    .extra-row .chip-add{
+      display:none !important;
     }
-    .chips-row{
-      position:absolute;
-      inset:0;
-      display:block;
-      margin:0;
-      z-index:4;
-      pointer-events:none;
+    /* Make the dice button readable on tablet. */
+    .random-btn{
+      width:40px;
+      height:40px;
+      border-radius:9px;
     }
-    .chips-row .chip{
-      position:absolute;
-      padding:5px 5px 7px;
-      pointer-events:auto;
+    .random-btn svg{
+      width:22px;
+      height:22px;
     }
-    .chips-row .chip:hover,
-    .chips-row .chip:active,
-    .chips-row .chip.used{
-      transform:var(--chip-rot) !important;
-    }
-    .custom-chip{
-      position:absolute;
-      width:72px;
-      pointer-events:auto;
-    }
+
   }
 
   @media (min-width:761px){ .chips-row{ display:block; } }
