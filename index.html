@@ -134,43 +134,8 @@
     filter:grayscale(.7) brightness(.65);
     pointer-events:none;
   }
-  /* Power-off mode: gather every memory chip into one retro storage row. */
-  .chips-row.powered-off{
-    position:absolute;
-    left:50%;
-    top:18px;
-    bottom:auto;
-    width:min(760px, calc(100% - 24px));
-    height:132px;
-    transform:translateX(-50%);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:14px;
-    padding:0 10px;
-    box-sizing:border-box;
-    overflow-x:auto;
-    overflow-y:hidden;
-    pointer-events:auto;
-    z-index:4;
-  }
-  .chips-row.powered-off .chip{
-    position:relative !important;
-    left:auto !important;
-    right:auto !important;
-    top:auto !important;
-    bottom:auto !important;
-    flex:0 0 88px;
-    transform:none !important;
-    filter:grayscale(.7) brightness(.65);
-    pointer-events:none;
-    transition:transform .28s ease, filter .28s ease;
-  }
-  .chips-row.powered-off .chip:hover,
-  .chips-row.powered-off .chip:active{
-    transform:none !important;
-  }
-  .chips-row.powered-off::-webkit-scrollbar{ height:0; }
+  /* Power-off mode keeps every memory chip in its normal scattered
+     position and only dims/desaturates it. */
 
   #view-off{ background:#000; }
   #view-off .off-line{
