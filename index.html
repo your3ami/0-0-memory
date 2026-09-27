@@ -1271,10 +1271,19 @@
       margin-top:20px;
     }
     /* Mobile control layout: keep GO and the compact dice/+ stack aligned. */
-    .action-cluster{ width:96px; height:68px; flex:0 0 96px; overflow:visible; }
+    .action-cluster{
+      width:96px; height:68px; flex:0 0 96px; overflow:visible;
+      display:flex; flex-direction:column; align-items:flex-end; justify-content:center; gap:7px;
+    }
     .action-stack{ left:0; top:0; width:62px; height:62px; }
-     .action-cluster .random-btn{ right:0; top:1.5px; }
-     .action-cluster .console-add-btn{ right:0; top:35.5px; bottom:auto; display:flex; }
+    .action-cluster .random-btn{
+      position:static; right:auto; top:auto; bottom:auto;
+      flex:0 0 27px;
+    }
+    .action-cluster .console-add-btn{
+      position:static; right:auto; top:auto; bottom:auto;
+      flex:0 0 27px; display:flex;
+    }
     .plate-power{ display:flex; }
     .slot-mute{ margin-left:auto; }
     .extra-row:not(.has-mobile-pages){ display:none; }
@@ -1482,10 +1491,19 @@
     margin-top:20px;
   }
   html.android-phone .random-btn svg{ width:22px; height:22px; }
-  html.android-phone .action-cluster{ width:96px; height:68px; flex:0 0 96px; overflow:visible; }
+  html.android-phone .action-cluster{
+    width:96px; height:68px; flex:0 0 96px; overflow:visible;
+    display:flex; flex-direction:column; align-items:flex-end; justify-content:center; gap:7px;
+  }
   html.android-phone .action-stack{ left:0; top:0; width:62px; height:62px; }
-  html.android-phone .action-cluster .random-btn{ right:0; top:1.5px; }
-  html.android-phone .action-cluster .console-add-btn{ right:0; top:35.5px; bottom:auto; display:flex; }
+  html.android-phone .action-cluster .random-btn{
+    position:static; right:auto; top:auto; bottom:auto;
+    flex:0 0 27px;
+  }
+  html.android-phone .action-cluster .console-add-btn{
+    position:static; right:auto; top:auto; bottom:auto;
+    flex:0 0 27px; display:flex;
+  }
   html.android-phone .plate-power{ display:flex; }
   html.android-phone .slot-mute{ margin-left:auto; }
   html.android-phone .extra-row:not(.has-mobile-pages){ display:none; }
