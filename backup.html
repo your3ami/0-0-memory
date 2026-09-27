@@ -1854,10 +1854,13 @@
 
   function formatMemoryDate(value){
     const raw=String(value||"").trim();
+    const compact=raw.replace(/\D/g,"");
+    if(/^\d{8}$/.test(compact)){
+      return compact.slice(0,4)+". "+compact.slice(4,6)+". "+compact.slice(6,8)+".";
+    }
     const m=raw.match(/^(\d{4})\s*[.\-/]\s*(\d{1,2})\s*[.\-/]\s*(\d{1,2})\s*$/);
-    return m ? `${m[1]}. ${String(m[2]).padStart(2,"0")}. ${String(m[3]).padStart(2,"0")}.` : raw;
+    return m ? m[1]+". "+String(m[2]).padStart(2,"0")+". "+String(m[3]).padStart(2,"0")+"." : raw;
   }
-
   function splitTitle(t){
     if(!t) return ["추억"];
     if(t.length<=5) return [t];
@@ -2843,6 +2846,8 @@
     if(!raw) return "";
     const m = raw.match(/^(\d{4})\s*[.\-/]\s*(\d{1,2})\s*[.\-/]\s*(\d{1,2})(?:\s|T|$)/);
     if(m) return m[1]+". "+String(m[2]).padStart(2,"0")+". "+String(m[3]).padStart(2,"0")+".";
+    const compact = raw.replace(/\D/g,"");
+    if(/^\d{8}$/.test(compact)) return compact.slice(0,4)+". "+compact.slice(4,6)+". "+compact.slice(6,8)+".";
     const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
     if(iso) return iso[1]+". "+iso[2]+". "+iso[3]+".";
     return "";
@@ -2851,6 +2856,25 @@
     const d = new Date();
     return d.getFullYear()+". "+String(d.getMonth()+1).padStart(2,"0")+". "+String(d.getDate()).padStart(2,"0")+".";
   }
+
+  // 날짜는 모바일/태블릿/데스크톱 모두 숫자 8자리로 입력해도
+  // YYYY. MM. DD. 형식으로 자동 표시되도록 한다.
+  function formatDateField(value){
+    const digits=String(value||"").replace(/\D/g,"").slice(0,8);
+    if(digits.length<=4) return digits;
+    if(digits.length<=6) return digits.slice(0,4)+". "+digits.slice(4);
+    return digits.slice(0,4)+". "+digits.slice(4,6)+". "+digits.slice(6);
+  }
+  fieldDate.addEventListener("input", ()=>{
+    const formatted=formatDateField(fieldDate.value);
+    if(fieldDate.value!==formatted){
+      fieldDate.value=formatted;
+      try{ fieldDate.setSelectionRange(formatted.length, formatted.length); }catch(e){}
+    }
+  });
+  fieldDate.addEventListener("blur", ()=>{
+    fieldDate.value=formatMemoryDate(fieldDate.value);
+  });
   function selectAuthor(author){
     const value = author === "N" ? "N" : "H";
     fieldAuthor.value = value;
