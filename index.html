@@ -1120,43 +1120,61 @@
     .custom-chip.custom-7{ left:2px !important; top:540px !important; --chip-rot:rotate(3deg); }
     .custom-chip.custom-8{ right:2px !important; left:auto !important; top:555px !important; --chip-rot:rotate(-3deg); }
     .custom-chip:hover, .custom-chip:active{ transform:var(--chip-rot) !important; }
-    /* Mobile storage becomes a compact retro LP rack instead of a floating book stack. */
+    /* Mobile: keep the original bookshelf concept, but anchor it above the console. */
     .extra-row.powered-off{
-      left:50%; right:auto; top:8px; bottom:auto;
-      width:min(300px, calc(100% - 28px)); height:94px;
-      padding:9px 27px 16px;
+      left:50%; right:auto;
+      top:calc(50% - 330px);
+      bottom:auto;
+      width:min(276px, calc(100% - 38px));
+      height:92px;
+      padding:11px 28px 13px;
       transform:translateX(-50%);
       gap:7px;
       overflow:hidden;
-      border:1px solid rgba(40,37,31,.34);
-      border-radius:8px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,.18)),
-        #e7e2d7;
-      box-shadow:0 8px 18px rgba(40,35,25,.14), 0 1px 0 rgba(255,255,255,.7) inset;
+      border:2px solid #4b4944;
+      border-radius:4px;
+      background:linear-gradient(180deg,#d7d2c7 0%,#c6c0b4 100%);
+      box-shadow:
+        0 9px 16px rgba(35,32,25,.16),
+        0 3px 0 #8e887d,
+        0 1px 0 rgba(255,255,255,.7) inset;
     }
+    /* top shelf board */
     .extra-row.powered-off::before{
-      content:"MEMORY RECORDS";
-      position:absolute; left:9px; top:6px;
-      font-family:var(--font-pixel); font-size:4px; letter-spacing:.45px;
-      color:#777168; pointer-events:none; z-index:5;
+      content:"";
+      position:absolute;
+      left:-2px; right:-2px; top:-7px;
+      height:10px;
+      border:2px solid #4b4944;
+      border-radius:4px 4px 1px 1px;
+      background:#bcb6aa;
+      box-shadow:0 2px 0 #8e887d;
+      pointer-events:none;
+      z-index:5;
     }
+    /* bottom shelf board */
     .extra-row.powered-off::after{
       display:block;
-      content:""; position:absolute; left:9px; right:9px; bottom:10px;
-      height:3px; border-radius:2px;
-      background:#4b4841;
-      box-shadow:0 1px 0 rgba(255,255,255,.55);
+      content:"";
+      position:absolute;
+      left:-2px; right:-2px; bottom:-5px;
+      height:9px;
+      border:2px solid #4b4944;
+      border-radius:1px 1px 4px 4px;
+      background:#bcb6aa;
+      box-shadow:0 -1px 0 rgba(255,255,255,.35) inset;
       pointer-events:none;
+      z-index:5;
     }
     .extra-row.powered-off .chip{
       flex:0 0 42px;
       width:42px; height:67px;
       padding:0 !important;
-      margin-top:5px;
-      border-radius:4px;
+      margin-top:2px;
+      border-radius:4px 4px 2px 2px;
       overflow:hidden;
-      box-shadow:2px 5px 8px rgba(20,18,14,.22);
+      box-shadow:2px 4px 5px rgba(20,18,14,.22);
+      z-index:2;
     }
     .extra-row.powered-off .chip-face{
       position:absolute; inset:0;
@@ -1174,18 +1192,20 @@
       z-index:2;
     }
     .extra-row.powered-off.has-pages{
-      width:min(300px, calc(100% - 28px));
-      padding-left:27px; padding-right:27px; gap:7px;
+      width:min(276px, calc(100% - 38px));
+      padding-left:28px; padding-right:28px; gap:7px;
     }
     .extra-row.powered-off.has-pages .chip{ flex-basis:42px; width:42px; }
     .extra-row.powered-off .shelf-nav{
-      top:34px; width:20px; height:25px; font-size:25px; color:#67635b;
-      z-index:7;
+      top:32px; width:22px; height:26px; font-size:25px; color:#4d4a44;
+      z-index:8;
+      background:rgba(246,244,238,.7);
+      border-radius:3px;
     }
-    .extra-row.powered-off .shelf-prev{ left:3px; }
-    .extra-row.powered-off .shelf-next{ right:3px; }
+    .extra-row.powered-off .shelf-prev{ left:4px; }
+    .extra-row.powered-off .shelf-next{ right:4px; }
     .extra-row.powered-off .shelf-page{
-      bottom:2px; font-size:6px; color:#817b70; z-index:7;
+      bottom:1px; font-size:6px; color:#5f5b53; z-index:8;
     }
     .chip.chip-add{ width:68px; height:88px; pointer-events:auto; }
     .chip-add-icon{ font-size:22px; }
