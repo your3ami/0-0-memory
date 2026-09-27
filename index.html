@@ -1138,8 +1138,8 @@
       position:absolute;
       right:auto !important;
       top:auto !important;
-      width:140px;
-      padding:7px 7px 9px;
+      width:108px;
+      padding:6px 6px 8px;
       pointer-events:auto;
     }
     /* Mobile: four corner parking spots — chips stay outside the console footprint. */
@@ -1166,7 +1166,7 @@
     /* Custom memories use the same scattered field as the built-in chips.
        Their positions stay on the outer sides so the console and + area remain clear. */
     .custom-chip{
-      width:140px;
+      width:108px;
       right:auto !important;
       pointer-events:auto;
     }
@@ -1284,14 +1284,8 @@
     .chips-row .chip:hover,
     .chips-row .chip:active,
     .chips-row .chip.used{
-      transform:var(--chip-rot) scale(1.16) !important;
+      transform:var(--chip-rot) !important;
     }
-    /* Same visual enlargement on landscape/tablet, while the rail positions stay fixed. */
-    .chips-row .chip{
-      transform:var(--chip-rot) scale(1.16) !important;
-    }
-    .chips-row .chip:nth-child(odd){ transform-origin:100% 50%; }
-    .chips-row .chip:nth-child(even){ transform-origin:0 50%; }
     .custom-chip{
       position:absolute;
       width:72px;
@@ -1966,7 +1960,7 @@
      * so using only the physical screenshot width caused chips to fall back
      * to the old desktop coordinates and cross the console.
      */
-    return window.matchMedia("(max-width:1100px)").matches;
+    return window.matchMedia("(max-width:760px)").matches;
   }
 
   /*
@@ -1990,12 +1984,12 @@
     const rr = consoleEl.getBoundingClientRect();
     const sideGutter = Math.max(42, (cr.width - rr.width) / 2);
     // Make the actual chip itself larger; keep its inner edge anchored just outside the console.
-    const chipWidth = Math.min(140, Math.max(132, Math.floor(sideGutter * 0.52)));
+    const chipWidth = Math.min(112, Math.max(104, Math.floor(sideGutter - 6)));
     const chipHeight = Math.round(chipWidth * 1.34);
-    const leftX = rr.left - cr.left - chipWidth - 2;
-    const rightX = rr.right - cr.left + 2;
-    const topY = Math.max(6, rr.top - cr.top - 18);
-    const lowerY = Math.min(cr.height - chipHeight - 6, rr.bottom - cr.top - chipHeight + 14);
+    const leftX = rr.left - cr.left - chipWidth - 8;
+    const rightX = rr.right - cr.left + 8;
+    const topY = Math.max(18, rr.top - cr.top - 8);
+    const lowerY = Math.min(cr.height - chipHeight - 18, rr.bottom - cr.top - chipHeight + 8);
 
     return [
       {left:leftX+"px", top:topY+"px", width:chipWidth+"px", rot:"-8deg"},
