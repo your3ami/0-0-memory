@@ -522,22 +522,22 @@
   }
   .action-cluster{
     position:relative;
-    width:100px; height:82px;
+    width:100px; height:104px;
     flex:0 0 100px;
   }
   .action-stack{
     position:absolute;
-    left:0; top:10px;
+    left:0; top:0;
     width:62px; height:62px;
     display:block;
   }
   .action-cluster .random-btn{
     position:absolute;
-    right:0; top:28px;
+    right:0; top:0;
   }
   .action-cluster .console-add-btn{
     position:absolute;
-    right:0; top:61px;
+    right:0; top:74px;
     display:flex;
   }
   .plate-power{ margin-left:auto; }
@@ -1124,14 +1124,14 @@
       padding:0; transform:none; display:block; overflow:visible; pointer-events:none;
     }
     .chips-row.powered-off .chip{
-      position:absolute !important; flex:none; width:68px;
+      position:absolute !important; flex:none; width:64px;
       padding:5px 5px 7px; filter:grayscale(1) brightness(.58) !important; pointer-events:none;
     }
     .chips-row .chip{
       position:absolute;
       right:auto !important;
       top:auto !important;
-      width:68px;
+      width:64px;
       padding:5px 5px 7px;
       pointer-events:auto;
     }
@@ -1905,9 +1905,9 @@
   const mobilePageLayouts = new Map();
   const MOBILE_CHIP_SPOTS = [
     {left:"0%",  top:"10%", rot:"-8deg"},
-    {left:"88%", top:"13%", rot:"6deg"},
-    {left:"1%",  top:"62%", rot:"7deg"},
-    {left:"86%", top:"70%", rot:"-9deg"}
+    {left:"0%",  top:"62%", rot:"6deg"},
+    {left:"0%",  top:"70%", rot:"7deg"},
+    {left:"0%",  top:"76%", rot:"-9deg"}
   ];
 
   function isMobileLayout(){
@@ -1916,7 +1916,7 @@
 
   function getMobileChipLayout(pageIndex){
     if(!mobilePageLayouts.has(pageIndex)){
-      const spots = [...MOBILE_CHIP_SPOTS].sort(()=>Math.random()-.5);
+      const spots = [...MOBILE_CHIP_SPOTS];
       mobilePageLayouts.set(pageIndex, spots);
     }
     return mobilePageLayouts.get(pageIndex);
