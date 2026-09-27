@@ -809,6 +809,43 @@
   .chip.chip-add:hover{ border-color:var(--ink); transform:translateY(-4px); }
   .chip-add-icon{ font-size:26px; color:#a39d8c; line-height:1; }
 
+  /* New-memory flight: + card -> cartridge slot. */
+  .add-flight-chip{
+    position:fixed;
+    z-index:10000;
+    pointer-events:none;
+    border:2px dashed #bcb6a6;
+    border-radius:8px;
+    background:#f3f0e7;
+    box-shadow:0 12px 24px rgba(35,32,25,.18);
+    transform-origin:center center;
+    will-change:transform,opacity;
+  }
+  .add-flight-face{
+    position:absolute; inset:7px;
+    border-radius:4px;
+    background:
+      radial-gradient(circle at 50% 38%, rgba(143,224,160,.16), transparent 35%),
+      linear-gradient(145deg,#28272c,#111116);
+  }
+  .add-flight-edge{
+    position:absolute; left:7px; right:7px; bottom:7px; height:7px;
+    border-radius:2px;
+    background:repeating-linear-gradient(90deg,#050505 0 2px,#333136 2px 4px);
+  }
+  .add-flight-chip.fly{
+    animation:addFlight .52s cubic-bezier(.18,.82,.28,1) forwards;
+  }
+  .chip.chip-add.add-launching{
+    opacity:.35;
+    transform:translateY(2px) scale(.96);
+  }
+  @keyframes addFlight{
+    0%{ opacity:1; transform:translate(0,0) rotate(-8deg) scale(1); }
+    70%{ opacity:1; }
+    100%{ opacity:.15; transform:var(--add-flight-transform); }
+  }
+
   .chip-blank{
     background:linear-gradient(165deg, #3a3940, #201f24 65%);
   }
@@ -1083,33 +1120,88 @@
     .custom-chip.custom-7{ left:2px !important; top:540px !important; --chip-rot:rotate(3deg); }
     .custom-chip.custom-8{ right:2px !important; left:auto !important; top:555px !important; --chip-rot:rotate(-3deg); }
     .custom-chip:hover, .custom-chip:active{ transform:var(--chip-rot) !important; }
+    /* Mobile storage becomes a compact retro LP rack instead of a floating book stack. */
     .extra-row.powered-off{
-      left:auto; right:8px; top:18px; bottom:auto;
-      width:154px; height:112px;
-      padding:0 19px;
-      transform:none;
-      gap:5px;
+      left:50%; right:auto; top:8px; bottom:auto;
+      width:min(300px, calc(100% - 28px)); height:94px;
+      padding:9px 27px 16px;
+      transform:translateX(-50%);
+      gap:7px;
       overflow:hidden;
+      border:1px solid rgba(40,37,31,.34);
+      border-radius:8px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,.18)),
+        #e7e2d7;
+      box-shadow:0 8px 18px rgba(40,35,25,.14), 0 1px 0 rgba(255,255,255,.7) inset;
     }
-    .extra-row.powered-off::after{ display:none; }
+    .extra-row.powered-off::before{
+      content:"MEMORY RECORDS";
+      position:absolute; left:9px; top:6px;
+      font-family:var(--font-pixel); font-size:4px; letter-spacing:.45px;
+      color:#777168; pointer-events:none; z-index:5;
+    }
+    .extra-row.powered-off::after{
+      display:block;
+      content:""; position:absolute; left:9px; right:9px; bottom:10px;
+      height:3px; border-radius:2px;
+      background:#4b4841;
+      box-shadow:0 1px 0 rgba(255,255,255,.55);
+      pointer-events:none;
+    }
     .extra-row.powered-off .chip{
-      flex:0 0 24px;
-      width:24px;
-      height:104px;
+      flex:0 0 42px;
+      width:42px; height:67px;
+      padding:0 !important;
+      margin-top:5px;
+      border-radius:4px;
+      overflow:hidden;
+      box-shadow:2px 5px 8px rgba(20,18,14,.22);
+    }
+    .extra-row.powered-off .chip-face{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      margin:0;
+      object-fit:cover;
+      opacity:.88;
+    }
+    .extra-row.powered-off .chip-edge{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      border-left:2px solid rgba(255,255,255,.16);
+      border-right:1px solid rgba(0,0,0,.28);
+      background:linear-gradient(90deg,rgba(255,255,255,.08),transparent 35%,rgba(0,0,0,.2));
+      z-index:2;
     }
     .extra-row.powered-off.has-pages{
-      width:154px;
-      padding-left:19px; padding-right:19px; gap:5px;
+      width:min(300px, calc(100% - 28px));
+      padding-left:27px; padding-right:27px; gap:7px;
     }
-    .extra-row.powered-off.has-pages .chip{ flex-basis:24px; width:24px; }
+    .extra-row.powered-off.has-pages .chip{ flex-basis:42px; width:42px; }
     .extra-row.powered-off .shelf-nav{
-      top:39px; width:18px; height:28px; font-size:26px; color:#77736c;
+      top:34px; width:20px; height:25px; font-size:25px; color:#67635b;
+      z-index:7;
     }
-    .extra-row.powered-off .shelf-prev{ left:0; }
-    .extra-row.powered-off .shelf-next{ right:0; }
-    .extra-row.powered-off .shelf-page{ bottom:3px; font-size:8px; }
+    .extra-row.powered-off .shelf-prev{ left:3px; }
+    .extra-row.powered-off .shelf-next{ right:3px; }
+    .extra-row.powered-off .shelf-page{
+      bottom:2px; font-size:6px; color:#817b70; z-index:7;
+    }
     .chip.chip-add{ width:68px; height:88px; pointer-events:auto; }
     .chip-add-icon{ font-size:22px; }
+
+    /* On mobile the + card stays below the machine; a new memory flies from here
+       directly into the cartridge slot instead of appearing beside the console. */
+    .extra-row:not(.powered-off){
+      left:50%; bottom:18px;
+      transform:translateX(-50%);
+      width:68px;
+      height:88px;
+      z-index:5;
+    }
+    .extra-row:not(.powered-off) .chip-add{
+      width:68px; height:88px;
+    }
   }
   @media (min-width:761px){ .chips-row{ display:block; } }
 
@@ -2561,15 +2653,44 @@
   addBtn.addEventListener("click", ()=>{
     if(inputLocked()) return;
     physicalReact("button");
-    const blank = document.createElement("div");
-    blank.className = "chip chip-blank chip-drop custom-chip custom-1";
-    blank.innerHTML = `<div class="chip-face"></div><div class="chip-edge"></div>`;
-    chipsEl.appendChild(blank);
     sfx.drop();
-    setTimeout(()=>{
-      blank.remove();
+
+    /* Do not create a temporary chip in the scattered field. Animate the + card
+       itself toward the cartridge slot, then open the editor. */
+    const from = addBtn.getBoundingClientRect();
+    const slot = document.querySelector(".slot");
+    const to = slot ? slot.getBoundingClientRect() : null;
+
+    if(!to){
       openAdder();
-    }, 480);
+      return;
+    }
+
+    const flight = document.createElement("div");
+    flight.className = "add-flight-chip";
+    flight.innerHTML = `<div class="add-flight-face"></div><div class="add-flight-edge"></div>`;
+    flight.style.left = from.left + "px";
+    flight.style.top = from.top + "px";
+    flight.style.width = from.width + "px";
+    flight.style.height = from.height + "px";
+    document.body.appendChild(flight);
+
+    const dx = (to.left + to.width/2) - (from.left + from.width/2);
+    const dy = (to.top + to.height/2) - (from.top + from.height/2);
+    const sx = Math.max(.22, to.width / from.width);
+    const sy = Math.max(.22, to.height / from.height);
+    flight.style.setProperty("--add-flight-transform",
+      `translate(${dx}px,${dy}px) rotate(-5deg) scale(${sx},${sy})`
+    );
+
+    addBtn.classList.add("add-launching");
+    requestAnimationFrame(()=> flight.classList.add("fly"));
+
+    setTimeout(()=>{
+      flight.remove();
+      addBtn.classList.remove("add-launching");
+      openAdder();
+    }, 520);
   });
   document.getElementById("modal-cancel").addEventListener("click", ()=>{
     if(modalStep === 2){
