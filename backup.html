@@ -2694,20 +2694,13 @@
     consoleBody.classList.add("powered-off");
     btnAlbum.classList.remove("active");
 
-    if(isMobileLayout()){
-      /* Mobile keeps the reference-like scattered chip field even when the
-         console is off. Only the add button is hidden. */
-      chipsEl.classList.add("powered-off");
-      extraRow.classList.remove("powered-off");
-      addBtn.style.display = "none";
-      addConsoleBtn.style.display = "none";
-      renderMobileChipPage();
-    } else {
-      moveAllChipsToStorageRow();
-      chipsEl.classList.add("powered-off");
-      extraRow.classList.add("powered-off");
-      addBtn.style.display = "none";
-    }
+    /* Keep the memory chips in their normal scattered positions on every
+       device size. Power-off only desaturates them, matching mobile. */
+    chipsEl.classList.add("powered-off");
+    extraRow.classList.remove("powered-off");
+    addBtn.style.display = "none";
+    addConsoleBtn.style.display = "none";
+    if(isMobileLayout()) renderMobileChipPage();
     showView("off");
   }
 
@@ -2723,15 +2716,10 @@
 
     setTimeout(()=>{
       consoleBody.classList.remove("powered-off");
-      if(!isMobileLayout()){
-        restoreChipsFromStorageRow();
-        chipsEl.classList.remove("powered-off");
-        extraRow.classList.remove("powered-off");
-      } else {
-        chipsEl.classList.remove("powered-off");
-        extraRow.classList.remove("powered-off");
-        renderMobileChipPage();
-      }
+      /* Restore the same scattered layout on every device. */
+      chipsEl.classList.remove("powered-off");
+      extraRow.classList.remove("powered-off");
+      if(isMobileLayout()) renderMobileChipPage();
       if(isMobileLayout()){
         addBtn.style.display = "none";
         addConsoleBtn.style.display = "flex";
