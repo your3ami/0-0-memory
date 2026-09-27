@@ -2017,39 +2017,28 @@
   function renderTabletChipLayout(){
     if(!isTabletLayout()) return;
 
-    const composition = document.getElementById("composition");
-    const consoleEl = document.getElementById("console-body");
-    if(!composition || !consoleEl) return;
-
-    const cr = composition.getBoundingClientRect();
-    const rr = consoleEl.getBoundingClientRect();
+    /*
+     * Tablet chips use fixed composition coordinates.
+     * Do not calculate their position from getBoundingClientRect():
+     * browser chrome / in-app browser viewport changes can move the console
+     * after first paint and make the chips jump toward it.
+     */
     const chipWidth = 88;
-    const sideGap = 18;
-    const consoleLeft = rr.left - cr.left;
-    const consoleRight = rr.right - cr.left;
-    const leftX = Math.max(4, consoleLeft - chipWidth - sideGap);
-    const rightX = Math.min(cr.width - chipWidth - 4, consoleRight + sideGap);
-    const topBase = Math.max(36, rr.top - cr.top + 18);
-    const lowerBase = Math.min(
-      cr.height - 150,
-      rr.top - cr.top + 285
-    );
-
     const spots = [
-      {left:leftX, top:topBase, rot:"-7deg"},
-      {left:leftX + 4, top:lowerBase, rot:"6deg"},
-      {left:rightX, top:topBase + 12, rot:"7deg"},
-      {left:rightX - 4, top:lowerBase + 18, rot:"-6deg"},
-      {left:leftX - 2, top:Math.min(cr.height - 145, lowerBase + 125), rot:"-3deg"},
-      {left:rightX + 2, top:Math.min(cr.height - 145, lowerBase + 138), rot:"4deg"},
-      {left:leftX + 6, top:Math.min(cr.height - 145, lowerBase + 250), rot:"4deg"},
-      {left:rightX - 6, top:Math.min(cr.height - 145, lowerBase + 265), rot:"-4deg"}
+      {left:4, top:130, rot:"-9deg"},
+      {left:8, top:395, rot:"6deg"},
+      {left:"calc(100% - 92px)", top:150, rot:"7deg"},
+      {left:"calc(100% - 96px)", top:380, rot:"-6deg"},
+      {left:4, top:170, rot:"5deg"},
+      {left:"calc(100% - 92px)", top:185, rot:"-5deg"},
+      {left:8, top:435, rot:"-4deg"},
+      {left:"calc(100% - 100px)", top:420, rot:"4deg"}
     ];
 
     chipEls.forEach((el, idx)=>{
       const spot = spots[idx % spots.length];
       el.style.display = "";
-      el.style.setProperty("left", spot.left + "px", "important");
+      el.style.setProperty("left", typeof spot.left === "number" ? spot.left + "px" : spot.left, "important");
       el.style.setProperty("top", spot.top + "px", "important");
       el.style.setProperty("right", "auto", "important");
       el.style.setProperty("bottom", "auto", "important");
