@@ -134,6 +134,32 @@
   }
   .console::before{ content:""; position:absolute; inset:0; pointer-events:none; border-radius:26px; }
 
+
+  /* Reference-inspired pixel speaker / dot-matrix detail */
+  .console-dot-pattern{
+    position:absolute;
+    right:10px;
+    bottom:5px;
+    width:40px;
+    height:26px;
+    z-index:2;
+    pointer-events:none;
+    opacity:.68;
+    transform:rotate(-2deg);
+  }
+  .console-dot-pattern i{
+    position:absolute;
+    width:2.5px;
+    height:2.5px;
+    border-radius:0;
+    background:rgba(8,8,10,.58);
+    box-shadow:0 1px 0 rgba(255,255,255,.07);
+  }
+  .console-dot-pattern i:nth-child(1){left:4px;top:16px}.console-dot-pattern i:nth-child(2){left:10px;top:10px}.console-dot-pattern i:nth-child(3){left:16px;top:4px}.console-dot-pattern i:nth-child(4){left:22px;top:2px}.console-dot-pattern i:nth-child(5){left:28px;top:4px}.console-dot-pattern i:nth-child(6){left:34px;top:10px}.console-dot-pattern i:nth-child(7){left:40px;top:16px}
+  .console-dot-pattern i:nth-child(8){left:4px;top:22px}.console-dot-pattern i:nth-child(9){left:10px;top:16px}.console-dot-pattern i:nth-child(10){left:16px;top:10px}.console-dot-pattern i:nth-child(11){left:22px;top:8px}.console-dot-pattern i:nth-child(12){left:28px;top:10px}.console-dot-pattern i:nth-child(13){left:34px;top:16px}.console-dot-pattern i:nth-child(14){left:40px;top:22px}
+  .console-dot-pattern i:nth-child(15){left:10px;top:22px}.console-dot-pattern i:nth-child(16){left:16px;top:16px}.console-dot-pattern i:nth-child(17){left:22px;top:14px}.console-dot-pattern i:nth-child(18){left:28px;top:16px}.console-dot-pattern i:nth-child(19){left:34px;top:22px}
+  .console-dot-pattern i:nth-child(20){left:16px;top:22px}.console-dot-pattern i:nth-child(21){left:22px;top:20px}.console-dot-pattern i:nth-child(22){left:28px;top:22px}
+
   .power-btn{
     width:36px; height:27px;
     background:#232227;
@@ -971,8 +997,7 @@
    .modal-field .modal-label{ margin-top:0; }
    .modal-field .modal-input{ width:100%; }
    .modal-field .author-options{ width:100%; }
-  .author-options{ display:flex; gap:7px; height:36px; }
-  .author-option{ flex:1; height:36px; box-sizing:border-box; font-family:var(--font-ui); font-size:13px; padding:0 6px; border:1px solid #ddd8c9; border-radius:6px; background:#fff; color:var(--sub); cursor:pointer; }
+  .author-options{ display:flex; gap:7px; height:36px; }  .author-option{ flex:1; height:36px; box-sizing:border-box; font-family:var(--font-ui); font-size:13px; padding:0 6px; border:1px solid #ddd8c9; border-radius:6px; background:#fff; color:var(--sub); cursor:pointer; }
   .author-option.active{ background:var(--ink); color:#fdfcf8; border-color:var(--ink); }
   .modal-input{
      width:100%; max-width:100%; min-width:0; box-sizing:border-box; display:block;
@@ -1894,6 +1919,7 @@
 
     <div class="console-col">
       <div class="console" id="console-body">
+        <div class="console-dot-pattern" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="top-slot"><div class="slot"><div class="slot-tab" id="slot-tab"></div></div></div>
         <div class="screen-frame">
           <div class="screen" id="screen">
@@ -1970,8 +1996,7 @@
           <span class="stage-label">STAGE 01</span>
           <button class="power-btn plate-power" id="btn-power" type="button" title="전원">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 3v8" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
-              <path d="M6.3 6.3a8 8 0 1 0 11.4 0" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
+              <path d="M12 3v8" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>              <path d="M6.3 6.3a8 8 0 1 0 11.4 0" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"/>
             </svg>
           </button>
         </div>
@@ -2970,8 +2995,7 @@
       if(currentIdx>-1){
         chipEls[currentIdx].classList.add("used");
         chipEls[currentIdx].classList.remove("selected");
-        btnEject.disabled = false;
-      }
+        btnEject.disabled = false;      }
     } else {
       selectChip(Math.min(selected, memories.length-1));
     }
