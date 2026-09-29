@@ -2779,7 +2779,7 @@
     const viewed = !!loadJSON("console:viewed:"+m.id, false);
     const state = rating ? "commented" : (viewed ? "viewed" : "unseen");
     el.classList.add("state-"+state);
-    const stateLabel = state === "commented" ? "COMMENTED" : (state === "viewed" ? "VIEWED" : "UNSEEN");
+    const stateLabel = state === "commented" ? "★ RECORD" : (state === "viewed" ? "✓ PLAYED" : "● NEW");
     el.innerHTML = `
       <img class="chip-face" src="${m.photo}" alt="${m.title||''}">
       <div class="chip-edge"></div>
@@ -3179,7 +3179,7 @@
       chipEls[idx].classList.remove("state-unseen","state-viewed");
       chipEls[idx].classList.add("state-commented");
       const stateEl = chipEls[idx].querySelector(".chip-state");
-      if(stateEl) stateEl.textContent = "COMMENTED";
+      if(stateEl) stateEl.textContent = "★ RECORD";
       // Saving a new/edited rating is the end of the recording step.
       // Return to the memory screen and let GO trigger MEMORY COMPLETE.
       completionMode = "memory";
